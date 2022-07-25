@@ -1,4 +1,4 @@
-console.log("Hello postbuild from post.js");
+console.log("Hello prebuild from pre.js");
 
 const fse = require('fs-extra');
 const path = require('path');
@@ -6,8 +6,8 @@ const path = require('path');
 const srcDir = `dist`;
 const destDir = path.join('..', 'docs');
 
-// Copy back updated build to output folder
-fse.copySync(srcDir, destDir, {
+// Copy current full build before astro build 
+fse.copySync(destDir, srcDir, {
     overwrite: true
 }, (err) => {
     if (err) {

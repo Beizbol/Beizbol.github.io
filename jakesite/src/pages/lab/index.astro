@@ -5,14 +5,8 @@ import Layout from '../../components/Layout.astro';
 <Layout title="Test Lab">
 	<h3>Welcome to testing area for new experiments, features, etc. </h3>
 	<p class="instructions">Active experiments:</p>
-	<ul>
-		<a href="/yew">rust/yew web-app</a>
-		<a href=""></a>
-		<a href=""></a>
-		<a href=""></a>
-		<a href=""></a>
-		<a href=""></a>
-	</ul>
+	<p><a href="/yew">rust/yew web-app</a></p>
+	<p><a href="/pinky-web" onclick="return confirm('Open the pinky NES emulator?')">rust pinky nes emu</a></p>
 </Layout>
 
 <style>

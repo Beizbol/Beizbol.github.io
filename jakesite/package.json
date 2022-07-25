@@ -6,11 +6,14 @@
     "dev": "astro dev",
     "build": "astro build",
     "postbuild": "node post.js",
-    "preview": "astro preview"
+    "prepreview": "node pre.js",
+    "preview": "astro preview",
+    "help": "astro --help",
+    "upgrade": "astro upgrade"
   },
   "devDependencies": {
     "@astrojs/sitemap": "^0.1.0",
-    "astro": "^0.26.1",
+    "astro": "^1.0.0-beta.73",
     "astro-robots-txt": "^0.1.14",
     "fs-extra": "^10.1.0"
   },
