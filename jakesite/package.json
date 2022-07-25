@@ -1,0 +1,19 @@
+{
+  "name": "@web/jakesite",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "devDependencies": {
+    "@astrojs/sitemap": "^0.1.0",
+    "astro": "^0.26.1",
+    "astro-robots-txt": "^0.1.14"
+  },
+  "dependencies": {
+    "nanostores": "^0.5.12"
+  }
+}
