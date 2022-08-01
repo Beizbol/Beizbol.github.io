@@ -6,9 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "postbuild": "node post.js",
-    "prepreview": "node pre.js",
     "preview": "astro preview",
-    "help": "astro --help",
     "upgrade": "astro upgrade"
   },
   "devDependencies": {
