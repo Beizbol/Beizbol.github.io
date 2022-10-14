@@ -17,6 +17,7 @@ serde_derive = "1.0.140"
 strum = "0.24.1"
 strum_macros = "0.24.2"
 yew = "0.19"
+yew-oauth2 = "0.3.0"
 [dependencies.web-sys]
 version = "0.3"
 features = [

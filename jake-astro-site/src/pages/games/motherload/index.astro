@@ -1,0 +1,36 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+---
+
+<Layout title="Jakesite Flash">
+  <main>
+    <div id="container"></div>
+  </main>
+</Layout>
+<script is:inline>
+  window.RufflePlayer = window.RufflePlayer || {};
+  window.addEventListener("load", (event) => {
+    const ruffle = window.RufflePlayer.newest();
+    const player = ruffle.createPlayer();
+    const container = document.getElementById("container");
+    container.appendChild(player);
+    player.style.width = "80rem";
+    player.style.height = "60rem";
+    player.load("/flash/motherload.swf");
+  });
+</script>
+<script src="/ruffle-nightly-2022_10_13-web-selfhosted/ruffle.js" is:inline></script>
+<style>
+  :root {
+    --color-gradient: linear-gradient(0deg, red, orange);
+  }
+
+  h1 {
+    margin: 2rem 0;
+  }
+
+  main {
+    margin: auto;
+    padding: 1em;
+  }
+</style>

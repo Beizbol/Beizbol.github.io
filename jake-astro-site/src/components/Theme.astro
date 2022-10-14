@@ -1,0 +1,106 @@
+<!-- Global color themes -->
+<div>
+  <input type="radio" id="lightTheme" name="theme" onclick="localStorage.setItem('theme', 'lightTheme')" />
+  <label for="lightTheme">Light</label>
+
+  <input type="radio" id="whiteTheme" name="theme" onclick="localStorage.setItem('theme', 'whiteTheme')" />
+  <label for="whiteTheme">White</label>
+
+  <input type="radio" id="mintTheme" name="theme" onclick="localStorage.setItem('theme', 'mintTheme')" />
+  <label for="mintTheme">Mint</label>
+
+  <input type="radio" id="denimTheme" name="theme" onclick="localStorage.setItem('theme', 'denimTheme')" />
+  <label for="denimTheme">Denim</label>
+
+  <input type="radio" id="deepTheme" name="theme" onclick="localStorage.setItem('theme', 'deepTheme')" />
+  <label for="deepTheme">Deep</label>
+
+  <input type="radio" id="darkTheme" name="theme" onclick="localStorage.setItem('theme', 'darkTheme')" />
+  <label for="darkTheme">Dark</label>
+
+  <input type="radio" id="blackTheme" name="theme" onclick="localStorage.setItem('theme', 'blackTheme')" />
+  <label for="blackTheme">Black</label>
+</div>
+<style is:global>
+  :root:has(#lightTheme:checked) {
+    --color-text: hsl(12, 5%, 4%);
+    --color-text-accent: black;
+    --color-border: hsl(17, 24%, 90%);
+    --color-bg: hsl(10, 21%, 95%);
+    --color-bg-accent: white;
+    --color-alt: red;
+  }
+
+  :root:has(#whiteTheme:checked) {
+    --color-text: hsl(12, 5%, 4%);
+    --color-text-accent: black;
+    --color-border: hsl(17, 24%, 90%);
+    --color-bg-accent: hsl(10, 21%, 95%);
+    --color-bg: white;
+    --color-alt: darkslategrey;
+  }
+
+  :root:has(#mintTheme:checked) {
+    --color-text: hsl(12, 5%, 4%);
+    --color-text-accent: black;
+    --color-border: white;
+    --color-bg: #c7ffed;
+    --color-bg-accent: #a5ffd2;
+    --color-alt: teal;
+  }
+
+  :root:has(#denimTheme:checked) {
+    --color-text: hsl(10, 21%, 95%);
+    --color-text-accent: black;
+    --color-border: hsl(209, 100%, 80%);
+    --color-bg: #011f4b;
+    --color-bg-accent: #011f4b;
+    --color-alt: CornflowerBlue;
+  }
+
+  :root:has(#deepTheme:checked) {
+    --color-text: hsl(10, 21%, 95%);
+    --color-text-accent: white;
+    --color-border: navy;
+    --color-bg: #100720;
+    --color-bg-accent: #100720;
+    --color-alt: #4f39fa;
+  }
+
+  :root:has(#darkTheme:checked) {
+    --color-bg: hsl(222, 5%, 14%);
+    --color-bg-accent: black;
+    --color-border: hsl(17, 24%, 90%);
+    --color-text: hsl(10, 21%, 95%);
+    --color-text-accent: white;
+    --color-alt: red;
+  }
+
+  :root:has(#blackTheme:checked) {
+    --color-bg-accent: hsl(12, 5%, 4%);
+    --color-bg: black;
+    --color-border: hsl(17, 24%, 90%);
+    --color-text: hsl(10, 21%, 95%);
+    --color-text-accent: white;
+    --color-alt: red;
+  }
+</style>
+<script>
+  function loadTheme() {
+    // console.log("hello theme");
+    const theme = localStorage.getItem("theme");
+    // console.log(theme);
+    if (theme === null) {
+      return;
+    }
+    const chk = document.getElementById(theme) as HTMLInputElement | null;
+    // console.log(chk);
+    if (chk === null) {
+      return;
+    }
+    chk.checked = true;
+    // console.log("theme done.");
+  }
+
+  loadTheme();
+</script>

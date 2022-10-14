@@ -1,0 +1,29 @@
+<details>
+    <summary aria-labelledby="edu-title"> <h2>Education</h2></summary>
+    <p>B.eng Computer Systems Engineering - Carleton University - Dec 2022</p>
+</details>
+<style>
+    summary {
+        display: flex;
+        cursor: pointer;
+    }
+
+    summary::-webkit-details-marker {
+        display: none;
+    }
+
+    details {
+        user-select: none;
+    }
+
+    details > summary span.icon {
+        width: 24px;
+        height: 24px;
+        transition: all 0.3s;
+        margin-left: auto;
+    }
+
+    details[open] summary span.icon {
+        transform: rotate(180deg);
+    }
+</style>

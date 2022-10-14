@@ -1,0 +1,94 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Theme from "../components/Theme.astro";
+
+let posts = await Astro.glob("../pages/posts/*.md");
+---
+
+<Layout title="JakeSite Blog">
+	<main>
+		<Theme />
+		<h1>Jakesite <span class="text-gradient">Blog</span></h1>
+		<p class="instructions">
+			Check out the <code>src/pages</code> directory to get started.<br />
+			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message
+			above.
+		</p>
+
+		<section>
+			{
+				posts.map((post) => (
+					<article>
+						<h3>
+							<a href={`/posts/${post.frontmatter.slug}`}>
+								{post.frontmatter.title}
+							</a>
+						</h3>
+						<p>{post.frontmatter.description}</p>
+						<p>Published: {post.frontmatter.date}</p>
+					</article>
+				))
+			}
+		</section>
+	</main>
+</Layout>
+
+<style>
+	:root {
+		--color-gradient: linear-gradient(0deg, red, orange);
+	}
+
+	h1 {
+		margin: 2rem 0;
+	}
+
+	main {
+		margin: auto;
+		padding: 1em;
+		max-width: 60ch;
+	}
+
+	.text-gradient {
+		font-weight: 900;
+		background-image: var(--color-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 100% 200%;
+		background-position-y: 100%;
+		border-radius: 0.4rem;
+		animation: pulse 4s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			background-position-y: 0%;
+		}
+		50% {
+			background-position-y: 80%;
+		}
+	}
+
+	.instructions {
+		line-height: 1.6;
+		margin: 1rem 0;
+		background: #4f39fa;
+		padding: 1rem;
+		border-radius: 0.4rem;
+		color: var(--color-bg);
+	}
+
+	.instructions code {
+		font-size: 0.875em;
+		border: 0.1em solid var(--color-border);
+		border-radius: 4px;
+		padding: 0.15em 0.25em;
+	}
+
+	.link-card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		gap: 1rem;
+		padding: 0;
+	}
+</style>

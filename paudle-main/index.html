@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   <meta charset="utf-8" />
+   <link data-trunk rel="scss" href="node_modules/@patternfly/patternfly/patternfly.scss">
+   <link data-trunk rel="scss" href="node_modules/@patternfly/patternfly/patternfly-addons.scss">
+   <link data-trunk rel="copy-dir" href="node_modules/@patternfly/patternfly/assets">
+   <style type="text/css">
+    :root {
+      --tile-empty-bg: white;
+      --tile-empty-fg: black;
+      --tile-empty-border: #d3d6da;
+      --tile-present-bg: #c9b458;
+      --tile-present-fg: white;
+      --tile-correct-bg: #6aaa64;
+      --tile-correct-fg: white;
+      --tile-absent-bg: #787c7e;
+      --tile-absent-fg: white;
+      --tile-size: 62px;
+      --tile-border-size: 2px;
+      --grid-gap: 5px;
+      --row-wrong-bg: red;
+      --key-bg: #d3d6da;
+      --key-fg: black;
+      --key-width: 43px;
+      --key-height: 58px;
+      --bar-base-width: 18px;
+      font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .page {
+      width: 100%;
+      height: 100vh;
+    }
+    .wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .game {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: var(--grid-gap);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--grid-gap);
+    }
+
+    .wrong > .tile[data-status="empty"] {
+      background-color: var(--row-wrong-bg);
+    }
+
+    .tile {
+      height: var(--tile-size);
+      width: var(--tile-size);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+      font-size: 2rem;
+      font-weight: bold;
+      box-sizing: border-box;
+    }
+
+    .keyboard {
+      margin-top: 24px;
+    }
+    .keyboard-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .key {
+      height: var(--key-height);
+      width: var(--key-width);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+      font-size: 1rem;
+      font-weight: bold;
+      box-sizing: border-box;
+      margin-right: 6px;
+      user-select: none;
+    }
+
+    .special-key {
+      width: calc(var(--key-width) * 1.5);
+    }
+
+    div[data-status="present"] {
+      background-color: var(--tile-present-bg);
+      color: var(--tile-present-fg);
+    }
+    div[data-status="correct"] {
+      background-color: var(--tile-correct-bg);
+      color: var(--tile-correct-fg);
+    }
+    div[data-status="empty"] {
+      background-color: var(--tile-empty-bg);
+      color: var(--tile-empty-fg);
+      border: var(--tile-border-size) solid var(--tile-empty-border);
+    }
+    div[data-status="absent"] {
+      background-color: var(--tile-absent-bg);
+      color: var(--tile-absent-fg);
+    }
+    div[data-status="unused"] {
+      background-color: var(--key-bg);
+      color: var(--key-fg);
+    }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+    .scoreboard-header {
+      margin-top: 10px;
+      grid-column: 1 / span 4;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .scoreboard > div {
+      text-align: center;
+    }
+    .scoreboard > .scoreboard-distribution {
+      text-align: left;
+    }
+    .scoreboard-distribution {
+      grid-column: 1 / span 4;
+    }
+    .distribution-row {
+      display: flex;
+    }
+    .distribution-row-num {
+      width: 15px;
+    }
+    .distribution-row-bar {
+      flex-grow: 1;
+    }
+    .distribution-bar {
+      margin: 1px;
+      padding-right: 3px;
+      text-align: right;
+      background-color: var(--key-bg);
+    }
+
+    .scoreboard-stat {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .scoreboard-stat > div:first-child {
+      font-size: 300%;
+    }
+
+    .scoreboard-stat > div:nth-child(2) {
+
+    }
+
+    .share-score {
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      width: 100%;
+    }
+    .play-button {
+      justify-content: right;
+      text-align: right;
+    }
+    .share-score > span {
+      cursor: pointer;
+    }
+  </style>
+    <title>Paudle</title>
+  </head>
+</html>

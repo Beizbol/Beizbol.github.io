@@ -1,0 +1,65 @@
+---
+import Layout from "../../components/Layout.astro";
+---
+
+<Layout title="Test Lab">
+	<h3>Welcome to testing area for new experiments, features, etc.</h3>
+	<p class="instructions">Active experiments:</p>
+	<p><a href="/yew">rust/yew web-app</a></p>
+	<p>
+		<a
+			href="/pinky-web"
+			onclick="return confirm('Open the pinky NES emulator?')"
+			>rust pinky nes emu
+		</a>
+	</p>
+	<details>
+		<summary>
+			<div class="icon">👇</div>
+			What is the meaning of life?
+		</summary>
+		<p>42</p>
+	</details>
+</Layout>
+
+<style>
+	/* Mobile (default) layout */
+	h2 {
+		display: flex;
+		align-items: center;
+	}
+
+	h2 span {
+		padding: 0.5rem;
+	}
+
+	svg {
+		fill: var(--color-text);
+		max-height: 4rem;
+		padding-right: 1rem;
+	}
+
+	details {
+		user-select: none;
+	}
+
+	details > summary .icon {
+		width: 2rem;
+		height: 2rem;
+		transition: all 0.3s;
+		padding-left: 1rem;
+	}
+
+	details[open] summary .icon {
+		transform: rotate(180deg);
+	}
+
+	summary {
+		display: flex;
+		cursor: pointer;
+	}
+
+	summary::-webkit-details-marker {
+		display: none;
+	}
+</style>
