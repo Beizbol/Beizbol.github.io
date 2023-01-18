@@ -1,8 +1,9 @@
 ---
 
-layout: ../../layouts/BlogPost.astro
+Page: ../../Layouts/BlogPost.astro
 slug: "rsturn"
 title: "Solving my Gripe with Rust"
+description: "Eliminating the mental burden of the optional return keyword in Rust."
 author: "Jake"
 date: "16 Sep 2022"
 

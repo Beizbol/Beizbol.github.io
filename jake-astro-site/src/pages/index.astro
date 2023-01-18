@@ -1,29 +1,25 @@
 ---
-import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
+import Page from "../layouts/Page.astro";
 ---
 
-<Layout title="Welcome to Jakesite.">
-  <main>
-    <h1>Welcome to <span class="text-gradient">Jakesite</span></h1>
-    <p class="instructions">
-      Check out the <code>src/pages</code> directory to get started.<br />
-      <strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
-    </p>
-    <ul role="list" class="link-card-grid">
-      <Card href="/portfolio" title="Portfolio" body="Learn about my skills and experience in computer systems." />
-      <Card href="/games" title="Games" body="Play a round or two... or ten." />
-      <Card href="/contact" title="Contact" body="Feel free to reach out." />
-      <Card href="/blog" title="Blog" body="An attempt to make permanent learning progress." />
-    </ul>
-
-    <a href="https://api.genius.com/oauth/authorize?client_id=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&
-		redirect_uri=http://localhost:3000/lyrics&
-		scope=<scope>&
-		state=<state>&
-		response_type=code">oauth</a>
-  </main>
-</Layout>
+<Page title="Home">
+  <h1>Welcome to <span class="text-gradient">Jakesite</span>.</h1>
+  <h3>Work</h3>
+  <ul role="list" class="link-card-grid">
+    <Card href="/portfolio" title="Portfolio" body="Learn about my skills and experience in computer systems." />
+    <Card href="/contact" title="Contact" body="Feel free to reach out." />
+  </ul>
+  <h3>Play</h3>
+  <ul role="list" class="link-card-grid">
+    <Card href="/games" title="Games" body="Play a round or two... or ten." />
+    <Card href="/lab" title="Lab" body="Caution - Hardhat & Steeltoes required." />
+  </ul>
+  <h3>Learn</h3>
+  <ul role="list" class="link-card-grid">
+    <Card href="/blog" title="Blog" body="An attempt to make permanent learning progress." />
+  </ul>
+</Page>
 
 <style>
   :root {
@@ -32,12 +28,6 @@ import Card from "../components/Card.astro";
 
   h1 {
     margin: 2rem 0;
-  }
-
-  main {
-    margin: auto;
-    padding: 1em;
-    max-width: 60ch;
   }
 
   .text-gradient {

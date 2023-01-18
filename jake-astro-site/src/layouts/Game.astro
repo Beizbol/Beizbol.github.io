@@ -1,62 +1,41 @@
 ---
-import Theme from "../components/Theme.astro";
-
 export interface Props {
-  date: string;
   title: string;
-  description: string;
+  desc: string;
 }
 
-const { title, description, date } = Astro.props;
+const { title, desc } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="JakeGame" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-startup-image" href="launch.png" />
+    <link rel="apple-touch-icon" href="custom_icon.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="manifest.json" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
   <body>
-    <h2>Jakesite <span class="text-gradient">{title}</span></h2>
-    <slot />
-    <p class="instructions">{description}</p>
     <style>
-      :root {
-        --font-size-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
-        --font-size-lg: clamp(1.2rem, 0.7vw + 1.2rem, 1.5rem);
-        --font-size-xl: clamp(1rem, 3vw + 1.5rem, 3.25rem);
-        /* 
-				--color-text: hsl(12, 5%, 4%);
-				--color-bg: hsl(10, 21%, 95%);
-				--color-border: hsl(17, 24%, 90%); */
+      .game {
+        text-align: center;
+        background-color: aqua;
+        padding: 2rem;
       }
 
-      html {
-        font-family: system-ui, sans-serif;
-        font-size: var(--font-size-base);
-        color: var(--color-text);
-        background-color: var(--color-bg);
-      }
-
-      body {
-        margin: 0;
-      }
-    </style>
-
-    <style is:global>
-      h1 {
-        font-size: var(--font-size-xl);
-      }
-
-      h2 {
-        font-size: var(--font-size-lg);
-      }
-
-      code {
-        font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+      .title {
+        font-size: xx-large;
+        margin: auto;
+        padding: 0.5rem;
+        text-align: center;
       }
     </style>
   </body>

@@ -1,15 +1,16 @@
 ---
 
-layout: ../../layouts/BlogPost.astro
+Page: ../../Layouts/BlogPost.astro
 slug: "rust"
 title: "Diving Into Rust"
+description: "Exploring the revolutionary language touted as the supposed future of computer programming."
 author: "Jake"
 date: "1 Sep 2022"
 ---
 
 ## Why Rust?
 
-Mozilla maintains Firefox (2-3 million lines of C++). Over the years they hired the best engineers and developed/used the best static analysis tools to manage it all. Nonetheless, 70% of their security issues were memory safety related. Thus they spawned a research team to create a language to avoid these many issues outright.
+Mozilla maintains the Firefox browser, a massive project (2-3 million lines of C++). Over the years they hired the best engineers and developed/used the best static analysis tools to manage it all. Nonetheless, 70% of their security issues were memory safety related. Thus in 2006 Mozilla Research employee Graydon Hoare started a personal project to tackle these issues. In 2009, Mozilla began sponsoring the project directly for it's next generation browser engine Servo. Thus began the true evolution of Rust. In 2015, the Rust 1.0 release was announced. As of 2021 the Rust Foundation was created by the 5 main sponsors of the project: AWS, Google, Huawei, Microsoft, and Mozilla. Needless to say the huge industry support from the major tech giants hints that there is more to Rust than merely being yet another programming language.
 
 **Compiler**
 
