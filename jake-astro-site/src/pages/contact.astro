@@ -13,24 +13,24 @@ import Page from "../Layouts/Page.astro";
 
     <a id="copy" class="btn" onclick="navigator.clipboard.writeText('jake.surrett@gmail.com')">Copy e-mail <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 48 48"><path d="M15 37.95q-1.25 0-2.125-.875T12 34.95v-28q0-1.25.875-2.125T15 3.95h22q1.25 0 2.125.875T40 6.95v28q0 1.25-.875 2.125T37 37.95Zm0-3h22v-28H15v28Zm-6 9q-1.25 0-2.125-.875T6 40.95V12.3q0-.65.425-1.075Q6.85 10.8 7.5 10.8q.65 0 1.075.425Q9 11.65 9 12.3v28.65h22.2q.65 0 1.075.425.425.425.425 1.075 0 .65-.425 1.075-.425.425-1.075.425Zm6-37v28-28Z"></path></svg></a>
   </div>
-</Page>
-<form action="https://formspree.io/f/xayvkdew" method="POST">
-  <div class="wrap">
-    <label for="emailAddress">Your email address</label>
-    <input id="emailAddress" type="email" name="email" size={64} maxlength={64} required placeholder="address@email.com" />
-  </div>
 
-  <div class="wrap">
-    <label for="message">Message</label>
-    <textarea id="message" name="message" cols={80} rows={8} required placeholder="Type message here..."></textarea>
-    <div class="info">note: drag to expand &uarr;</div>
-  </div>
+  <form action="https://formspree.io/f/xayvkdew" method="POST">
+    <div class="wrap">
+      <label for="emailAddress">Your email address</label>
+      <input id="emailAddress" type="email" name="email" size={64} maxlength={64} required placeholder="address@email.com" />
+    </div>
 
-  <div>
-    <button id="submit" type="submit"
-      ><div>Send</div>
-      <svg class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 350">
-        <path d="M339.798,260.429c0.13-0.026,0.257-0.061,0.385-0.094c0.109-0.028,0.219-0.051,0.326-0.084
+    <div class="wrap">
+      <label for="message">Message</label>
+      <textarea id="message" name="message" cols={80} rows={8} required placeholder="Type message here..."></textarea>
+      <div class="info">note: drag to expand &uarr;</div>
+    </div>
+
+    <div id="btn">
+      <button id="submit" type="submit"
+        ><div>Send</div>
+        <svg class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 350">
+          <path d="M339.798,260.429c0.13-0.026,0.257-0.061,0.385-0.094c0.109-0.028,0.219-0.051,0.326-0.084
                    c0.125-0.038,0.247-0.085,0.369-0.129c0.108-0.039,0.217-0.074,0.324-0.119c0.115-0.048,0.226-0.104,0.338-0.157
                    c0.109-0.052,0.22-0.1,0.327-0.158c0.107-0.057,0.208-0.122,0.312-0.184c0.107-0.064,0.215-0.124,0.319-0.194
                    c0.111-0.074,0.214-0.156,0.321-0.236c0.09-0.067,0.182-0.13,0.27-0.202c0.162-0.133,0.316-0.275,0.466-0.421
@@ -58,16 +58,16 @@ import Page from "../Layouts/Page.astro";
                    l49.383-41.897c3.158-2.68,3.546-7.412,0.866-10.571c-2.678-3.157-7.41-3.547-10.571-0.866l-84.381,71.59l-98.444-87.158h208.965
                    V234.967z M185.878,179.888c0.535-0.535,0.969-1.131,1.308-1.765l28.051,24.835c1.418,1.255,3.194,1.885,4.972,1.885
                    c1.726,0,3.451-0.593,4.853-1.781l28.587-24.254c0.26,0.38,0.553,0.743,0.89,1.08l65.687,65.687H120.191L185.878,179.888z"></path>
-        <path d="M7.5,170.676h126.667c4.143,0,7.5-3.357,7.5-7.5s-3.357-7.5-7.5-7.5H7.5c-4.143,0-7.5,3.357-7.5,7.5
+          <path d="M7.5,170.676h126.667c4.143,0,7.5-3.357,7.5-7.5s-3.357-7.5-7.5-7.5H7.5c-4.143,0-7.5,3.357-7.5,7.5
                    S3.357,170.676,7.5,170.676z"></path>
-        <path d="M20.625,129.345H77.5c4.143,0,7.5-3.357,7.5-7.5s-3.357-7.5-7.5-7.5H20.625c-4.143,0-7.5,3.357-7.5,7.5
+          <path d="M20.625,129.345H77.5c4.143,0,7.5-3.357,7.5-7.5s-3.357-7.5-7.5-7.5H20.625c-4.143,0-7.5,3.357-7.5,7.5
                    S16.482,129.345,20.625,129.345z"></path>
-        <path d="M62.5,226.51h-55c-4.143,0-7.5,3.357-7.5,7.5s3.357,7.5,7.5,7.5h55c4.143,0,7.5-3.357,7.5-7.5S66.643,226.51,62.5,226.51z"></path>
-      </svg>
-    </button>
-  </div>
-</form>
-
+          <path d="M62.5,226.51h-55c-4.143,0-7.5,3.357-7.5,7.5s3.357,7.5,7.5,7.5h55c4.143,0,7.5-3.357,7.5-7.5S66.643,226.51,62.5,226.51z"></path>
+        </svg>
+      </button>
+    </div>
+  </form>
+</Page>
 <style>
   h1 {
     margin: 2rem 0;
@@ -75,7 +75,7 @@ import Page from "../Layouts/Page.astro";
 
   .contact {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.75rem;
     margin: 1rem 0;
   }
 
