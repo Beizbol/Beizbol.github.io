@@ -65,19 +65,19 @@
 
 <style>
   .links {
-    /* background-color: aqua; */
-    /* position: absolute; */
-    left: 0;
-    padding-left: 3rem;
+    isolation: isolate;
   }
-
   .menu {
     display: none;
-    gap: 0.25rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+
     position: absolute;
-    top: 0.4rem;
-    left: 3rem;
-    box-shadow: 0 0 0 max(150vh, 150vw) rgba(0, 0, 0, 0.5);
+    top: 3rem;
+    left: 0rem;
+    border-radius: 0 0 0.5rem;
+    box-shadow: max(150vh, 150vw) max(150vh, 150vw) 0 max(150vh, 150vw) rgba(0, 0, 0, 0.5);
   }
 
   svg {
@@ -95,6 +95,7 @@
     cursor: pointer;
     scale: 3;
     opacity: 0;
+    z-index: 3;
   }
 
   #menuToggle {
@@ -118,6 +119,7 @@
     border-radius: 3px;
     transform-origin: 5px 0px;
     transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
+    z-index: 5;
   }
 
   #menuToggle span:first-child {

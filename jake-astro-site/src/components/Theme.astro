@@ -1,15 +1,17 @@
 <!-- Global color themes -->
 <div class="themes">
   <input type="checkbox" class="chk" />
-  <select id="themeSelect" onchange="localStorage.setItem('theme', this.value);">
-    <option id="whiteTheme">White</option>
-    <option id="lightTheme">Light</option>
-    <option id="mintTheme">Mint</option>
-    <option id="denimTheme">Denim</option>
-    <option id="deepTheme">Deep</option>
-    <option id="darkTheme">Dark</option>
-    <option id="blackTheme">Black</option>
-  </select>
+  <div class="menu">
+    <select id="themeSelect" onchange="localStorage.setItem('theme', this.value);">
+      <option id="whiteTheme">White</option>
+      <option id="lightTheme">Light</option>
+      <option id="mintTheme">Mint</option>
+      <option id="denimTheme">Denim</option>
+      <option id="deepTheme">Deep</option>
+      <option id="darkTheme">Dark</option>
+      <option id="blackTheme">Black</option>
+    </select>
+  </div>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 409.952 409.952" xml:space="preserve">
     <path d="M298.809,287.873c-21.789,31.978-47.21,63.656-70.192,87.398c-8.04,8.306-15.595,15.467-22.582,21.418
      c68.588-1.306,133.022-38.713,97.567-101.286C302.02,292.817,300.42,290.313,298.809,287.873z"></path>
@@ -52,12 +54,20 @@
     fill: var(--color-accent);
   }
 
-  .chk:checked ~ select {
-    fill: var(--color-accent);
+  .chk:checked + .menu {
     display: flex;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    background-color: var(--color-bg-alt);
+    gap: 0.5rem;
+    padding: 0.5rem;
     position: absolute;
-    top: 0.25rem;
-    right: 3rem;
+    top: 3rem;
+    right: 0rem;
+    border-radius: 0 0 0 0.5rem;
   }
 
   svg {
@@ -76,11 +86,10 @@
   }
 
   select {
-    display: none;
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 0.25rem;
-    background-color: var(--color-bg-alt);
+    background-color: var(--color-bg);
     color: var(--color-text);
     font-size: medium;
     border: 1px solid var(--color-text);
@@ -90,7 +99,7 @@
 <style is:global>
   :root:has(#whiteTheme:checked) {
     --color-bg: white;
-    --color-bg-alt: rgb(240, 255, 255);
+    --color-bg-alt: gainsboro;
     --color-border: black;
     --color-border-alt: black;
     --color-text: black;
@@ -100,7 +109,7 @@
   }
   :root:has(#lightTheme:checked) {
     --color-bg: Linen;
-    --color-bg-alt: Lavender;
+    --color-bg-alt: LightBlue;
     --color-border: black;
     --color-border-alt: black;
     --color-text: black;
@@ -165,9 +174,9 @@
 </style>
 <script>
   function loadTheme() {
-    console.log("hello theme");
+    // console.log("hello theme");
     const theme = localStorage.getItem("theme");
-    console.log(theme);
+    // console.log(theme);
     if (theme === null) {
       return;
     }

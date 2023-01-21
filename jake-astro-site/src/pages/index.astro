@@ -5,29 +5,25 @@ import Page from "../layouts/Page.astro";
 
 <Page title="Home">
   <h1>Welcome to <span class="text-gradient">Jakesite</span>.</h1>
-  <h3>Work</h3>
-  <ul role="list" class="link-card-grid">
-    <Card href="/portfolio" title="Portfolio" body="Learn about my skills and experience in computer systems." />
-    <Card href="/contact" title="Contact" body="Feel free to reach out." />
-  </ul>
-  <h3>Play</h3>
-  <ul role="list" class="link-card-grid">
-    <Card href="/games" title="Games" body="Play a round or two... or ten." />
-  </ul>
-  <h3>Learn</h3>
-  <ul role="list" class="link-card-grid">
-    <Card href="/blog" title="Blog" body="An attempt to make permanent learning progress." />
-    <Card href="/lab" title="Lab" body="Caution - Hardhat & Steeltoes required." />
-  </ul>
+  <div>
+    <h3>Work</h3>
+    <ul role="list" class="link-card-grid">
+      <Card href="/portfolio" title="Portfolio" body="Learn about my skills and experience in computer systems." />
+      <Card href="/contact" title="Contact" body="Feel free to reach out." />
+    </ul>
+  </div>
+  <div>
+    <h3>Play</h3>
+    <ul role="list" class="link-card-grid">
+      <Card href="/games" title="Games" body="Play a round or two... or ten." />
+      <Card href="/consoles" title="Consoles" body="Fun to look at and maybe interact with." />
+    </ul>
+  </div>
 </Page>
 
 <style>
   :root {
     --color-gradient: linear-gradient(0deg, red, orange);
-  }
-
-  h1 {
-    margin: 2rem 0;
   }
 
   .text-gradient {
@@ -72,5 +68,10 @@ import Page from "../layouts/Page.astro";
     grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
     gap: 1rem;
     padding: 0;
+  }
+
+  h3 {
+    padding: 0;
+    margin: 0;
   }
 </style>

@@ -21,7 +21,7 @@ const { title } = Astro.props;
   <body>
     <header>
       <Nav />
-      <h1 class="title">Jakesite {title}</h1>
+      <h1 class="title"><a href="/">Jakesite</a> {title}</h1>
       <Theme />
     </header>
     <main>
@@ -36,6 +36,7 @@ const { title } = Astro.props;
       }
 
       body {
+        min-width: 300;
         font-family: system-ui, sans-serif;
         /* font-size: var(--font-size-base); */
         color: var(--color-text);
@@ -44,28 +45,41 @@ const { title } = Astro.props;
         margin: 0;
         grid-template-columns: 1fr;
         grid-template-rows: 3rem 1fr;
+        overflow-y: hidden;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        margin-top: 3rem;
+        overflow-y: auto;
+        height: calc(96vh - 3rem);
       }
 
       header {
-        position: sticky;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        position: fixed;
+        text-align: center;
         top: 0;
-        min-height: 3rem;
+        height: 3rem;
+        width: 100vw;
         background-color: var(--color-bg-alt);
         z-index: 1;
       }
 
       .title {
-        margin: 0;
-        margin-right: 3rem;
-        color: aqua;
+        margin-top: 0.5rem;
+        color: var(--color-text);
         font-size: x-large;
       }
 
-      main {
-        padding: 0 1rem;
+      .title a:hover {
+        color: var(--color-accent);
+      }
+
+      .title a {
+        text-decoration: none;
+        color: var(--color-text);
       }
     </style>
 
