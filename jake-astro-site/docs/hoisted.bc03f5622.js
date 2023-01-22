@@ -1,0 +1,1 @@
+import"./chunks/Theme.astro_astro_type_script_index_0_lang.c8c31dd1.js";const t=new IntersectionObserver(s=>{s.forEach(e=>{const r=e.target;if(e.isIntersecting){r.classList.add("square-animation");return}r.classList.remove("square-animation")})});t.observe(document.querySelector(".square"));

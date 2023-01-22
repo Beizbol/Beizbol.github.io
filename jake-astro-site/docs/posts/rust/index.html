@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<h2 id="why-rust">Why Rust?</h2>
+<p>Mozilla maintains the Firefox browser, a massive project (2-3 million lines of C++). Over the years they hired the best engineers and developed/used the best static analysis tools to manage it all. Nonetheless, 70% of their security issues were memory safety related. Thus in 2006 Mozilla Research employee Graydon Hoare started a personal project to tackle these issues. In 2009, Mozilla began sponsoring the project directly for it’s next generation browser engine Servo. Thus began the true evolution of Rust. In 2015, the Rust 1.0 release was announced. As of 2021 the Rust Foundation was created by the 5 main sponsors of the project: AWS, Google, Huawei, Microsoft, and Mozilla. Needless to say the huge industry support from the major tech giants hints that there is more to Rust than merely being yet another programming language.</p>
+<p><strong>Compiler</strong></p>
+<ul>
+<li>Guarantees memory safety at compile time</li>
+<li>No runtime memory errors (aka security vulnerabilities)</li>
+<li>No race conditions (mutex required by compiler when needed)</li>
+<li>No Garbage Collector (thus no unscheduled pauses to execution)</li>
+<li>Cached Incremental Builds (fast rebuilds)</li>
+</ul>
+<p><strong>Type System</strong></p>
+<ul>
+<li>Very powerful type system allows for explicitly correct programs</li>
+<li>Supports a state-machine-like code style (valid states and transitions between)</li>
+<li>Allows compiler to understand more and be more helpful</li>
+<li>Type-safe compile-time !macros (less like text insertion more like full functions)</li>
+<li>ex. println!(“hello world”) compiles to the proper stdout system call for the target</li>
+</ul>
+<p><strong>Performance</strong></p>
+<ul>
+<li>Compiles to native binaries just like C/C++ (no overhead)</li>
+<li>Zero cost abstractions (map, filter, collect, etc. same speed as manual loops)</li>
+<li>Immutable by default (no <strong>const</strong> keyword, <strong>mut</strong> instead)</li>
+<li>Powerful optimizations thanks to the compiler/type system</li>
+</ul>
+<p><strong>Bonus</strong></p>
+<ul>
+<li>Rust is open source, with an active community and large industry support</li>
+<li>Built in package manager Cargo (like pip for python)</li>
+<li>Built in test framework (no junit needed)</li>
+</ul>
+<p><strong>What’s the catch?</strong></p>
+<ul>
+<li>The borrow-checker learning curve (enforces memory safety - bit of a pain in the ass)</li>
+<li>Pay the cost of the worst runtime bugs (race conditions, memory leaks, etc) at compile time instead of too late</li>
+<li>First builds can be slow (Rust team roadmap for improvement)</li>
+<li>Return keyword optional - a line with no semicolon returns (I hated this so much that <a href="/blog/rsturn">I made a VS Code extension</a> to fix it)</li>
+</ul>
+<p><strong>Vids:</strong></p>
+<ul>
+<li><a href="https://www.youtube.com/c/NoBoilerplate"><strong>Dank Rust Hype</strong></a> Best Rust YouTube channel for getting into Rust</li>
+<li><a href="https://www.youtube.com/watch?v=OhCjnyBc448&#x26;ab_channel=Rust"><strong>Rust Versus C++</strong></a> Software talk from an experienced engineer</li>
+</ul>
+<p><strong>Tools:</strong></p>
+<ul>
+<li><a href="https://github.com/tokio-rs/axum"><strong>Axum</strong></a> (like Flask.py) Fast async web api framework
+<ul>
+<li><a href="https://github.com/shanesveller/axum-rest-example">https://github.com/shanesveller/axum-rest-example</a></li>
+</ul>
+</li>
+<li><a href="https://yew.rs/"><strong>Yew</strong></a> (like React.js) Multi-threaded web apps using <a href="https://webassembly.org/">wasm</a>.</li>
+<li><a href="https://tauri.app/"><strong>Tauri</strong></a> (like Electron.js) Cross-platform desktop apps with a web ui</li>
+<li><a href="https://github.com/clap-rs/clap"><strong>Clap</strong></a> Command Line Argument Parser for rich, polished cli apps</li>
+<li><a href="https://bevyengine.org/"><strong>Bevy</strong></a> Rust Game Engine</li>
+<li><a href="https://github.com/fzyzcjy/flutter_rust_bridge"><strong>Flutter Bridge</strong></a> Use Rust from Flutter mobile apps</li>
+<li><a href="https://github.com/PyO3/pyo3"><strong>PyO3</strong></a> Use Rust from Python or vise versa</li>
+<li><a href="https://github.com/rusqlite/rusqlite"><strong>rusqlite</strong></a> easy SQLite in Rust</li>
+</ul>
