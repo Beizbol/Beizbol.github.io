@@ -1,0 +1,102 @@
+---
+import Page from "../Layouts/Page.astro";
+
+---
+
+<Page title="JakeSite Lyrics">
+  <main>
+    <h1>Jakesite <span class="text-gradient">Lyrics</span></h1>
+    <button onclick="find_song()">Find Kendrick</button>
+    <form action="https://formspree.io/f/xayvkdew" method="GET">
+      <input id="song" type="text" name="song" size={64} maxlength={64} required placeholder="Bohemian Rhapsody" />
+      <input id="song" type="text" name="song" size={64} maxlength={64} required placeholder="Freddie Mercury - Queen" />
+      <button id="submit" type="submit">Search</button>
+    </form>
+
+    <!-- <p class="instructions">
+			Check out the <code>src/Layouts</code> directory to get started.<br />
+			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message
+			above.
+		</p> -->
+  </main>
+</Page>
+<style>
+  :root {
+    --color-gradient: linear-gradient(0deg, red, orange);
+  }
+
+  h1 {
+    margin: 2rem 0;
+  }
+
+  main {
+    margin: auto;
+    padding: 1em;
+    max-width: 60ch;
+  }
+
+  .text-gradient {
+    font-weight: 900;
+    background-image: var(--color-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 100% 200%;
+    background-position-y: 100%;
+    border-radius: 0.4rem;
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      background-position-y: 0%;
+    }
+    50% {
+      background-position-y: 80%;
+    }
+  }
+
+  .instructions {
+    line-height: 1.6;
+    margin: 1rem 0;
+    background: #4f39fa;
+    padding: 1rem;
+    border-radius: 0.4rem;
+    color: var(--color-bg);
+  }
+
+  .instructions code {
+    font-size: 0.875em;
+    border: 0.1em solid var(--color-border);
+    border-radius: 4px;
+    padding: 0.15em 0.25em;
+  }
+
+  .link-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+    gap: 1rem;
+    padding: 0;
+  }
+</style>
+<script is:inline>
+  async function find_song() {
+    console.log("Finding Kendrick");
+    let headersList = {
+      Accept: "*/*",
+      Authorization: "Bearer hCi1McvF90HhvxeV80RlQGD3JHoEAlF8VTxYEuhsW2HammR2MZMzSBRG7BBTf0JS",
+    };
+    let response = await fetch("https://api.genius.com/search?q=Kendrick%20Lamar", {
+      method: "GET",
+      mode: "cors",
+      credentials: "include",
+      headers: headersList,
+    });
+
+    console.log(response.status);
+    console.log(response.statusText);
+
+    let data = await response.text();
+    console.log(data);
+  }
+</script>

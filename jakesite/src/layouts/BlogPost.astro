@@ -1,0 +1,49 @@
+---
+import Theme from "../components/Theme.astro";
+
+// 1. The frontmatter prop gives access to frontmatter and other data
+const { frontmatter } = Astro.props;
+---
+
+<html>
+	<head>
+		<!-- Add other Head elements here, like styles and meta tags. -->
+		<title>{frontmatter.title}</title>
+	</head>
+	<body>
+		<header>
+			<nav></nav>
+			<Theme />
+		</header>
+		<h1>{frontmatter.title}</h1>
+		<article>
+			<slot />
+		</article>
+		<footer>
+			<p>Written by {frontmatter.author} on {frontmatter.date}</p>
+		</footer>
+	</body>
+</html>
+<style>
+	body {
+		background-color: var(--color-bg);
+		color: var(--color-text);
+	}
+	header,
+	footer {
+		padding: 1rem;
+		background-color: var(--color-alt);
+	}
+
+	h1 {
+		color: var(--color-accent);
+	}
+</style>
+<style is:inline>
+	h2 {
+		color: var(--color-alt);
+	}
+	h3 {
+		color: var(--color-text-accent);
+	}
+</style>

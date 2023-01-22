@@ -1,0 +1,31 @@
+---
+export interface Props {
+  game: string;
+}
+
+const { game } = Astro.props;
+
+const count = localStorage.getItem("wordle_streak");
+const best = localStorage.getItem("wordle_best");
+
+console.log(count);
+console.log(best);
+---
+
+<div>
+  <h3>{game} Streak: {count} | Best: {best}</h3>
+  <button onclick="setStreak()">Count++</button>
+  <button onclick="setBest()">Guess++</button>
+</div>
+
+<script is:inline>
+  function setStreak() {
+    localStorage.setItem("wordle_streak", "1");
+    console.log("wordle_streak");
+  }
+
+  function setBest() {
+    localStorage.setItem("wordle_best", "1");
+    console.log("wordle_best");
+  }
+</script>

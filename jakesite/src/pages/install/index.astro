@@ -1,0 +1,40 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Install">
+  <h1>Install</h1>
+  <ul class="btns">
+    <li><button class="btn tauri"> Desktop</button></li>
+    <li><button class="btn web"> Web</button></li>
+    <li><button class="btn app"> Mobile?</button></li>
+  </ul>
+
+  <style>
+    .btns {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .btn {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      font-size: x-large;
+    }
+
+    .btn:hover {
+      background-color: aqua;
+    }
+
+    .tauri {
+      background-color: var(--color-accent);
+    }
+    .web {
+      background-color: var(--color-accent-alt);
+    }
+    .app {
+      background-color: var(--color-text);
+    }
+  </style>
+</Page>

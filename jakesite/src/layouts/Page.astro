@@ -1,0 +1,100 @@
+---
+import Nav from "../components/Nav.astro";
+import Theme from "../components/Theme.astro";
+
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header>
+      <Nav />
+      <h1 class="title"><a href="/">Jakesite</a> {title}</h1>
+      <Theme />
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer></footer>
+    <style>
+      :root {
+        --font-size-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
+        --font-size-lg: clamp(1.2rem, 0.7vw + 1.2rem, 1.5rem);
+        --font-size-xl: clamp(1rem, 3vw + 1.5rem, 3.25rem);
+      }
+
+      body {
+        min-width: 300;
+        font-family: system-ui, sans-serif;
+        /* font-size: var(--font-size-base); */
+        color: var(--color-text);
+        background-color: var(--color-bg);
+        display: grid;
+        margin: 0;
+        grid-template-columns: 1fr;
+        grid-template-rows: 3rem 1fr;
+        overflow-y: hidden;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        margin-top: 3rem;
+        overflow-y: auto;
+        height: calc(96vh - 3rem);
+      }
+
+      header {
+        position: fixed;
+        text-align: center;
+        top: 0;
+        height: 3rem;
+        width: 100vw;
+        background-color: var(--color-bg-alt);
+        z-index: 1;
+      }
+
+      .title {
+        margin-top: 0.5rem;
+        color: var(--color-text);
+        font-size: x-large;
+      }
+
+      .title a:hover {
+        color: var(--color-accent);
+      }
+
+      .title a {
+        text-decoration: none;
+        color: var(--color-text);
+      }
+    </style>
+
+    <style is:global>
+      h1 {
+        font-size: var(--font-size-xl);
+      }
+
+      h2 {
+        font-size: var(--font-size-lg);
+      }
+
+      code {
+        font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+      }
+    </style>
+  </body>
+</html>
