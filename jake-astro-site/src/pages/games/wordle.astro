@@ -113,9 +113,9 @@ import Page from "../../layouts/Page.astro";
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: hsl(var(--hue, 200), var(--saturation, 1%), calc(var(--lightness-offset, 0%) + var(--lightness, 21%)));
-      color: white;
-      fill: white;
+      background-color: var(--color-bg-alt);
+      color: var(--color-text);
+      fill: var(--color-text);
       text-transform: uppercase;
       border-radius: 0.25em;
       cursor: pointer;
@@ -133,11 +133,11 @@ import Page from "../../layouts/Page.astro";
 
     .key:hover,
     .key:focus {
-      --lightness-offset: 10%;
+      border: 0.1em solid var(--color-text);
     }
 
     .key.wrong {
-      opacity: 0.5;
+      --lightness-offset: -10%;
     }
 
     .key.wrong-location {
@@ -183,17 +183,17 @@ import Page from "../../layouts/Page.astro";
 
     .tile[data-state="wrong"] {
       border: none;
-      background-color: hsl(240, 2%, 23%);
+      background-color: hsla(240, 3%, 43%, 0.8);
     }
 
     .tile[data-state="wrong-location"] {
       border: none;
-      background-color: hsl(49, 51%, 47%);
+      background-color: hsla(49, 51%, 47%, 0.8);
     }
 
     .tile[data-state="correct"] {
       border: none;
-      background-color: hsl(115, 29%, 43%);
+      background-color: hsla(115, 29%, 43%, 0.8);
     }
 
     .tile.shake {
@@ -264,6 +264,7 @@ import Page from "../../layouts/Page.astro";
       position: fixed;
       top: 10vh;
       left: 50vw;
+      background-color: hsl(204, 7%, 85%);
       transform: translateX(-50%);
       z-index: 1;
       display: flex;
