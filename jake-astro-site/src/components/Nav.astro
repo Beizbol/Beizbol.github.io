@@ -1,3 +1,10 @@
+---
+const path = new URL(Astro.request.url).pathname;
+const isHome = path === "/";
+const isGames = path === "/games"; //path.includes("/games");
+
+---
+
 <div class="links">
   <input class="chk" type="checkbox" />
   <div id="menuToggle">
@@ -6,7 +13,7 @@
     <span></span>
   </div>
   <nav class="menu">
-    <a href="/">
+    <a href="/" class={ isHome ? "active" : ""}>
       <svg version="1.1" id="home" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 330.242 330.242" xml:space="preserve">
         <path d="M324.442,129.811l-41.321-33.677V42.275c0-6.065-4.935-11-11-11h-26c-6.065,0-11,4.935-11,11v14.737l-55.213-44.999
          c-3.994-3.254-9.258-5.047-14.822-5.047c-5.542,0-10.781,1.782-14.753,5.019L5.8,129.81c-6.567,5.351-6.173,10.012-5.354,12.314
@@ -16,7 +23,7 @@
       </svg>
       Home
     </a>
-    <a href="https://www.linkedin.com/in/jake-surrett-6a5755147">
+    <a href="https://www.linkedin.com/in/jake-surrett-6a5755147" class={path === "/portfolio" ? "active" : ""}>
       <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
         <polygon points="320,12.499 320,127.998 435.499,127.998 			"></polygon>
         <path d="M298.667,170.667c-11.797,0-21.333-9.536-21.333-21.333V0h-192C73.536,0,64,9.536,64,21.333v469.333
@@ -33,7 +40,7 @@
       </svg>
       Portfolio
     </a>
-    <a href="/games">
+    <a href="/games" class={isGames ? "active" : ""}>
       <svg version="1.1" id="games" xmlns="http://www.w3.org/2000/svg" style="transform: scaleX(-1);" viewBox="0 0 512.001 512.001">
         <path d="M490.667,384h-23.488c-9.92-48.619-53.013-85.333-104.512-85.333h-8.149l43.072-86.123
         c2.603,0.192,5.099,0.789,7.744,0.789c58.816,0,106.667-47.851,106.667-106.667C512,47.852,464.149,0,405.333,0
@@ -44,7 +51,7 @@
       </svg>
       Games
     </a>
-    <a href="/contact">
+    <a href="/contact" class={path === "/contact" ? "active" : ""}>
       <svg version="1.1" id="contact" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
         <polygon points="0,96.791 0,422.722 147.691,229.591 			"></polygon>
         <polygon points="364.309,229.572 512,422.724 512,96.794 			"></polygon>
@@ -54,7 +61,7 @@
       </svg>
       Contact
     </a>
-    <a href="/lab">
+    <a href="/lab" class={path === "/lab" ? "active" : ""}>
       <svg id="lab" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg">
         <path d="M1.34 0a.5.5 0 0 0 .16 1h.5v1.41c-.09.17-1.2 2.31-1.66 3.09-.16.26-.34.61-.34 1.06 0 .39.15.77.41 1.03s.64.41 1.03.41h5.13c.38 0 .74-.16 1-.41h.03c.26-.26.41-.64.41-1.03 0-.45-.19-.8-.34-1.06-.46-.78-1.57-2.92-1.66-3.09v-1.41h.5a.5.5 0 1 0 0-1h-5a.5.5 0 0 0-.09 0 .5.5 0 0 0-.06 0zm1.66 1h2v1.63l.06.09s.63 1.23 1.19 2.28h-4.5c.56-1.05 1.19-2.28 1.19-2.28l.06-.09v-1.63z"></path>
       </svg>
@@ -167,7 +174,16 @@
     color: var(--color-accent);
   }
 
+
+  .menu .active svg {
+    fill: var(--color-accent);
+  }
+
   a:hover svg {
     fill: var(--color-accent);
   }
 </style>
+
+<script is:inline>
+
+</script>
