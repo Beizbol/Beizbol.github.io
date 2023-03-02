@@ -15293,7 +15293,7 @@ const WORD_LENGTH = 5
 const FLIP_ANIMATION_DURATION = 500
 const DANCE_ANIMATION_DURATION = 500
 const keyboard = document.querySelector("[data-keyboard]")
-const alertContainer = document.querySelector("[data-alert-container]")
+const alert = document.querySelector("[data-alert]")
 const guessGrid = document.querySelector("[data-guess-grid]")
 const offsetFromDate = new Date(2022, 0, 1)
 const msOffset = Date.now() - offsetFromDate
@@ -15378,32 +15378,53 @@ function submitGuess() {
   }
 
   stopInteraction()
-  activeTiles.forEach((...params) => flipTile(...params, guess))
+  const results = judgeGuess(guess)
+  console.log(results)
+  activeTiles.forEach((tile, idx) => flipTile(tile, idx, results))
 }
 
-function flipTile(tile, index, array, guess) {
+function judgeGuess(guess) {
+  
+  console.log("judging")
+
+  if (guess === targetWord) {
+    return Array(5).fill("correct")
+  }
+
+  let results = Array(5).fill("wrong-location")
+  let running = Array.from(targetWord)
+  for (let i = 0; i < guess.length; i++) {
+    if (targetWord[i] === guess[i]) {
+      results[i] = "correct"
+      running.splice(running.indexOf(guess[i]), 1)
+    }
+    else if (!running.includes(guess[i])) {
+      results[i] = "wrong"
+    }
+  }
+
+  return results
+
+}
+
+function flipTile(tile, index, results) {
   const letter = tile.dataset.letter
   const key = keyboard.querySelector(`[data-key="${letter}"i]`)
   setTimeout(() => {
     tile.classList.add("flip")
   }, (index * FLIP_ANIMATION_DURATION) / 2)
 
+  console.log("flip")
+
   tile.addEventListener(
     "transitionend",
     () => {
       tile.classList.remove("flip")
-      if (targetWord[index] === letter) {
-        tile.dataset.state = "correct"
-        key.classList.add("correct")
-      } else if (targetWord.includes(letter)) {
-        tile.dataset.state = "wrong-location"
-        key.classList.add("wrong-location")
-      } else {
-        tile.dataset.state = "wrong"
-        key.classList.add("wrong")
-      }
-
-      if (index === array.length - 1) {
+      const result = results[index]
+      key.classList.add(result)
+      tile.dataset.state = result
+      
+      if (index === results.length - 1) {
         tile.addEventListener(
           "transitionend",
           () => {
@@ -15422,18 +15443,14 @@ function getActiveTiles() {
   return guessGrid.querySelectorAll('[data-state="active"]')
 }
 
-function showAlert(message, duration = 1000) {
-  const alert = document.createElement("div")
+function showAlert(message, duration = 5000) {
   alert.textContent = message
-  alert.classList.add("alert")
-  alertContainer.prepend(alert)
+  alert.classList.remove("hide")
+  
   if (duration == null) return
 
   setTimeout(() => {
     alert.classList.add("hide")
-    alert.addEventListener("transitionend", () => {
-      alert.remove()
-    })
   }, duration)
 }
 
