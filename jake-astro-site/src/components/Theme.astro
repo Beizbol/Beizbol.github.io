@@ -5,9 +5,13 @@
     <select id="themeSelect" onchange="localStorage.setItem('theme', this.value);">
       <option id="lightTheme">Light</option>
       <option id="mintTheme">Mint</option>
+      <option id="skyTheme">Sky</option>
+      <option id="prettyTheme">Pretty</option>
+      <option id="mintTheme">Grass</option>
+      <option id="darkTheme">Dark</option>
+      <option id="forestTheme">Forest</option>
       <option id="denimTheme">Denim</option>
       <option id="deepTheme">Deep</option>
-      <option id="darkTheme">Dark</option>
     </select>
   </div>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 409.952 409.952" xml:space="preserve">
@@ -116,9 +120,42 @@
     --color-accent-alt: deepskyblue;
   }
 
+  :root:has(#skyTheme:checked) {
+    --color-bg: hsl(204, 100%, 80%);
+    --color-bg-alt: hsl(204, 100%, 70%);
+    --color-border: hsl(17, 24%, 90%);
+    --color-border-alt: hsl(17, 24%, 90%);
+    --color-text: black;
+    --color-text-alt: red;
+    --color-accent: darkorange;
+    --color-accent-alt: deepskyblue;
+  }
+
+  :root:has(#prettyTheme:checked) {
+    --color-bg: rgb(255, 180, 255);
+    --color-bg-alt: rgb(200, 170, 255);
+    --color-border: hsl(17, 24%, 90%);
+    --color-border-alt: hsl(17, 24%, 90%);
+    --color-text: black;
+    --color-text-alt: red;
+    --color-accent: darkorange;
+    --color-accent-alt: deepskyblue;
+  }
+
+  :root:has(#forestTheme:checked) {
+    --color-bg: hsl(126, 95%, 8%);
+    --color-bg-alt: hsl(126, 95%, 12%);
+    --color-border: hsl(17, 24%, 90%);
+    --color-border-alt: hsl(17, 24%, 90%);
+    --color-text: hsl(10, 21%, 95%);
+    --color-text-alt: red;
+    --color-accent: darkorange;
+    --color-accent-alt: deepskyblue;
+  }
+
   :root:has(#denimTheme:checked) {
-    --color-bg: hsl(222, 95%, 16%);
-    --color-bg-alt: hsl(222, 95%, 24%);
+    --color-bg: hsl(212, 95%, 16%);
+    --color-bg-alt: hsl(212, 95%, 24%);
     --color-border: hsl(17, 24%, 90%);
     --color-border-alt: hsl(17, 24%, 90%);
     --color-text: hsl(10, 21%, 95%);
@@ -128,8 +165,8 @@
   }
 
   :root:has(#deepTheme:checked) {
-    --color-bg: hsl(255, 95%, 10%);
-    --color-bg-alt: hsl(255, 95%, 16%);
+    --color-bg: hsl(265, 96%, 10%);
+    --color-bg-alt: hsl(265, 95%, 16%);
     --color-border: hsl(17, 24%, 90%);
     --color-border-alt: hsl(17, 24%, 90%);
     --color-text: hsl(10, 21%, 95%);

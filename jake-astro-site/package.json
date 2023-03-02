@@ -8,10 +8,12 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "hint": "hint https://www.jakesite.ca/"
   },
   "dependencies": {
     "@astrojs/sitemap": "^1.0.1",
-    "astro": "^2.0.10"
+    "astro": "^2.0.16",
+    "hint": "^2.0.0"
   }
 }
