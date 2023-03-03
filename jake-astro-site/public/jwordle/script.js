@@ -15300,7 +15300,69 @@ const msOffset = Date.now() - offsetFromDate
 const dayOffset = msOffset / 1000 / 60 / 60 / 24
 const targetWord = targetWords[Math.floor(dayOffset)]
 
+loadTiles()
 startInteraction()
+
+function loadTiles() {
+  const today = new Date()
+  const strDate = [today.getDate(), today.getMonth(), today.getFullYear()].join(" ")
+  const date = localStorage.getItem("date")
+  if (date != strDate) {
+    return
+  }
+  
+  const tileElems = [...guessGrid.querySelectorAll("*")]
+  const strTiles = localStorage.getItem("tiles")
+  const letters = strTiles.split(" ")
+  let words = []
+  letters.forEach((char, i, arr) => {
+    console.log(char)
+    tileElems[i].dataset.letter = char
+    tileElems[i].textContent = char.toUpperCase()
+    tileElems[i].dataset.state = "active"
+    if ((i + 1) % 5 == 0) {
+      const word = arr.slice(i - 4, i + 1).join("")
+      console.log(word)
+      words.push(word)
+    }
+  });
+
+  words.forEach((word, idx) => {
+    console.log(word)
+    const results = judgeGuess(word)
+    const tiles = tileElems.slice(5*idx, 5*idx+5)
+    tiles.forEach((tile, idx) => flipTile(tile, idx, results))
+  });
+  
+}
+
+function submitGuess() {
+  const activeTiles = [...getActiveTiles()]
+  if (activeTiles.length !== WORD_LENGTH) {
+    showAlert("Not enough letters")
+    shakeTiles(activeTiles)
+    return
+  }
+
+  const guess = activeTiles.reduce((word, tile) => {
+    return word + tile.dataset.letter
+  }, "")
+
+  if (!dictionary.includes(guess)) {
+    showAlert("Not in word list")
+    shakeTiles(activeTiles)
+    return
+  }
+
+  stopInteraction()
+  saveTiles()
+  const results = judgeGuess(guess)
+  activeTiles.forEach((tile, idx) => flipTile(tile, idx, results))
+}
+
+function getActiveTiles() {
+  return guessGrid.querySelectorAll('[data-state="active"]')
+}
 
 function startInteraction() {
   document.addEventListener("click", handleMouseClick)
@@ -15359,34 +15421,21 @@ function deleteKey() {
   delete lastTile.dataset.letter
 }
 
-function submitGuess() {
-  const activeTiles = [...getActiveTiles()]
-  if (activeTiles.length !== WORD_LENGTH) {
-    showAlert("Not enough letters")
-    shakeTiles(activeTiles)
-    return
-  }
-
-  const guess = activeTiles.reduce((word, tile) => {
-    return word + tile.dataset.letter
-  }, "")
-
-  if (!dictionary.includes(guess)) {
-    showAlert("Not in word list")
-    shakeTiles(activeTiles)
-    return
-  }
-
-  stopInteraction()
-  const results = judgeGuess(guess)
-  console.log(results)
-  activeTiles.forEach((tile, idx) => flipTile(tile, idx, results))
+function saveTiles() {
+  const tileElems = [...guessGrid.querySelectorAll("[data-letter]")]
+  const tiles = tileElems.map((tile, _i, _arr) => {
+    return tile.dataset.letter
+  })
+  const strTiles = tiles.join(" ")
+  localStorage.setItem("tiles", strTiles)
+  console.log(strTiles)
+  const today = new Date()
+  const strDate = [today.getDate(), today.getMonth(), today.getFullYear()].join(" ")
+  localStorage.setItem("date", strDate)
 }
 
 function judgeGuess(guess) {
-  
-  console.log("judging")
-
+  // console.log("judging")
   if (guess === targetWord) {
     return Array(5).fill("correct")
   }
@@ -15414,7 +15463,7 @@ function flipTile(tile, index, results) {
     tile.classList.add("flip")
   }, (index * FLIP_ANIMATION_DURATION) / 2)
 
-  console.log("flip")
+  // console.log("flip")
 
   tile.addEventListener(
     "transitionend",
@@ -15437,10 +15486,6 @@ function flipTile(tile, index, results) {
     },
     { once: true }
   )
-}
-
-function getActiveTiles() {
-  return guessGrid.querySelectorAll('[data-state="active"]')
 }
 
 function showAlert(message, duration = 5000) {
