@@ -15316,19 +15316,19 @@ function loadTiles() {
   const letters = strTiles.split(" ")
   let words = []
   letters.forEach((char, i, arr) => {
-    console.log(char)
+    // console.log(char)
     tileElems[i].dataset.letter = char
     tileElems[i].textContent = char.toUpperCase()
     tileElems[i].dataset.state = "active"
     if ((i + 1) % 5 == 0) {
       const word = arr.slice(i - 4, i + 1).join("")
-      console.log(word)
+      // console.log(word)
       words.push(word)
     }
   });
 
   words.forEach((word, idx) => {
-    console.log(word)
+    // console.log(word)
     const results = judgeGuess(word)
     const tiles = tileElems.slice(5*idx, 5*idx+5)
     tiles.forEach((tile, idx) => flipTile(tile, idx, results))
@@ -15428,7 +15428,7 @@ function saveTiles() {
   })
   const strTiles = tiles.join(" ")
   localStorage.setItem("tiles", strTiles)
-  console.log(strTiles)
+  // console.log(strTiles)
   const today = new Date()
   const strDate = [today.getDate(), today.getMonth(), today.getFullYear()].join(" ")
   localStorage.setItem("date", strDate)
