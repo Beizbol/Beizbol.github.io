@@ -1,11 +1,9 @@
 ---
 import Page from "../../layouts/Page.astro";
-// import Streak from "../../components/Streak.astro";
 ---
 
 <Page title="Wordle">
   <div class="alert hide" data-alert></div>
-  <!-- <Streak game="Wordle" /> -->
   <div class="wrap">
     <div data-guess-grid class="guess-grid">
       <div class="tile"></div>
@@ -77,8 +75,276 @@ import Page from "../../layouts/Page.astro";
       </button>
     </div>
   </div>
+  <script src="/scripts/js/words.js" is:inline></script>
 
-  <script src="/jwordle/script.js" is:inline></script>
+  <script>
+    import confetti from "canvas-confetti";
+
+    const WORD_LENGTH = 5;
+    const FLIP_ANIMATION_DURATION = 500;
+    const DANCE_ANIMATION_DURATION = 500;
+    const keyboard = document.querySelector("[data-keyboard]");
+    const alert = document.querySelector("[data-alert]");
+    const guessGrid = document.querySelector("[data-guess-grid]");
+    const ms = Date.now() - Date.UTC(new Date().getFullYear(), 0, 1);
+    const day = Math.floor(ms / 1000 / 60 / 60 / 24);
+    const targetWord = targetWords[day];
+
+    loadTiles();
+    startInteraction();
+
+    function loadTiles() {
+      const today = new Date();
+      const strDate = [today.getDate(), today.getMonth(), today.getFullYear()].join(" ");
+      const date = localStorage.getItem("date");
+      if (date != strDate) {
+        return;
+      }
+
+      const tileElems = [...queryTiles("*")];
+      const strTiles = localStorage.getItem("tiles");
+      const letters = strTiles.split(" ");
+      let words = [];
+      letters.forEach((char, i, arr) => {
+        // console.log(char)
+        tileElems[i].dataset.letter = char;
+        tileElems[i].textContent = char.toUpperCase();
+        tileElems[i].dataset.state = "active";
+        if ((i + 1) % 5 == 0) {
+          const word = arr.slice(i - 4, i + 1).join("");
+          // console.log(word)
+          words.push(word);
+        }
+      });
+
+      words.forEach((word, idx) => {
+        // console.log(word)
+        const results = judgeGuess(word);
+        const tiles = tileElems.slice(5 * idx, 5 * idx + 5);
+        tiles.forEach((tile, idx) => flipTile(tile, results[idx], (idx * FLIP_ANIMATION_DURATION) / 2));
+      });
+
+      setTimeout(() => checkDone(words[words.length - 1]), 1500);
+    }
+
+    function submitGuess() {
+      const activeTiles = [...queryTiles('[data-state="active"]')];
+      if (activeTiles.length !== WORD_LENGTH) {
+        showAlert("Not enough letters");
+        shakeTiles(activeTiles);
+        return;
+      }
+
+      const guess = activeTiles.reduce((word, tile) => {
+        return word + tile.dataset.letter;
+      }, "");
+
+      if (!guess) {
+        return;
+      }
+
+      if (!dictionary.includes(guess)) {
+        showAlert("Not in word list");
+        shakeTiles(activeTiles);
+        return;
+      }
+
+      stopInteraction();
+      saveTiles();
+
+      const results = judgeGuess(guess);
+      activeTiles.forEach((tile, idx) => {
+        flipTile(tile, results[idx], (idx * FLIP_ANIMATION_DURATION) / 2);
+      });
+      checkDone(guess);
+    }
+
+    function queryTiles(queryStr) {
+      const elems = guessGrid.querySelectorAll(queryStr);
+      const tiles: HTMLElement[] = [...elems]
+        .filter((e) => {
+          return e instanceof HTMLElement;
+        })
+        .map((e) => e as HTMLElement);
+      return tiles;
+    }
+
+    function queryTile(queryStr) {
+      const elem = guessGrid.querySelector(queryStr);
+      if (elem instanceof HTMLElement) {
+        return elem as HTMLElement;
+      }
+      return null;
+    }
+
+    function startInteraction() {
+      console.log("start");
+      console.log(targetWord);
+      document.addEventListener("click", handleMouseClick);
+      document.addEventListener("keydown", handleKeyPress);
+    }
+
+    function stopInteraction() {
+      console.log("stop");
+      document.removeEventListener("click", handleMouseClick);
+      document.removeEventListener("keydown", handleKeyPress);
+    }
+
+    function handleMouseClick(e) {
+      if (e.target.matches("[data-key]")) {
+        pressKey(e.target.dataset.key);
+        return;
+      }
+
+      if (e.target.matches("[data-enter]")) {
+        submitGuess();
+        return;
+      }
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === "Enter") {
+        submitGuess();
+        return;
+      }
+
+      if (e.key === "Backspace" || e.key === "Delete") {
+        deleteKey();
+        return;
+      }
+
+      if (e.key.match(/^[a-z]$/)) {
+        pressKey(e.key);
+        return;
+      }
+    }
+
+    function pressKey(key) {
+      const activeTiles = queryTiles('[data-state="active"]');
+      if (activeTiles.length >= WORD_LENGTH) return;
+      const nextTile = queryTile(":not([data-letter])");
+      nextTile.dataset.letter = key.toLowerCase();
+      nextTile.textContent = key;
+      nextTile.dataset.state = "active";
+    }
+
+    function deleteKey() {
+      const activeTiles = queryTiles('[data-state="active"]');
+      const lastTile = activeTiles[activeTiles.length - 1];
+      if (lastTile == null) return;
+      lastTile.textContent = "";
+      delete lastTile.dataset.state;
+      delete lastTile.dataset.letter;
+    }
+
+    function saveTiles() {
+      const tileElems = [...queryTiles("[data-letter]")];
+      const tiles = tileElems.map((tile, _i, _arr) => {
+        return tile.dataset.letter;
+      });
+      const strTiles = tiles.join(" ");
+      localStorage.setItem("tiles", strTiles);
+      // console.log(strTiles)
+      const today = new Date();
+      const strDate = [today.getDate(), today.getMonth(), today.getFullYear()].join(" ");
+      localStorage.setItem("date", strDate);
+    }
+
+    function checkDone(guess: string) {
+      if (guess === targetWord) {
+        showAlert("You Win", 5000);
+        danceTiles();
+        confetti();
+        stopInteraction();
+        return;
+      }
+
+      const remainingTiles = guessGrid.querySelectorAll(":not([data-letter])");
+      if (remainingTiles.length === 0) {
+        showAlert(targetWord.toUpperCase(), null);
+        stopInteraction();
+      }
+
+      startInteraction();
+    }
+
+    function judgeGuess(guess: string) {
+      if (guess === targetWord) {
+        return Array(5).fill("correct");
+      }
+      let results = Array(5).fill("wrong-location");
+      let running = targetWord.split("");
+      for (let i = 0; i < guess.length; i++) {
+        if (targetWord.charAt(i) === guess.charAt(i)) {
+          results[i] = "correct";
+          running[i] = "";
+        } else if (!running.includes(guess[i])) {
+          results[i] = "wrong";
+        }
+      }
+      return results;
+    }
+
+    function flipTile(tile, result: string, delay: number) {
+      const letter = tile.dataset.letter;
+      const key = keyboard.querySelector(`[data-key="${letter}"i]`);
+      setTimeout(() => {
+        tile.classList.add("flip");
+      }, delay);
+
+      // console.log("flip")
+
+      tile.addEventListener(
+        "transitionend",
+        () => {
+          tile.classList.remove("flip");
+          key.classList.add(result);
+          tile.dataset.state = result;
+        },
+        { once: true }
+      );
+    }
+
+    function showAlert(message, duration = 5000) {
+      alert.textContent = message;
+      alert.classList.remove("hide");
+
+      if (duration == null) return;
+
+      setTimeout(() => {
+        alert.classList.add("hide");
+      }, duration);
+    }
+
+    function shakeTiles(tiles) {
+      tiles.forEach((tile) => {
+        tile.classList.add("shake");
+        tile.addEventListener(
+          "animationend",
+          () => {
+            tile.classList.remove("shake");
+          },
+          { once: true }
+        );
+      });
+    }
+
+    function danceTiles() {
+      const tiles = queryTiles("*");
+      tiles.forEach((tile, index) => {
+        setTimeout(() => {
+          tile.classList.add("dance");
+          tile.addEventListener(
+            "animationend",
+            () => {
+              tile.classList.remove("dance");
+            },
+            { once: true }
+          );
+        }, (index * DANCE_ANIMATION_DURATION) / 5);
+      });
+    }
+  </script>
   <style>
     *,
     *::after,
@@ -90,7 +356,7 @@ import Page from "../../layouts/Page.astro";
     .wrap {
       display: flex;
       flex-direction: column;
-      text-align: center; 
+      text-align: center;
       height: 100%;
       margin: 0;
       font-size: clamp(0.75rem, 2.5vmin, 2rem);
@@ -262,7 +528,7 @@ import Page from "../../layouts/Page.astro";
       opacity: 0;
     }
 
-    .alert {      
+    .alert {
       position: fixed;
       top: 5vh;
       left: 50vw;

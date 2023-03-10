@@ -1,0 +1,60 @@
+---
+export interface Props {
+  value: string;
+  suit: string;
+}
+
+const { value, suit } = Astro.props;
+
+const values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+const v = values.indexOf(value) + 1;
+
+const suits = ["spades", "hearts", "clubs", "diamonds"];
+const s = suits.indexOf(suit);
+
+const face = `/assets/faces/${s}_${v}.svg`;
+const;
+---
+
+<div class="wrap">
+  <img class="card back face" src="/assets/faces/back.png" alt="card back" />
+  <div class="card front">
+    <div class="card face" style="background-image: {face};">
+      {value}
+    </div>
+  </div>
+</div>
+
+<style>
+  .wrap {
+    position: relative;
+    min-width: 10rem;
+    min-height: 14rem;
+    padding: 1rem;
+    background-color: grey;
+  }
+
+  .card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1rem;
+    width: 10rem;
+    height: 14rem;
+  }
+
+  .front {
+    background-color: coral;
+    z-index: 1;
+  }
+
+  .back {
+    background-color: blue;
+    z-index: 0;
+  }
+
+  .face {
+    background-size: contain;
+    background-color: whitesmoke;
+  }
+</style>
