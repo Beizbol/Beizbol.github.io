@@ -12,7 +12,7 @@ import Page from "../../layouts/Page.astro";
     <strong>Improved:</strong>
     <code>wordle</code>
   </p>
-  <div>
+  <section>
     <h3>Home-Made</h3>
     <ul role="list" class="link-card-grid">
       <Card href="/games/wordle" title="Wordle" body="Guess all the letters in six tries or less." />
@@ -22,8 +22,8 @@ import Page from "../../layouts/Page.astro";
         <Card href="/games/2048" title="Contact" body="Stack and combine matching tiles to reach 2048." />
         <Card href="./blog" title="Blog" body="An attempt to make permanent learning progress." /> -->
     </ul>
-  </div>
-  <div>
+  </section>
+  <section>
     <h3>Hand-Picked</h3>
     <ul role="list" class="link-card-grid">
       <!-- <Card href="/games/2048" title="2048" body="Stack and combine matching tiles to reach 2048." /> -->
@@ -43,7 +43,7 @@ import Page from "../../layouts/Page.astro";
       <Card href="/games/whack" title="Whack-a-Mole" body="How many can you hit before time runs out?" />
       <Card href="/games/worlds-hardest-game" title="World's Hardest Game" body="Put your skills to the test with each harder level." />
     </ul>
-  </div>
+  </section>
 </Page>
 
 <style>
@@ -53,6 +53,11 @@ import Page from "../../layouts/Page.astro";
 
   h1 {
     margin: 2rem 0;
+  }
+
+  section {
+    margin: 1rem 0;
+    /* background-color: aquamarine; */
   }
 
   .text-gradient {

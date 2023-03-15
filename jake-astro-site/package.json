@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "hello": "node ./src/scripts/postbuild.js",
+    "postbuild": "node ./src/scripts/postbuild.js",
     "preview": "astro preview",
     "astro": "astro",
     "hint": "hint https://www.jakesite.ca/"
