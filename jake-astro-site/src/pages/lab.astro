@@ -12,28 +12,27 @@ import Page from "../layouts/Page.astro";
     <span></span>
     <span></span>
   </button>
-  <div id="glow" />
-  <div id="glow-box" />
+  <div id="glow"></div>
+  <div id="glow-box"></div>
 </Page>
 
 <script is:inline>
+  const glow_box = document.getElementById("glow-box");
+  const glow = document.getElementById("glow");
 
-  const glow_box = document.getElementById("glow-box")
-  const glow = document.getElementById("glow")
-
-  glow_box.onpointermove = event => {
-    const {x, y} = event;
-    glow.animate({
-      left:`${x}px`,
-      top: `${y}px`
-    }, {duration: 4000, fill: "forwards"});
-
-  }
-
+  glow_box.onpointermove = (event) => {
+    const { x, y } = event;
+    glow.animate(
+      {
+        left: `${x}px`,
+        top: `${y}px`,
+      },
+      { duration: 4000, fill: "forwards" }
+    );
+  };
 </script>
 
 <style>
-
   #glow-box {
     height: 80vh;
     width: 100%;
@@ -57,7 +56,7 @@ import Page from "../layouts/Page.astro";
     position: absolute;
     height: 10rem;
     width: 10rem;
-    background: linear-gradient(to right,aquamarine, blueviolet);
+    background: linear-gradient(to right, red, orange);
     z-index: 1;
     top: 50%;
     left: 50%;

@@ -6,7 +6,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta name="generator" content="Astro v2.1.2">
     <title>Lab</title>
-  <link rel="stylesheet" href="/assets/lab.b97acdb5.css" />
+  <link rel="stylesheet" href="/assets/lab.1bcbd26e.css" />
 <link rel="stylesheet" href="/assets/art.e22f0f1c.css" /><script type="module" src="/assets/hoisted.a1d230f8.js"></script></head>
   <body class="astro-QO5XHE7C">
     <header class="astro-QO5XHE7C">
@@ -135,19 +135,19 @@
 </html>
 
 <script>
+  const glow_box = document.getElementById("glow-box");
+  const glow = document.getElementById("glow");
 
-  const glow_box = document.getElementById("glow-box")
-  const glow = document.getElementById("glow")
-
-  glow_box.onpointermove = event => {
-    const {x, y} = event;
-    glow.animate({
-      left:`${x}px`,
-      top: `${y}px`
-    }, {duration: 4000, fill: "forwards"});
-
-  }
-
+  glow_box.onpointermove = (event) => {
+    const { x, y } = event;
+    glow.animate(
+      {
+        left: `${x}px`,
+        top: `${y}px`,
+      },
+      { duration: 4000, fill: "forwards" }
+    );
+  };
 </script>
 
 
