@@ -6,7 +6,7 @@ import Page from "../../layouts/Page.astro";
   <section>
     <h2>Product Plus represents Erikson Consumer</h2>
     <div class="card">
-      <img src="/assets/demo/erikson-logo.svg" alt="" />
+      <a href="https://www.eriksonconsumer.com/"><img src="/assets/demo/erikson-logo.svg" alt="" /></a>
       <h3>Brian Surrett</h3>
       <h4>Sales Agent serving Ontario</h4>
       <ul>
@@ -21,7 +21,7 @@ import Page from "../../layouts/Page.astro";
   <section>
     <h2>Product Plus represents Totem Acoustic</h2>
     <div class="card">
-      <img src="/assets/demo/totem-logo.png" alt="" />
+      <a href="https://totemacoustic.com/"><img src="/assets/demo/totem-logo.png" alt="" /></a>
       <h3>Brian Surrett</h3>
       <h4>Sales Agent serving Ontario</h4>
       <ul>
@@ -32,22 +32,24 @@ import Page from "../../layouts/Page.astro";
   </section>
 
   <style>
-    body {
-      background-color: rgb(28, 47, 47);
-    }
     h2 {
       font-size: xx-large;
-      color: white;
     }
 
+    section {
+      display: grid;
+      justify-items: center;
+    }
     .card {
-      margin: 2rem;
-      padding: 2rem;
+      margin: 3rem;
+      padding: 2.5rem;
       background-color: white;
+      color: black;
       background-image: url("/assets/imgs/cream_paper.png");
       box-shadow: 0.5rem 0.5rem 2rem 0.5rem #111;
       width: fit-content;
       border-radius: 0.25rem;
+      object-fit: cover;
     }
 
     img {
