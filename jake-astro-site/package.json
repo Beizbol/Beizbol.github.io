@@ -14,7 +14,8 @@
   "dependencies": {
     "@astrojs/sitemap": "^1.0.1",
     "astro": "^2.0.16",
-    "canvas-confetti": "^1.6.0"
+    "canvas-confetti": "^1.6.0",
+    "vite-plugin-wasm-pack": "^0.1.12"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.6.0",

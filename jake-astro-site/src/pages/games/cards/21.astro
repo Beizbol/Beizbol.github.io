@@ -5,4 +5,22 @@ import Card from "./card.astro";
 
 <Page title="21">
   <Card value="A" suit="clubs" />
+  <script>
+    import init, { take_number_by_value, return_number, take_option_number, return_option_number, greet } from "my-crate";
+
+    init().then(() => {
+      console.log("init wasm-pack");
+      take_number_by_value(42);
+      let x = return_number();
+      console.log(x); // "number"
+      take_option_number(null);
+      take_option_number(undefined);
+      take_option_number(13);
+      let y = return_option_number(69);
+      console.log(y);
+      let z = return_option_number(0);
+      console.log(z);
+      greet("from vite!");
+    });
+  </script>
 </Page>

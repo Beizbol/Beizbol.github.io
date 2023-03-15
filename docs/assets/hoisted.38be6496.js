@@ -1,0 +1,1 @@
+import"./Theme.astro_astro_type_script_index_0_lang.84aacc82.js";const t=new IntersectionObserver(s=>{s.forEach(e=>{const r=e.target;if(e.isIntersecting){r.classList.add("square-animation");return}r.classList.remove("square-animation")})});t.observe(document.querySelector(".square"));

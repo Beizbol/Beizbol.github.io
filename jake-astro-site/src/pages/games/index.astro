@@ -8,7 +8,7 @@ import Page from "../../layouts/Page.astro";
   <p class="instructions">
     Check out the newest additions and latest upgrades to the arcade.<br />
     <strong>New:</strong>
-    <code>jigsaw puzzle</code> |
+    <code>tic-tac-toe</code> |
     <strong>Improved:</strong>
     <code>wordle</code>
   </p>
@@ -17,6 +17,7 @@ import Page from "../../layouts/Page.astro";
     <ul role="list" class="link-card-grid">
       <Card href="/games/wordle" title="Wordle" body="Guess all the letters in six tries or less." />
       <Card href="/games/jigsaw" title="Jigsaw" body="Put together the puzzle to reveal the image." />
+      <Card href="/games/tictactoe" title="TicTacToe" body="The classic 'X's and 'O's" />
       <!-- <Card href="/games/minecraft" title="Games" body="Explore a voxel world in minecraft js edition." />
         <Card href="/games/2048" title="Contact" body="Stack and combine matching tiles to reach 2048." />
         <Card href="./blog" title="Blog" body="An attempt to make permanent learning progress." /> -->
@@ -81,7 +82,7 @@ import Page from "../../layouts/Page.astro";
     background: #4f39fa;
     padding: 1rem;
     border-radius: 0.4rem;
-    color: var(--color-accent);
+    color: white;
   }
 
   .instructions code {

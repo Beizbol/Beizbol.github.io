@@ -7,11 +7,10 @@
       <option id="mintTheme">Mint</option>
       <option id="skyTheme">Sky</option>
       <option id="prettyTheme">Pretty</option>
-      <option id="mintTheme">Grass</option>
-      <option id="darkTheme">Dark</option>
       <option id="forestTheme">Forest</option>
       <option id="denimTheme">Denim</option>
       <option id="deepTheme">Deep</option>
+      <option id="darkTheme">Dark</option>
     </select>
   </div>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 409.952 409.952" xml:space="preserve">
@@ -176,8 +175,8 @@
   }
 
   :root:has(#darkTheme:checked) {
-    --color-bg: black;
-    --color-bg-alt: hsl(222, 5%, 10%);
+    --color-bg: hsl(222, 5%, 10%);
+    --color-bg-alt: black;
     --color-border: hsl(17, 24%, 90%);
     --color-border-alt: hsl(17, 24%, 90%);
     --color-text: hsl(10, 21%, 95%);
@@ -191,7 +190,7 @@
     // console.log("hello theme");
     const theme = localStorage.getItem("theme");
     // console.log(theme);
-    if (theme === null) {
+    if (theme === null || theme === "") {
       return "darkTheme";
     }
     const sel = document.getElementById("themeSelect") as HTMLSelectElement | null;
