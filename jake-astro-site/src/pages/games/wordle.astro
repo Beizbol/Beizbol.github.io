@@ -67,7 +67,7 @@ import Page from "../../layouts/Page.astro";
       <button class="key" data-key="B">B</button>
       <button class="key" data-key="N">N</button>
       <button class="key" data-key="M">M</button>
-      <button class="key large del" onclick="deleteKey()">
+      <button class="key large del">
         <svg class="svg-icon" viewBox="0 0 24 24" aria-labelledby="button-label" focusable="false">
           <title id="button-label">Delete</title>
           <path fill="var(--color-tone-1)" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"> </path>
@@ -180,6 +180,8 @@ import Page from "../../layouts/Page.astro";
     function startInteraction() {
       console.log("start");
       console.log(targetWord);
+      const btnDel = document.querySelector("button.del");
+      btnDel.addEventListener("click", deleteKey);
       document.addEventListener("click", handleMouseClick);
       document.addEventListener("keydown", handleKeyPress);
     }
@@ -202,6 +204,29 @@ import Page from "../../layouts/Page.astro";
       }
     }
 
+    function pressKey(key) {
+      const activeTiles = queryTiles('[data-state="active"]');
+      if (activeTiles.length >= WORD_LENGTH) return;
+      const nextTile = queryTile(":not([data-letter])");
+      nextTile.dataset.letter = key.toLowerCase();
+      nextTile.textContent = key;
+      nextTile.dataset.state = "active";
+    }
+
+    function deleteKey() {
+      const activeTiles = queryTiles('[data-state="active"]');
+      console.log(activeTiles);
+      const lastTile = activeTiles[activeTiles.length - 1];
+      console.log(lastTile);
+      if (lastTile == null) {
+        console.log("no last tile");
+        return;
+      }
+      lastTile.textContent = "";
+      delete lastTile.dataset.state;
+      delete lastTile.dataset.letter;
+    }
+
     function handleKeyPress(e) {
       if (e.key === "Enter") {
         submitGuess();
@@ -217,24 +242,6 @@ import Page from "../../layouts/Page.astro";
         pressKey(e.key);
         return;
       }
-    }
-
-    function pressKey(key) {
-      const activeTiles = queryTiles('[data-state="active"]');
-      if (activeTiles.length >= WORD_LENGTH) return;
-      const nextTile = queryTile(":not([data-letter])");
-      nextTile.dataset.letter = key.toLowerCase();
-      nextTile.textContent = key;
-      nextTile.dataset.state = "active";
-    }
-
-    function deleteKey() {
-      const activeTiles = queryTiles('[data-state="active"]');
-      const lastTile = activeTiles[activeTiles.length - 1];
-      if (lastTile == null) return;
-      lastTile.textContent = "";
-      delete lastTile.dataset.state;
-      delete lastTile.dataset.letter;
     }
 
     function saveTiles() {
