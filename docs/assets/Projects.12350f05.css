@@ -1,1 +1,0 @@
-.pics:where(.astro-EFLMJ6M6){display:flex;flex-flow:column;justify-content:center}img:where(.astro-EFLMJ6M6){width:20rem;height:fit-content;border:solid var(--color-accent);border-radius:.25rem;object-fit:contain}@media (min-width: 60rem){.pics:where(.astro-EFLMJ6M6){display:flex;flex-direction:row;justify-content:left}.carousel:where(.astro-EFLMJ6M6){margin-right:1rem}}
