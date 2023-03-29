@@ -14,8 +14,10 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^1.0.1",
+    "@cheprasov/qrcode": "^0.1.0",
     "astro": "^2.0.16",
     "canvas-confetti": "^1.6.0",
+
     "vite-plugin-wasm-pack": "^0.1.12"
   },
   "devDependencies": {

@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta name="generator" content="Astro v2.1.2">
+    <meta name="generator" content="Astro v2.1.8">
     <title>Lab</title>
-  <link rel="stylesheet" href="/assets/lab.1bcbd26e.css" />
-<link rel="stylesheet" href="/assets/art.e22f0f1c.css" /><script type="module" src="/assets/hoisted.a1d230f8.js"></script></head>
+  <link rel="stylesheet" href="/assets/index.b51e2857.css" />
+<link rel="stylesheet" href="/assets/index.0cd6b101.css" />
+<link rel="stylesheet" href="/assets/art.7e13b97e.css" /><script type="module" src="/assets/hoisted.a1d230f8.js"></script></head>
   <body class="astro-QO5XHE7C">
     <header class="astro-QO5XHE7C">
       <div class="links astro-DMQPWCEC">
@@ -120,12 +121,53 @@
 </div>
     </header>
     <main class="astro-QO5XHE7C">
-      <h1 class="astro-T3NV4XEF">Jakesite <span class="text-gradient astro-T3NV4XEF">Lab</span></h1><button id="fullscreen-button" onclick="toggle_fullscreen()" class="astro-T3NV4XEF">
-    <span class="astro-T3NV4XEF"></span>
-    <span class="astro-T3NV4XEF"></span>
-    <span class="astro-T3NV4XEF"></span>
-    <span class="astro-T3NV4XEF"></span>
-  </button><div id="glow" class="astro-T3NV4XEF"></div><div id="glow-box" class="astro-T3NV4XEF"></div>
+      <h1 class="astro-BNX2QAK7">Welcome to my <span class="text-gradient astro-BNX2QAK7">Lab</span></h1><p class="instructions astro-BNX2QAK7">
+    Check out the newest additions and latest upgrades to the arcade.<br class="astro-BNX2QAK7">
+    <strong class="astro-BNX2QAK7">New:</strong>
+    <code class="astro-BNX2QAK7">tic-tac-toe</code> |
+    <strong class="astro-BNX2QAK7">Improved:</strong>
+    <code class="astro-BNX2QAK7">wordle</code>
+  </p><section class="astro-BNX2QAK7">
+    <h3 class="astro-BNX2QAK7">Home-Made</h3>
+    <ul role="list" class="link-card-grid astro-BNX2QAK7">
+      <li class="link-card astro-DOHJNAO5">
+  <a href="/lab/qr" class="astro-DOHJNAO5">
+    <h2 class="astro-DOHJNAO5">
+      Create QR
+      <span class="astro-DOHJNAO5">&rarr;</span>
+    </h2>
+    <p class="astro-DOHJNAO5">
+      Quick, painless, and free. What more could you want?
+    </p>
+  </a>
+</li>
+      <li class="link-card astro-DOHJNAO5">
+  <a href="/lab/rm-img-bg" class="astro-DOHJNAO5">
+    <h2 class="astro-DOHJNAO5">
+      Remove Image Background
+      <span class="astro-DOHJNAO5">&rarr;</span>
+    </h2>
+    <p class="astro-DOHJNAO5">
+      A magic eraser for the backgrounds of photos.
+    </p>
+  </a>
+</li>
+      <li class="link-card astro-DOHJNAO5">
+  <a href="/lab/hover" class="astro-DOHJNAO5">
+    <h2 class="astro-DOHJNAO5">
+      Hover
+      <span class="astro-DOHJNAO5">&rarr;</span>
+    </h2>
+    <p class="astro-DOHJNAO5">
+      Nice to look at.
+    </p>
+  </a>
+</li>
+      <!-- <Card href="/games/minecraft" title="Games" body="Explore a voxel world in minecraft js edition." />
+        <Card href="/games/2048" title="Contact" body="Stack and combine matching tiles to reach 2048." />
+        <Card href="./blog" title="Blog" body="An attempt to make permanent learning progress." /> -->
+    </ul>
+  </section>
       <footer class="astro-QO5XHE7C">&copy; 2023, Jake Surrett. All rights reserved.</footer>
     </main>
     
@@ -133,77 +175,3 @@
     
   </body>
 </html>
-
-<script>
-  const glow_box = document.getElementById("glow-box");
-  const glow = document.getElementById("glow");
-
-  glow_box.onpointermove = (event) => {
-    const { x, y } = event;
-    glow.animate(
-      {
-        left: `${x}px`,
-        top: `${y}px`,
-      },
-      { duration: 4000, fill: "forwards" }
-    );
-  };
-</script>
-
-
-<script>
-  const document_element = document.documentElement;
-  if (document.fullscreenEnabled /* Standard syntax */ || document.webkitFullscreenEnabled /* Safari */ || document.msFullscreenEnabled /* IE11 */) {
-    create_fullscreen_button();
-  }
-  function create_fullscreen_button() {
-    let fullscreen_button = document.createElement("button");
-    fullscreen_button.setAttribute("id", "fullscreen-button");
-    fullscreen_button.addEventListener("click", toggle_fullscreen);
-    fullscreen_button.innerHTML = `
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-    `;
-    document.body.appendChild(fullscreen_button);
-  }
-
-  function toggle_fullscreen() {
-    if (
-      !document.fullscreenElement && // alternative standard method
-      !document.mozFullScreenElement &&
-      !document.webkitFullscreenElement
-    ) {
-      // current working methods
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-      }
-      document.body.setAttribute("fullscreen", "");
-    } else {
-      if (document.cancelFullScreen) {
-        document.cancelFullScreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitCancelFullScreen) {
-        document.webkitCancelFullScreen();
-      }
-      document.body.removeAttribute("fullscreen");
-    }
-  }
-  function check_fullscreen() {
-    // Because users can exit & enter fullscreen differently
-    if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen) {
-      document.body.setAttribute("fullscreen", "");
-    } else {
-      document.body.removeAttribute("fullscreen");
-    }
-  }
-  setInterval(function () {
-    check_fullscreen();
-  }, 1000);
-</script>

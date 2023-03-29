@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <meta name="generator" content="Astro v2.1.8">
-    <title>Slots</title>
-  <link rel="stylesheet" href="/assets/art.7e13b97e.css" /><script type="module" src="/assets/hoisted.a1d230f8.js"></script></head>
+    <title>Hover</title>
+  <link rel="stylesheet" href="/assets/qr.13718d0c.css" />
+<link rel="stylesheet" href="/assets/art.7e13b97e.css" /><script type="module" src="/assets/hoisted.9faefdcd.js"></script></head>
   <body class="astro-QO5XHE7C">
     <header class="astro-QO5XHE7C">
       <div class="links astro-DMQPWCEC">
@@ -79,7 +80,7 @@
 <script>
 
 </script>
-      <h1 class="title astro-QO5XHE7C"><a href="/" class="astro-QO5XHE7C">Jakesite</a> Slots</h1>
+      <h1 class="title astro-QO5XHE7C"><a href="/" class="astro-QO5XHE7C">Jakesite</a> Hover</h1>
       <!-- Global color themes --><div class="themes astro-QS7BGSLL">
   <input type="checkbox" class="chk astro-QS7BGSLL">
   <div class="menu astro-QS7BGSLL">
@@ -119,103 +120,10 @@
 </div>
     </header>
     <main class="astro-QO5XHE7C">
-      <div id="slot">
-    <div id="jackpot">Jackpot: <span id="jp">5.555.555</span></div>
-    <div id="reels">
-      <div class="reel"></div>
-      <div class="reel"></div>
-      <div class="reel"></div>
-      <div class="reel"></div>
-      <div class="reel"></div>
-    </div>
-    <div id="controls">
-      <button type="button" id="spin">SPIN</button>
-      <label>
-        <input type="checkbox" name="autoplay" id="autoplay">
-        Autoplay
-      </label>
-    </div>
-  </div><style>
-    .slot {
-      width: 100vw;
-      height: 100vh;
-      padding: 1rem;
-      background-image: url("/slots/assets/bg.jpg");
-      background-size: cover;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-family: "Roboto Condensed", sans-serif;
-    }
-
-    @media only screen and (max-width: 1200px) {
-      body {
-        background-image: url("/slots/assets/bg_small.jpg");
-      }
-    }
-
-    #reels {
-      display: flex;
-      width: 100vw;
-      height: calc((3 / 5) * 100vw);
-      max-height: calc(90vh - 50px - 40px);
-      max-width: calc((5 / 3) * (90vh - 50px - 40px));
-    }
-
-    .reel {
-      overflow: hidden;
-      width: 20%;
-      height: 100%;
-    }
-
-    .reel > .icons > img {
-      width: calc(100% + 6px);
-      margin: -3px 0 0 -3px;
-      height: auto;
-
-      /* enable gpu accelaration, fixes iOS flicker */
-      transform: translate3d(0, 0, 0);
-    }
-
-    #controls {
-      background-color: rgba(255, 255, 255, 0.9);
-      height: 50px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 5px 30px;
-    }
-
-    #controls label {
-      display: flex;
-      align-items: center;
-      margin: 0;
-    }
-
-    #controls label input {
-      margin-right: 5px;
-    }
-
-    input[type="checkbox"] {
-      width: 40px;
-      height: 40px;
-    }
-
-    #jackpot {
-      color: #d5ad6d;
-      font-size: 40px;
-      text-align: center;
-    }
-
-    #slot.inverted .reel {
-      transform: scaleY(-1);
-    }
-
-    #slot.inverted .reel > .icons > img {
-      transform: scaleY(-1);
-    }
-  </style><script src="/slots/js/slots.js"></script><script src="/slots/js/polyfill.min.js"></script>
+      <h1 class="astro-YN5WXQRK">Generate QR Code</h1><div class="wrap astro-YN5WXQRK">
+    <input id="txt" type="text" placeholder="Enter text" class="astro-YN5WXQRK">
+    <button id="btn" class="btn astro-YN5WXQRK">Generate</button>
+  </div><div class="wrap astro-YN5WXQRK" id="qr"></div><div class="wrap astro-YN5WXQRK"><a class="btn astro-YN5WXQRK" id="download" download="qr.png"> Download</a></div>
       <footer class="astro-QO5XHE7C">&copy; 2023, Jake Surrett. All rights reserved.</footer>
     </main>
     
@@ -223,3 +131,4 @@
     
   </body>
 </html>
+

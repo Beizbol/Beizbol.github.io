@@ -1,0 +1,85 @@
+---
+import Page from "../../layouts/Page.astro";
+// import Video from "../components/Video.astro";
+---
+
+<Page title="Hover">
+  <h1>Generate QR Code</h1>
+  <div class="wrap">
+    <input id="txt" type="text" placeholder="Enter text" />
+    <button id="btn" class="btn">Generate</button>
+  </div>
+  <div class="wrap" id="qr"></div>
+  <div class="wrap"><a class="btn" id="download" download="qr.png"> Download</a></div>
+</Page>
+
+<script>
+  import { QRCodeCanvas } from "@cheprasov/qrcode";
+
+  const btn = document.getElementById("btn");
+  const input = document.getElementById("txt");
+  const wrap = document.getElementById("qr");
+  const download = document.getElementById("download");
+
+  btn.onclick = makeQr;
+
+  function makeQr() {
+    const txt = input.value;
+    //TODO: add validation
+    const qr = new QRCodeCanvas(txt);
+    download.href = qr.toDataUrl();
+    download.style.display = "inline";
+    if (wrap.firstChild) {
+      wrap.removeChild(wrap.firstChild);
+    }
+
+    wrap.appendChild(qr.getCanvas());
+  }
+</script>
+<style>
+  #txt {
+    resize: none;
+    padding: 1rem;
+    overflow-y: none;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  h1 {
+    margin: 1rem;
+  }
+
+  h1,
+  .wrap {
+    text-align: center;
+  }
+
+  #qr {
+    display: block;
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+
+  #download {
+    display: none;
+
+    text-decoration: none;
+    outline: none;
+    text-align: center;
+  }
+
+  .btn {
+    border: 2px solid;
+    color: black;
+    padding: 0.75rem;
+    margin: 0.5rem;
+    font-size: 1.25rem;
+    border-radius: 0.5rem;
+    background-color: var(--color-accent);
+  }
+
+  .btn:focus,
+  .btn:hover {
+    color: var(--color-text);
+  }
+</style>
