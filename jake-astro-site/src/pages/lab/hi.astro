@@ -1,0 +1,14 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="hi">
+  <h3>Hi</h3>
+  <p id="agent">User-agent:</p>
+</Page>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    let agent = document.getElementById("agent");
+    agent.innerText += " " + navigator.userAgent;
+  });
+</script>

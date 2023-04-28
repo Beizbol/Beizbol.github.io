@@ -1,0 +1,229 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Jump">
+  <div id="opts">
+    <label id="lbl" for="obs">Options:</label>
+    <select id="sel">
+      <option id="flat">Flat</option>
+      <option id="on">On</option>
+      <option id="over">Over</option>
+      <option id="up">Up</option>
+
+      <!-- <option id="roofs">Roofs</option>
+      <option id="rope">Rope</option>
+      <option id="hoops">Hoops</option>
+      <option id="hurdles">Hurdles</option>
+      <option id="poles">Poles</option>
+      <option id="walls">Walls</option>
+      <option id="fences">Fences</option>
+      <option id="homes">Homes</option>
+      <option id="towers">Towers</option>
+      <option id="rivers">Rivers</option>
+      <option id="mountains">Mountains</option>
+      <option id="lava">Lava</option>
+      <option id="spikes">Spikes</option>
+      <option id="space">Space</option> -->
+    </select>
+  </div>
+
+  <div id="game">
+    <div id="level"></div>
+    <div id="ball"></div>
+    <div id="player"></div>
+    <div id="bat">
+      <img src="/imgs/bat.png" alt="" />
+    </div>
+  </div>
+
+  <style>
+    #lbl {
+      font-size: larger;
+      color: var(--color-text);
+    }
+
+    #level {
+      background-color: var(--color-bg-alt);
+      width: 100%;
+      height: 200%;
+    }
+
+    #opts {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    #opts:has(#up:checked) + #game #level {
+      background-color: deepskyblue;
+    }
+    #opts:has(#over:checked) + #game #level {
+      background-color: darkblue;
+    }
+    #opts:has(#on:checked) + #game #level {
+      background-color: darkslateblue;
+    }
+
+    #sel {
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      background-color: var(--color-bg-alt);
+      color: var(--color-text);
+      font-size: medium;
+      border: 1px solid var(--color-text);
+      height: 2.5rem;
+    }
+
+    #game {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: var(--color-bg-alt);
+    }
+
+    #bat {
+      position: absolute;
+      bottom: 30%;
+      left: 30%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 150px;
+      background-image: url("/imgs/bat.png");
+      border-radius: 5px;
+      transition: all 0.2s;
+    }
+
+    #bat img {
+      object-fit: contain;
+      width: 20rem;
+      height: 20rem;
+      translate: 65% -30%;
+      transform: scaleX(-1);
+    }
+
+    #bat.swing img {
+      animation: swing 1s;
+    }
+
+    #ball {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    #player {
+      position: absolute;
+      bottom: 0;
+      left: 75%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 200px;
+      background: var(--color-accent);
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    #player.idle {
+      transition: all 1s;
+      height: 25px;
+      width: 75px;
+    }
+
+    #player.swing {
+      animation: swing 1s ease-in-out;
+    }
+
+    /* #player.bunt {
+    }
+    
+    #player.take {
+    }
+
+    #player.hit {
+    }
+
+    #player.foul {
+    }
+
+    #player.miss {
+    }
+
+    #player.early {
+    }
+
+    #player.square {
+    }
+
+    #player.late {
+    } */
+
+    @keyframes swing {
+      0% {
+        translate: 65% -30%;
+        /* rotate: 0deg; */
+      }
+      10% {
+        translate: 55% -25%;
+        rotate: -50deg;
+      }
+      20% {
+        translate: 70% -45%;
+        rotate: 120deg;
+      }
+      100% {
+        translate: 65% -30%;
+        /* rotate: 0deg; */
+      }
+    }
+
+    /* @keyframes throw {
+      0% {
+        bottom: 0;
+      }
+      10% {
+        bottom: -5px;
+      }
+      50% {
+        bottom: 150px;
+      }
+      100% {
+        bottom: 0;
+      }
+    } */
+  </style>
+  <script>
+    const game = document.getElementById("game");
+    // game.addEventListener("mousedown", squat);
+    game.addEventListener("mouseup", swing);
+    // document.addEventListener("keydown", squat);
+    // document.addEventListener("keyup", jump);
+    const player = document.getElementById("player");
+    const bat = document.getElementById("bat");
+    const ball = document.getElementById("ball");
+
+    function step(event) {
+      if (player.classList.contains("squat")) return;
+      if (event.key !== " " && event.key !== "ArrowUp" && event.key !== "w" && event.button !== 0) return;
+      player.classList.add("squat");
+      console.log("squat");
+    }
+
+    function swing(event) {
+      if (bat.classList.contains("swing")) return;
+      if (event.key !== " " && event.key !== "ArrowUp" && event.key !== "w" && event.button !== 0) return;
+      bat.classList.add("swing");
+      setTimeout(() => {
+        bat.classList.remove("swing");
+      }, 500);
+      console.log("swing");
+    }
+  </script>
+</Page>

@@ -4,6 +4,8 @@ hint-report/
 dist/
 .output/
 
+_hide/
+
 # dependencies
 node_modules/
 

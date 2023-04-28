@@ -1,0 +1,36 @@
+<script>
+  function update(timestamp, frameId) {
+    const obs = document.getElementById("obs");
+    const level = document.getElementById("level");
+    const player = document.getElementById("player");
+
+    const results = {
+      obs: obs,
+      level: level,
+      player: player,
+      timestamp: timestamp,
+      frameId: frameId,
+    };
+
+    return results;
+  }
+
+  function draw(results) {
+    console.log(results);
+  }
+
+  function gameLoop(timestamp) {
+    const frameId = window.requestAnimationFrame(gameLoop);
+    // game loop content
+
+    const results = update(timestamp, frameId);
+    draw(results);
+
+    const dt = performance.now() - timestamp;
+
+    // call the next frame
+  }
+
+  // start the cycle
+  window.requestAnimationFrame(gameLoop);
+</script>

@@ -3,10 +3,11 @@ import Page from "../../layouts/Page.astro";
 // import Video from "../components/Video.astro";
 ---
 
-<Page title="Hover">
+<Page title="Tools">
   <h1>Generate QR Code</h1>
   <div class="wrap">
-    <input id="txt" type="text" placeholder="Enter text" />
+    <label for="txt">Url:</label>
+    <input id="txt" type="text" placeholder="https://www.jakesite.ca/" />
     <button id="btn" class="btn">Generate</button>
   </div>
   <div class="wrap" id="qr"></div>
@@ -37,6 +38,11 @@ import Page from "../../layouts/Page.astro";
   }
 </script>
 <style>
+  label {
+    font-size: 1.25rem;
+    margin: 0.5rem;
+  }
+
   #txt {
     resize: none;
     padding: 1rem;

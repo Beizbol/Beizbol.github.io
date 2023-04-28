@@ -1,0 +1,21 @@
+---
+import Page from "../../layouts/Page.astro";
+
+const getRounds = new Request("http://localhost:3001/golf", {
+  mode: "cors",
+});
+
+const scores = fetch(getRounds).then((response) => response.text());
+---
+
+<Page title="Golf">
+  <button id="go">Go</button>
+  <div id="rounds"></div>
+</Page>
+
+<script>
+  let rounds = document.getElementById("rounds");
+  let go = document.getElementById("go");
+  go.onclick = getRounds;
+  function getRounds() {}
+</script>

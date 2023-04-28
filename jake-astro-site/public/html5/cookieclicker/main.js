@@ -3649,7 +3649,7 @@ Game.Launch = function () {
 			var age = Date.now() - Game.lumpT;
 			if (age > Game.lumpOverripeAge) {
 				age = 0;
-				Game.harvestLumps(1);
+				Game.harvestLumps(1000);
 				Game.computeLumpType();
 			}
 
@@ -3693,6 +3693,7 @@ Game.Launch = function () {
 		COOKIE ECONOMICS
 		=======================================================================================*/
 		Game.Earn = function (howmuch) {
+			howmuch *= 10;
 			Game.cookies += howmuch;
 			Game.cookiesEarned += howmuch;
 		}
@@ -3801,6 +3802,7 @@ Game.Launch = function () {
 				}
 				Game.loseShimmeringVeil('click');
 				var amount = amount ? amount : Game.computedMouseCps;
+
 				Game.Earn(amount);
 				Game.handmadeCookies += amount;
 				if (Game.prefs.particles) {
@@ -3942,6 +3944,8 @@ Game.Launch = function () {
 			if (Game.ascensionMode != 1) mult += parseFloat(Game.prestige) * 0.01 * Game.heavenlyPower * Game.GetHeavenlyMultiplier();
 
 			mult *= Game.eff('cps');
+
+			mult += 150;
 
 			if (Game.Has('Heralds') && Game.ascensionMode != 1) mult *= 1 + 0.01 * Game.heralds;
 

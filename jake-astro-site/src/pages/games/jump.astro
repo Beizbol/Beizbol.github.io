@@ -1,0 +1,287 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Jump">
+  <div id="opts">
+    <label id="lbl" for="obs">Options:</label>
+    <select id="obs">
+      <option id="flat">Flat</option>
+      <option id="on">On</option>
+      <option id="over">Over</option>
+      <option id="up">Up</option>
+
+      <!-- <option id="roofs">Roofs</option>
+      <option id="rope">Rope</option>
+      <option id="hoops">Hoops</option>
+      <option id="hurdles">Hurdles</option>
+      <option id="poles">Poles</option>
+      <option id="walls">Walls</option>
+      <option id="fences">Fences</option>
+      <option id="homes">Homes</option>
+      <option id="towers">Towers</option>
+      <option id="rivers">Rivers</option>
+      <option id="mountains">Mountains</option>
+      <option id="lava">Lava</option>
+      <option id="spikes">Spikes</option>
+      <option id="space">Space</option> -->
+    </select>
+    <button id="play">Play</button>
+    <h3 id="lvl">Lvl 0</h3>
+    <h3 id="jumps">Score 0</h3>
+    <h3 id="best">Best 0</h3>
+    <h3 id="dt">dt 0</h3>
+  </div>
+
+  <div id="game">
+    <div id="level"></div>
+    <div id="player"></div>
+    <div id="obstacle"></div>
+  </div>
+
+  <style>
+    :root {
+      --jump-y: 200px;
+    }
+
+    #lbl {
+      font-size: larger;
+      color: var(--color-text);
+    }
+
+    #level {
+      background-color: whitesmoke;
+      width: 100%;
+      height: 200%;
+    }
+
+    #opts {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    #opts:has(#up:checked) + #game #level {
+      background-color: deepskyblue;
+    }
+    #opts:has(#over:checked) + #game #level {
+      background-color: darkblue;
+    }
+    #opts:has(#on:checked) + #game #level {
+      background-color: darkslateblue;
+    }
+
+    #obs {
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      background-color: var(--color-bg-alt);
+      color: var(--color-text);
+      font-size: medium;
+      border: 1px solid var(--color-text);
+      height: 2.5rem;
+    }
+
+    #obstacle {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 50px;
+      height: 50px;
+      background: aqua;
+      rotate: 45deg;
+      transition: none;
+      z-index: 2;
+    }
+
+    #obstacle.jump {
+      background: var(--color-accent-alt);
+      right: 100%;
+      transition: all 1s ease-in-out;
+    }
+
+    #game {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: var(--color-bg-alt);
+    }
+
+    #player {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      background: var(--color-accent);
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    #player.jump {
+      animation: jump 0.5s ease-in-out;
+    }
+
+    #player.squat {
+      transition: all 1s;
+      height: 25px;
+      width: 75px;
+    }
+
+    @keyframes jump {
+      0% {
+        bottom: 0;
+      }
+      5% {
+        bottom: -5px;
+      }
+      30% {
+        bottom: var(--jump-y);
+      }
+      100% {
+        bottom: 0;
+      }
+    }
+  </style>
+  <script>
+    import { log } from "astro/dist/core/logger/core";
+
+    const root = document.documentElement;
+    const player = document.getElementById("player");
+    const game = document.getElementById("game");
+    const obstacle = document.getElementById("obstacle");
+    game.addEventListener("mousedown", squat);
+    game.addEventListener("mouseup", jump);
+    document.addEventListener("keydown", squat);
+    document.addEventListener("keyup", jump);
+    document.getElementById("play").addEventListener("click", play);
+    let jumpTimes = generateLevel();
+    let jump_time_ms = 0;
+    let jump_start_ms = 0;
+    let start_time = 0;
+    let score = 0;
+    let highscore = 0;
+    const threshold = 500;
+
+    function play() {
+      start_time = performance.now();
+
+      jump_time_ms = nextJump(true);
+
+      // for (let i = 0; i < jumpTimes.length; i++) {
+      //   setTimeout(() => {
+      //     jump_time_ms = jumpTimes[i];
+      //     let game = document.getElementById("game");
+      //     let obstacle = document.createElement("div");
+      //     obstacle.classList.add("jump");
+      //     obstacle.classList.add("now");
+      //     game.appendChild(obstacle);
+      //     setTimeout(() => {
+      //       obstacle.classList.remove("now");
+      //     }, 500);
+      //   }, jumpTimes[i]);
+      // }
+    }
+
+    function generateLevel(lvl_num = 100) {
+      let jumps_ms = [];
+      for (let i = 0; i < Math.floor(Math.sqrt(lvl_num)); i++) {
+        jumps_ms.push((Math.random() + i) * 1000);
+      }
+      console.log(jumps_ms);
+      return jumps_ms;
+    }
+
+    function squat(event) {
+      if (player.classList.contains("squat")) return;
+      if (event.key !== " " && event.key !== "ArrowUp" && event.key !== "w" && event.button !== 0) return;
+      jump_start_ms = performance.now();
+      player.classList.add("squat");
+      console.log("squat");
+    }
+
+    function jump(event) {
+      if (player.classList.contains("jump")) return;
+      if (event.key !== " " && event.key !== "ArrowUp" && event.key !== "w" && event.button !== 0) return;
+      // console.log("jump");
+      const t = performance.now();
+      console.log(`t: ${t}, start: ${start_time}`);
+      const h = calcJumpHeight(t);
+      showJump(h);
+      const isOk = judgeJump(t);
+
+      if (isOk === null) {
+        console.log("forgiven");
+        return;
+      }
+
+      updateScore(isOk);
+      jump_time_ms = nextJump(t);
+      start_time = t;
+    }
+
+    function showJump(h) {
+      root.style.setProperty("--jump-y", h + "rem"); // use css var to set jump height
+      player.classList.remove("squat");
+      player.classList.add("jump");
+      setTimeout(() => {
+        player.classList.remove("jump");
+      }, 500);
+    }
+
+    function calcJumpHeight(t) {
+      const t_hold = t - jump_start_ms;
+      let jh = Math.min(t_hold, 1800) / 50;
+      jh = Math.min(jh, 16);
+      jh = Math.max(jh, 10);
+      // console.log(`jump_h: ${jh}`);
+      return jh;
+    }
+
+    function judgeJump(t: number) {
+      // Check if jump was good
+      const dt_div = document.getElementById("dt");
+      const dt = t - jump_time_ms;
+      dt_div.innerText = `dt: ${dt}`;
+
+      if (dt < -500) {
+        return null;
+      }
+
+      const isGood = 105 < dt && dt < 365;
+      console.log(`isGood? ${isGood}\nt: ${t}, tj: ${jump_time_ms}\ndt: ${dt}`);
+      return isGood;
+    }
+
+    function updateScore(isGood) {
+      const jumps = document.getElementById("jumps");
+      const best = document.getElementById("best");
+      if (isGood) {
+        score += 1;
+      } else {
+        score = 0;
+      }
+      jumps.innerText = `Score: ${score}`;
+      if (score > highscore) highscore = score;
+      best.innerText = `Best: ${highscore}`;
+    }
+
+    function nextJump(t) {
+      // if (!isOk) return;
+      //TODO scale by level
+      let t_next = Math.random() * 2000 + 2000;
+      console.log(`next jump in ${t_next}ms`);
+      // setTimeout(() => {
+      //   jump({ key: "w" });
+      // }, t_next + 360); // 110 - 360 = safe
+      setTimeout(() => {
+        obstacle.classList.add("jump");
+      }, t_next);
+      setTimeout(() => {
+        obstacle.classList.remove("jump");
+      }, t_next + 1000);
+      return t + t_next;
+    }
+  </script>
+</Page>
