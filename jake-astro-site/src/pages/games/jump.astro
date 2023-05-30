@@ -1,47 +1,170 @@
 ---
 import Page from "../../layouts/Page.astro";
+
+const jdev = false;
 ---
 
 <Page title="Jump">
+  <dialog id="resultsDialog">
+    <h1>Game Over</h1>
+    <p>Score: <span id="res-score"></span></p>
+    <p>Best: <span id="res-best"></span></p>
+    <button class="restart">Restart</button>
+  </dialog>
+  <dialog id="pauseDialog">
+    <h1>Paused</h1>
+    <button id="resume">Resume</button>
+  </dialog>
   <div id="opts">
     <label id="lbl" for="obs">Options:</label>
     <select id="obs">
-      <option id="flat">Flat</option>
-      <option id="on">On</option>
-      <option id="over">Over</option>
-      <option id="up">Up</option>
-
-      <!-- <option id="roofs">Roofs</option>
-      <option id="rope">Rope</option>
-      <option id="hoops">Hoops</option>
-      <option id="hurdles">Hurdles</option>
-      <option id="poles">Poles</option>
-      <option id="walls">Walls</option>
-      <option id="fences">Fences</option>
-      <option id="homes">Homes</option>
-      <option id="towers">Towers</option>
-      <option id="rivers">Rivers</option>
-      <option id="mountains">Mountains</option>
-      <option id="lava">Lava</option>
-      <option id="spikes">Spikes</option>
-      <option id="space">Space</option> -->
+      <option id="flat">Cars</option>
+      <option id="on">Steps</option>
+      <option id="over">Gaps</option>
     </select>
-    <button id="play">Play</button>
+    <!-- <button id="play">Play</button> -->
     <h3 id="lvl">Lvl 0</h3>
     <h3 id="jumps">Score 0</h3>
     <h3 id="best">Best 0</h3>
-    <h3 id="dt">dt 0</h3>
+    <h3 id="lives">Lives 3</h3>
+    {jdev && <h3 id="dt">dt 0</h3>}
+    <button id="btnGo">Pause</button>
   </div>
 
   <div id="game">
-    <div id="level"></div>
+    <div class="bg" id="back"></div>
+    <div class="bg" id="back2"></div>
+    <div class="bg" id="far"></div>
+    <div class="bg" id="far2"></div>
+    <div class="bg" id="mid"></div>
+    <div class="bg" id="mid2"></div>
+    <div class="bg" id="near"></div>
+    <div class="bg" id="near2"></div>
+    <div class="bg" id="top"></div>
+    <div class="bg" id="top2"></div>
+    <!-- <div id="floor"></div> -->
+    <!-- <div id="hole"></div> -->
+    <div id="car"></div>
     <div id="player"></div>
-    <div id="obstacle"></div>
+    <!-- <div id="obstacle"></div> -->
   </div>
 
   <style>
     :root {
-      --jump-y: 200px;
+      --jump-y: -200px;
+    }
+
+    @keyframes swipe {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* @keyframes swipe2 {
+      0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(50%);
+      }
+    } */
+
+    body,
+    main {
+      overflow-x: hidden;
+    }
+
+    #game {
+      margin: auto;
+      position: relative;
+      height: 348px;
+      width: 576px;
+      overflow: hidden;
+      background: var(--color-bg-alt);
+    }
+
+    #floor {
+      position: absolute;
+      width: 100%;
+      height: 1rem;
+      bottom: 0;
+      background-color: navy;
+      overflow: hidden;
+    }
+
+    #floor.good {
+      background-color: green;
+    }
+
+    #floor.fail {
+      background-color: brown;
+    }
+
+    .bg {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: calc(2 * 576px);
+      height: 324px;
+      background-size: contain;
+      background-repeat: repeat-x;
+      overflow: hidden;
+    }
+
+    #back {
+      animation: swipe linear 64s infinite;
+      background-image: url("/assets/free-city-backgrounds-pixel-art/city-1/1.png");
+    }
+    /* #back2 {
+      animation: swipe2 linear 64s infinite;
+      background-image: url("/assets/free-city-backgrounds-pixel-art/city-1/1.png");
+    } */
+
+    #far {
+      animation: swipe linear 32s infinite;
+      background-image: url("/assets/free-city-backgrounds-pixel-art/city-1/2.png");
+    }
+    /* #far2 {
+      animation: swipe2 linear 32s infinite;
+      background-image: url("/assets/free-city-backgrounds-pixel-art/city-1/2.png");
+    } */
+    #mid {
+      animation: swipe linear 12s infinite;
+      background-image: url("/assets/free-city-backgrounds-pixel-art/city-1/3.png");
+    }
+    /* #mid2 {
+      animation: swipe2 linear 12s infinite;
+      background-image: url("/assets/free-city-backgrounds-pixel-art/city-1/3.png");
+    } */
+    #near {
+      animation: swipe linear 6s infinite;
+      background-image: url("/assets/free-city-backgrounds-pixel-art/city-1/4.png");
+    }
+    /* #near2 {
+      animation: swipe2 linear 6s infinite;
+      background-image: url("/assets/free-city-backgrounds-pixel-art/city-1/4.png");
+    } */
+    #top {
+      animation: swipe linear 2s infinite;
+      background-image: url("/assets/free-city-backgrounds-pixel-art/city-1/5.png");
+    }
+    /* #top2 {
+      animation: swipe2 linear 2s infinite;
+      background-image: url("/assets/free-city-backgrounds-pixel-art/city-1/5.png");
+    } */
+
+    #back.paused,
+    #far.paused,
+    #mid.paused,
+    #near.paused,
+    #top.paused {
+      animation-play-state: paused;
+      /* animation: none; */
     }
 
     #lbl {
@@ -49,16 +172,11 @@ import Page from "../../layouts/Page.astro";
       color: var(--color-text);
     }
 
-    #level {
-      background-color: whitesmoke;
-      width: 100%;
-      height: 200%;
-    }
-
     #opts {
       display: flex;
       gap: 1rem;
       align-items: center;
+      margin-bottom: 0.5rem;
     }
 
     #opts:has(#up:checked) + #game #level {
@@ -80,88 +198,133 @@ import Page from "../../layouts/Page.astro";
       font-size: medium;
       border: 1px solid var(--color-text);
       height: 2.5rem;
+      overflow: hidden;
+    }
+
+    #hole {
+      position: absolute;
+      bottom: -80%;
+      right: -400px;
+      width: 400px;
+      height: 100%;
+      background: var(--color-text);
+      transition: none;
+    }
+
+    #car {
+      position: absolute;
+      bottom: 0;
+      right: -64px;
+      width: 64px;
+      height: 64px;
+      background-image: url("/assets/car.svg");
+      background-size: contain;
+      transition: none;
     }
 
     #obstacle {
       position: absolute;
-      bottom: 0;
-      right: 0;
+      bottom: 20%;
+      right: -200px;
       width: 50px;
       height: 50px;
-      background: aqua;
+      background: var(--color-accent-alt);
       rotate: 45deg;
       transition: none;
       z-index: 2;
     }
 
-    #obstacle.jump {
-      background: var(--color-accent-alt);
-      right: 100%;
+    #car.jump {
+      right: 150%;
       transition: all 1s ease-in-out;
     }
 
-    #game {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      background: var(--color-bg-alt);
+    #hole.jump {
+      right: 150%;
+      transition: all 1s ease-in-out;
+    }
+
+    #obstacle.jump {
+      right: 170%;
+      transition: all 1s ease-in-out;
     }
 
     #player {
       position: absolute;
       bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 50px;
-      height: 50px;
+      left: 30%;
+      width: 2rem;
+      height: 2rem;
       background: var(--color-accent);
       border-radius: 50%;
-      transition: all 0.2s;
+      transition: 0.5s cubic-bezier(0.33333, 0, 0.66667, 0.33333);
     }
 
     #player.jump {
-      animation: jump 0.5s ease-in-out;
+      transition: 0.5s cubic-bezier(0.33333, 0.66667, 0.66667, 1);
+      transform: translateY(var(--jump-y));
     }
 
     #player.squat {
-      transition: all 1s;
-      height: 25px;
-      width: 75px;
+      transition: 0.5s ease-in;
+      height: 1.5rem;
+      width: 3rem;
+      left: 29%;
     }
 
-    @keyframes jump {
-      0% {
-        bottom: 0;
-      }
-      5% {
-        bottom: -5px;
-      }
-      30% {
-        bottom: var(--jump-y);
-      }
-      100% {
-        bottom: 0;
-      }
+    dialog {
+      text-align: right;
+      border-radius: 0.5rem;
+      background-color: var(--color-bg-alt);
+      color: var(--color-text);
+    }
+
+    dialog::backdrop {
+      background: black;
+      opacity: 0.5;
+    }
+
+    button {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 2px solid var(--color-text);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    button:hover,
+    button:focus {
+      background-color: var(--color-accent);
     }
   </style>
   <script>
-    import { log } from "astro/dist/core/logger/core";
-
+    const resBtn = document.getElementById("resume");
+    resBtn.addEventListener("click", resume);
     const root = document.documentElement;
+    const go = document.getElementById("btnGo");
+    go.addEventListener("click", pause);
     const player = document.getElementById("player");
     const game = document.getElementById("game");
     const obstacle = document.getElementById("obstacle");
+    const hole = document.getElementById("hole");
+    const car = document.getElementById("car");
     game.addEventListener("mousedown", squat);
     game.addEventListener("mouseup", jump);
     document.addEventListener("keydown", squat);
     document.addEventListener("keyup", jump);
-    document.getElementById("play").addEventListener("click", play);
-    let jumpTimes = generateLevel();
+    // document.getElementById("play").addEventListener("click", play);
+    // let jumpTimes = generateLevel();
+
+    let isGameOver = false;
+    let isPaused = false;
     let jump_time_ms = 0;
     let jump_start_ms = 0;
     let start_time = 0;
     let score = 0;
-    let highscore = 0;
+    let highscore = +localStorage.getItem("best");
+    if (!highscore) {
+      highscore = 0;
+    }
     const threshold = 500;
 
     function play() {
@@ -194,7 +357,11 @@ import Page from "../../layouts/Page.astro";
     }
 
     function squat(event) {
-      if (player.classList.contains("squat")) return;
+      if (isPaused) {
+        console.log("spaused");
+        return;
+      }
+      if (player.classList.contains("squat") || player.classList.contains("jump") || player.classList.contains("fall")) return;
       if (event.key !== " " && event.key !== "ArrowUp" && event.key !== "w" && event.button !== 0) return;
       jump_start_ms = performance.now();
       player.classList.add("squat");
@@ -202,9 +369,17 @@ import Page from "../../layouts/Page.astro";
     }
 
     function jump(event) {
-      if (player.classList.contains("jump")) return;
+      if (isPaused) {
+        console.log("jpaused");
+        return;
+      }
+      if (player.classList.contains("jump") || player.classList.contains("fall") || !player.classList.contains("squat")) {
+        console.log("already jumping");
+        return;
+      }
       if (event.key !== " " && event.key !== "ArrowUp" && event.key !== "w" && event.button !== 0) return;
       // console.log("jump");
+
       const t = performance.now();
       console.log(`t: ${t}, start: ${start_time}`);
       const h = calcJumpHeight(t);
@@ -227,7 +402,11 @@ import Page from "../../layouts/Page.astro";
       player.classList.add("jump");
       setTimeout(() => {
         player.classList.remove("jump");
-      }, 500);
+        player.classList.add("fall");
+        setTimeout(() => {
+          player.classList.remove("fall");
+        }, 400);
+      }, 600);
     }
 
     function calcJumpHeight(t) {
@@ -236,21 +415,37 @@ import Page from "../../layouts/Page.astro";
       jh = Math.min(jh, 16);
       jh = Math.max(jh, 10);
       // console.log(`jump_h: ${jh}`);
-      return jh;
+      return -jh;
     }
 
-    function judgeJump(t: number) {
+    function judgeJump(t) {
+      const floor = document.getElementById("floor");
       // Check if jump was good
-      const dt_div = document.getElementById("dt");
       const dt = t - jump_time_ms;
-      dt_div.innerText = `dt: ${dt}`;
+      const dt_div = document.getElementById("dt");
+      if (dt_div) {
+        dt_div.innerText = `dt: ${dt}`;
+      }
 
       if (dt < -500) {
         return null;
       }
 
       const isGood = 105 < dt && dt < 365;
-      console.log(`isGood? ${isGood}\nt: ${t}, tj: ${jump_time_ms}\ndt: ${dt}`);
+
+      if (isGood) {
+        floor.classList.add("good");
+        setTimeout(() => {
+          floor.classList.remove("good");
+        }, 400);
+      } else if (score > 0) {
+        floor.classList.add("fail");
+        setTimeout(() => {
+          floor.classList.remove("fail");
+        }, 400);
+      }
+
+      // console.log(`isGood? ${isGood}\nt: ${t}, tj: ${jump_time_ms}\ndt: ${dt}`);
       return isGood;
     }
 
@@ -263,7 +458,10 @@ import Page from "../../layouts/Page.astro";
         score = 0;
       }
       jumps.innerText = `Score: ${score}`;
-      if (score > highscore) highscore = score;
+      if (score > highscore) {
+        highscore = score;
+        localStorage.setItem("best", highscore.toString());
+      }
       best.innerText = `Best: ${highscore}`;
     }
 
@@ -277,11 +475,40 @@ import Page from "../../layouts/Page.astro";
       // }, t_next + 360); // 110 - 360 = safe
       setTimeout(() => {
         obstacle.classList.add("jump");
+        hole.classList.add("jump");
+        car.classList.add("jump");
       }, t_next);
       setTimeout(() => {
         obstacle.classList.remove("jump");
+        hole.classList.remove("jump");
+        car.classList.remove("jump");
       }, t_next + 1000);
       return t + t_next;
+    }
+
+    updateScore(false);
+
+    function showResults() {
+      const resultsDialog = document.getElementById("resultsDialog") as HTMLDialogElement;
+      resultsDialog.showModal();
+    }
+
+    const pauseDialog = document.getElementById("pauseDialog") as HTMLDialogElement;
+    const bgs = document.getElementsByClassName("bg");
+    function pause() {
+      isPaused = true;
+      for (let i = 0; i < bgs.length; i++) {
+        bgs[i].classList.add("paused");
+      }
+      pauseDialog.showModal();
+    }
+
+    function resume() {
+      pauseDialog.close();
+      for (let i = 0; i < bgs.length; i++) {
+        bgs[i].classList.remove("paused");
+      }
+      isPaused = false;
     }
   </script>
 </Page>

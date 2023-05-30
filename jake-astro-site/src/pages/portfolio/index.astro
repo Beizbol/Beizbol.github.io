@@ -5,6 +5,8 @@ import Gallery from "../../components/Gallery.astro";
 
 <Page title="Portfolio">
   <section>
+    <div id="box"></div>
+    <h2>About</h2>
     <h3>Recent graduate seeking software positions in team-oriented environments.</h3>
     <ul>
       <li>2+ years of co-op and internship experiences in software development.</li>
@@ -588,9 +590,21 @@ import Gallery from "../../components/Gallery.astro";
   </section>
 
   <style>
+    #box {
+      position: sticky;
+      top: 0;
+      width: 10rem;
+      height: 10rem;
+      background-color: aqua;
+      grid-row: span 1000;
+    }
+
     section {
+      display: grid;
+      grid-template-columns: 12rem 1fr;
       padding: 1rem;
       font-size: larger;
+      background-color: blueviolet;
     }
 
     .tools {

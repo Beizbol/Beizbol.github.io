@@ -4,20 +4,22 @@ import Page from "../layouts/Page.astro";
 ---
 
 <Page title="Home">
-  <h1>Welcome to <span class="text-gradient">Jakesite</span>.</h1>
   <div>
-    <h3>Work</h3>
-    <ul role="list" class="link-card-grid">
-      <Card href="/portfolio" title="Portfolio" body="Learn about my skills and experience in computer systems." />
-      <Card href="/contact" title="Contact" body="Feel free to reach out." />
-    </ul>
-  </div>
-  <div>
-    <h3>Play</h3>
-    <ul role="list" class="link-card-grid">
-      <Card href="/games" title="Games" body="Play a round or two... or ten." />
-      <Card href="/consoles" title="Consoles" body="Fun to look at and maybe interact with." />
-    </ul>
+    <h1>Welcome to <span class="text-gradient">Jakesite</span>.</h1>
+    <div>
+      <h3>Work</h3>
+      <ul role="list" class="link-card-grid">
+        <Card href="/portfolio" title="Portfolio" body="Learn about my skills and experience in computer systems." />
+        <Card href="/contact" title="Contact" body="Feel free to reach out." />
+      </ul>
+    </div>
+    <div>
+      <h3>Play</h3>
+      <ul role="list" class="link-card-grid">
+        <Card href="/games" title="Games" body="Play a round or two... or ten." />
+        <Card href="/consoles" title="Consoles" body="Fun to look at and maybe interact with." />
+      </ul>
+    </div>
   </div>
 </Page>
 
@@ -65,7 +67,7 @@ import Page from "../layouts/Page.astro";
 
   .link-card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(24ch, 56ch));
     gap: 1rem;
     padding: 0;
   }

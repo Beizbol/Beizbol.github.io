@@ -1,0 +1,160 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Bounce">
+  <div id="wrap">
+    <canvas id="canvas"> </canvas>
+    <div class="pp" id="pause">&#x23F8</div>
+    <div class="pp" id="play">&#x23F5</div>
+  </div>
+  <h3 id="bounces"></h3>
+  <p>Note: click/tap to pause</p>
+</Page>
+<script>
+  const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+  const play = document.getElementById("play");
+  const bounces = document.getElementById("bounces");
+  const ctx = canvas.getContext("2d", { alpha: false });
+
+  let state = {
+    running: true,
+    x: 0,
+    y: 0,
+    dx: 3,
+    dy: -3,
+    bounces: 0,
+    color: "hsl(0 100% 70%)",
+    frame: null,
+  };
+
+  function init() {
+    if (!ctx) {
+      console.error("Canavas not supported :(");
+    }
+    const dpr = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    state.x = canvas.width / 2;
+    state.y = canvas.height - 25;
+
+    canvas.addEventListener("click", (ev) => {
+      if (state.running) {
+        pause();
+      } else {
+        nextFrame();
+      }
+    });
+
+    play.addEventListener("click", (ev) => {
+      if (state.running) {
+        pause();
+      } else {
+        nextFrame();
+      }
+    });
+
+    nextFrame();
+  }
+
+  function nextFrame() {
+    console.log("next");
+    state.running = true;
+    canvas.classList.remove("paused");
+    state.frame = window.requestAnimationFrame(draw);
+  }
+
+  function pause() {
+    console.log("pause");
+    state.running = false;
+    canvas.classList.add("paused");
+    window.cancelAnimationFrame(state.frame);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBall();
+    state.x += state.dx;
+    state.y += state.dy;
+
+    if (state.y + state.dy > canvas.height - 5 || state.y + state.dy < 5) {
+      state.dy *= -1;
+      state.bounces += 1;
+    }
+
+    if (state.x + state.dx > canvas.width - 5 || state.x + state.dx < 5) {
+      state.dx *= -1;
+      state.bounces += 1;
+    }
+
+    bounces.innerText = `Bounces: ${state.bounces}`;
+    state.color = `hsl(${state.bounces % 255} 100% 70%)`;
+
+    nextFrame();
+  }
+
+  function drawBall() {
+    ctx.beginPath();
+    ctx.arc(state.x, state.y, 10, 0, Math.PI * 2);
+    ctx.fillStyle = state.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  init();
+</script>
+<style>
+  #canvas {
+    /* background-color: black; */
+
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  #wrap {
+    max-height: 100%;
+  }
+
+  .pp {
+    text-align: center;
+    opacity: 0.5;
+    position: absolute;
+    min-width: 2rem;
+    min-height: 2rem;
+    aspect-ratio: 1 / 1;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    display: none;
+    align-items: flex-end;
+    justify-items: center;
+    padding: 0.75rem;
+    margin: 0;
+    border-radius: 0.5rem;
+    z-index: 9;
+    font-size: 2rem;
+    background-color: #222;
+  }
+
+  #wrap:active .pp {
+    color: aqua;
+  }
+
+  #wrap:hover #play {
+    display: none;
+  }
+
+  #wrap:hover #pause {
+    display: flex;
+  }
+
+  #wrap:hover #canvas.paused ~ #play {
+    display: flex;
+  }
+
+  #wrap:hover #canvas.paused ~ #pause {
+    display: none;
+  }
+</style>

@@ -50,6 +50,11 @@ const year = new Date().getFullYear();
         overflow-y: hidden;
       }
 
+      /* #jslot {
+        text-align: center;
+        width: 100%;
+      } */
+
       main {
         display: flex;
         flex-direction: column;
@@ -57,7 +62,7 @@ const year = new Date().getFullYear();
         gap: 1rem;
         margin-top: 3rem;
         overflow-y: auto;
-        height: calc(96vh - 3rem);
+        min-height: calc(96vh - 3rem);
       }
 
       header {
@@ -87,7 +92,7 @@ const year = new Date().getFullYear();
 
       footer {
         text-align: center;
-        padding: 2rem;
+        padding-top: 2rem;
         margin: 2rem;
       }
     </style>
