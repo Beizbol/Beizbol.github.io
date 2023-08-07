@@ -1,24 +1,46 @@
 ---
 import Nav from "../components/Nav.astro";
 import Theme from "../components/Theme.astro";
+import { ViewTransitions } from "astro:transitions";
 
 export interface Props {
   title: string;
+  filename?: string;
 }
 
-const { title } = Astro.props;
+const { title, filename } = Astro.props;
 
 const year = new Date().getFullYear();
+
+const isApp = filename !== undefined;
+// console.log(isApp);
+// console.log(filename);
+const pwa = `/apps/${filename}/manifest.json`;
+const app = `/apps/${filename}/app.js`;
 ---
 
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content={title} />
     <title>{title}</title>
+    <ViewTransitions />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
+    {isApp && <link rel="manifest" href={pwa} />}
+    {isApp && <script is:inline src={app} />}
+
+    <!-- <style>
+      main,
+      footer {
+        text-align: center;
+      }
+    </style> -->
   </head>
   <body>
     <header>
@@ -27,7 +49,9 @@ const year = new Date().getFullYear();
       <Theme />
     </header>
     <main>
-      <slot />
+      <article>
+        <slot />
+      </article>
       <footer>&copy; {year}, Jake Surrett. All rights reserved.</footer>
     </main>
     <style>

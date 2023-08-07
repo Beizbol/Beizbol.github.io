@@ -190,12 +190,12 @@
     // console.log("hello theme");
     const theme = localStorage.getItem("theme");
     // console.log(theme);
-    if (theme === null || theme === "") {
+    if (theme === null || theme === "" || theme === undefined) {
       return "darkTheme";
     }
     const sel = document.getElementById("themeSelect") as HTMLSelectElement | null;
     // console.log(chk);
-    if (sel === null) {
+    if (sel === null || sel === undefined) {
       return;
     }
     sel.value = theme;

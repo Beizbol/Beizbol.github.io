@@ -1,7 +1,7 @@
 {
   "name": "jakesite",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -15,16 +15,14 @@
   "dependencies": {
     "@astrojs/sitemap": "^1.0.1",
     "@cheprasov/qrcode": "^0.1.0",
-    "@upstash/redis": "^1.20.2",
+    "@vite-pwa/astro": "^0.0.5",
     "astro": "^2.0.16",
     "canvas-confetti": "^1.6.0",
     "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.5.28",
-    "vite-plugin-wasm-pack": "^0.1.12"
+    "jspdf-autotable": "^3.5.28"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.6.0",
-    "@vite-pwa/astro": "^0.0.5",
     "prettier": "^2.8.4",
     "prettier-plugin-astro": "^0.8.0"
   }

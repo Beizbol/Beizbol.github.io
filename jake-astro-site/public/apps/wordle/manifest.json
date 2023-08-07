@@ -1,0 +1,29 @@
+ 
+{
+    "name": "JakeSite Wordle",
+    "short_name": "JS-Wordle",
+    "id": "jakesite-games-wordle",
+    "start_url": "/games/wordle/",
+    "theme_color": "orange",
+    "background_color": "#111",
+    "description": "Pick letters to guess the word in 6 tries or less in this take on the popular Wordle.",
+    "icons": [
+        {
+          "src": "pwa-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "src": "pwa-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        },
+        {
+          "src": "pwa-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any maskable"
+        }
+      ],
+    "display": "standalone"
+  }

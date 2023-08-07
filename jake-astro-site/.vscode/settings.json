@@ -1,6 +1,11 @@
 {
     "[astro]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "astro-build.astro-vscode"
+    },
+    "[typescript]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "vscode.typescript-language-features"
     },
     "spellright.language": [
         "en"

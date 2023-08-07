@@ -4,104 +4,187 @@ import Page from "../../layouts/Page.astro";
 ---
 
 <Page title="Games">
-  <h1>Welcome to my <span class="text-gradient">Arcade</span></h1>
-  <p class="instructions">
-    Check out the newest additions and latest upgrades to the arcade.<br />
-    <strong>New:</strong>
-    <code>tic-tac-toe</code> |
-    <strong>Improved:</strong>
-    <code>wordle</code>
-  </p>
-  <section>
-    <h3>Home-Made</h3>
-    <ul role="list" class="link-card-grid">
-      <Card href="/games/wordle" title="Wordle" body="Guess all the letters in six tries or less." />
-      <Card href="/games/jigsaw" title="Jigsaw" body="Put together the puzzle to reveal the image." />
-      <Card href="/games/tictactoe" title="TicTacToe" body="The classic 'X's and 'O's" />
-      <Card href="/games/jump" title="Jump" body="Jump in time to set a record" />
-      <!-- <Card href="/games/minecraft" title="Games" body="Explore a voxel world in minecraft js edition." />
+	<h1>Welcome to my <span class="text-gradient">Arcade</span></h1>
+	<p class="instructions">
+		Check out the newest additions and latest upgrades to the arcade.<br />
+		<strong>New:</strong>
+		<code>tic-tac-toe</code> |
+		<strong>Improved:</strong>
+		<code>wordle</code>
+	</p>
+	<section>
+		<h3>Home-Made</h3>
+		<ul role="list" class="link-card-grid">
+			<Card
+				href="/games/ambush"
+				title="Ambush"
+				body="Prepare your army to hold the line!"
+			/>
+			<Card
+				href="/games/highnoon"
+				title="High Noon"
+				body="Dueling pistols outside the saloon."
+			/>
+			<Card
+				href="/games/wordle"
+				title="Wordle"
+				body="Guess all the letters in six tries or less."
+			/>
+			<Card
+				href="/games/jigsaw"
+				title="Jigsaw"
+				body="Put together the puzzle to reveal the image."
+			/>
+			<Card
+				href="/games/jump"
+				title="Jump"
+				body="Jump in time to set a record"
+			/>
+			<Card
+				href="/games/tictactoe"
+				title="TicTacToe"
+				body="The classic 'X's and 'O's"
+			/>
+
+			<!-- <Card href="/games/minecraft" title="Games" body="Explore a voxel world in minecraft js edition." />
         <Card href="/games/2048" title="Contact" body="Stack and combine matching tiles to reach 2048." />
         <Card href="./blog" title="Blog" body="An attempt to make permanent learning progress." /> -->
-    </ul>
-  </section>
-  <section>
-    <h3>Hand-Picked</h3>
-    <ul role="list" class="link-card-grid">
-      <!-- <Card href="/games/2048" title="2048" body="Stack and combine matching tiles to reach 2048." /> -->
-      <Card href="/games/age-of-war" title="Age of War" body="Race through the ages to survive and defeat your opponent." />
-      <Card href="/html5/asteroids/index.html" title="Asteroids" body="Dodge & defend your ship from the splitting space rocks." />
-      <Card href="/html5/breakout/index.html" title="Breakout" body="The classic brick breaker game." />
-      <!-- <Card href="/html5/chess/index.html" title="Chess" body="The age old battle of the mind." /> -->
-      <Card href="/games/connect4" title="Connect-4" body="Drop chips to make a line of 4 before your opponent." />
-      <Card href="/html5/cookieclicker/index.html" title="Cookie Clicker" body="The original exponential idle game." />
-      <Card href="/html5/chromedino/index.html" title="Dino Jump" body="Jump the cacti and duck the birds." />
-      <Card href="/html5/flappybird/index.html" title="Flappy Bird" body="The age old battle of the mind." />
-      <Card href="/games/minecraft" title="Minecraft JS" body="Explore a voxel world in the Minecraft JS Edition." />
-      <Card href="/games/motherload" title="Motherload" body="Mine and explore an alien planet, just don't run out of fuel!" />
-      <Card href="/html5/pacman/index.html" title="Pacman" body="The age old battle of the mind." />
-      <Card href="/games/tanks" title="Tanks" body="Shoot a variety of projectiles to clear the battlefield of enemy tanks." />
-      <Card href="/html5/tetris/index.html" title="Tetris" body="The age old battle of the mind." />
-      <Card href="/games/whack" title="Whack-a-Mole" body="How many can you hit before time runs out?" />
-      <Card href="/games/worlds-hardest-game" title="World's Hardest Game" body="Put your skills to the test with each harder level." />
-    </ul>
-  </section>
+		</ul>
+	</section>
+	<section>
+		<h3>Hand-Picked</h3>
+		<ul role="list" class="link-card-grid">
+			<!-- <Card href="/games/2048" title="2048" body="Stack and combine matching tiles to reach 2048." /> -->
+			<Card
+				href="/games/age-of-war"
+				title="Age of War"
+				body="Race through the ages to survive and defeat your opponent."
+			/>
+			<Card
+				href="/html5/asteroids/index.html"
+				title="Asteroids"
+				body="Dodge & defend your ship from the splitting space rocks."
+			/>
+			<Card
+				href="/html5/breakout/index.html"
+				title="Breakout"
+				body="The classic brick breaker game."
+			/>
+			<!-- <Card href="/html5/chess/index.html" title="Chess" body="The age old battle of the mind." /> -->
+			<Card
+				href="/games/connect4"
+				title="Connect-4"
+				body="Drop chips to make a line of 4 before your opponent."
+			/>
+			<Card
+				href="/html5/cookieclicker/index.html"
+				title="Cookie Clicker"
+				body="The original exponential idle game."
+			/>
+			<Card
+				href="/html5/chromedino/index.html"
+				title="Dino Jump"
+				body="Jump the cacti and duck the birds."
+			/>
+			<Card
+				href="/html5/flappybird/index.html"
+				title="Flappy Bird"
+				body="The age old battle of the mind."
+			/>
+			<Card
+				href="/games/minecraft"
+				title="Minecraft JS"
+				body="Explore a voxel world in the Minecraft JS Edition."
+			/>
+			<Card
+				href="/games/motherload"
+				title="Motherload"
+				body="Mine and explore an alien planet, just don't run out of fuel!"
+			/>
+			<Card
+				href="/html5/pacman/index.html"
+				title="Pacman"
+				body="The age old battle of the mind."
+			/>
+			<Card
+				href="/games/tanks"
+				title="Tanks"
+				body="Shoot a variety of projectiles to clear the battlefield of enemy tanks."
+			/>
+			<Card
+				href="/html5/tetris/index.html"
+				title="Tetris"
+				body="The age old battle of the mind."
+			/>
+			<Card
+				href="/games/whack"
+				title="Whack-a-Mole"
+				body="How many can you hit before time runs out?"
+			/>
+			<Card
+				href="/games/worlds-hardest-game"
+				title="World's Hardest Game"
+				body="Put your skills to the test with each harder level."
+			/>
+		</ul>
+	</section>
 </Page>
 
 <style>
-  :root {
-    --color-gradient: linear-gradient(0deg, red, orange);
-  }
+	:root {
+		--color-gradient: linear-gradient(0deg, red, orange);
+	}
 
-  h1 {
-    margin: 2rem 0;
-  }
+	h1 {
+		margin: 2rem 0;
+	}
 
-  section {
-    margin: 1rem 0;
-    /* background-color: aquamarine; */
-  }
+	section {
+		margin: 1rem 0;
+		/* background-color: aquamarine; */
+	}
 
-  .text-gradient {
-    font-weight: 900;
-    background-image: var(--color-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 100% 200%;
-    background-position-y: 100%;
-    border-radius: 0.4rem;
-    animation: pulse 4s ease-in-out infinite;
-  }
+	.text-gradient {
+		font-weight: 900;
+		background-image: var(--color-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 100% 200%;
+		background-position-y: 100%;
+		border-radius: 0.4rem;
+		animation: pulse 4s ease-in-out infinite;
+	}
 
-  @keyframes pulse {
-    0%,
-    100% {
-      background-position-y: 0%;
-    }
-    50% {
-      background-position-y: 80%;
-    }
-  }
+	@keyframes pulse {
+		0%,
+		100% {
+			background-position-y: 0%;
+		}
+		50% {
+			background-position-y: 80%;
+		}
+	}
 
-  .instructions {
-    line-height: 1.6;
-    margin: 1rem 0;
-    background: #4f39fa;
-    padding: 1rem;
-    border-radius: 0.4rem;
-    color: white;
-  }
+	.instructions {
+		line-height: 1.6;
+		margin: 1rem 0;
+		background: #4f39fa;
+		padding: 1rem;
+		border-radius: 0.4rem;
+		color: white;
+	}
 
-  .instructions code {
-    font-size: 0.875em;
-    border: 0.1em solid var(--color-border);
-    border-radius: 4px;
-    padding: 0.15em 0.25em;
-  }
+	.instructions code {
+		font-size: 0.875em;
+		border: 0.1em solid var(--color-border);
+		border-radius: 4px;
+		padding: 0.15em 0.25em;
+	}
 
-  .link-card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(28ch, 1fr));
-    gap: 1rem;
-    padding: 0;
-  }
+	.link-card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(28ch, 1fr));
+		gap: 1rem;
+		padding: 0;
+	}
 </style>

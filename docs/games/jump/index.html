@@ -2,12 +2,26 @@
 <html lang="en" class="astro-QO5XHE7C">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta name="generator" content="Astro v2.3.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/pwa-192x192.png">
+    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="theme-color" content="#ffffff">
     <title>Jump</title>
-  <link rel="stylesheet" href="/assets/jump.3772c41a.css" />
-<link rel="stylesheet" href="/assets/art.5f5dd223.css" /><script type="module" src="/assets/hoisted.96a5b039.js"></script></head>
+    <meta name="description" content="Jump">
+
+    
+    
+
+    <!-- <style>
+      main,
+      footer {
+        text-align: center;
+      }
+    </style> -->
+  <link rel="stylesheet" href="/assets/jump.984bafa2.css" />
+<link rel="stylesheet" href="/assets/404.e4bf2307.css" /><script type="module" src="/assets/hoisted.9bb9cf74.js"></script></head>
   <body class="astro-QO5XHE7C">
     <header class="astro-QO5XHE7C">
       <div class="links astro-DMQPWCEC">
@@ -120,53 +134,58 @@
 </div>
     </header>
     <main class="astro-QO5XHE7C">
-      
+      <article class="astro-QO5XHE7C">
+        
+  <dialog id="resultsDialog" class="astro-HG2JRHHZ">
+    <h1 class="astro-HG2JRHHZ">Game Over</h1>
+    <p class="astro-HG2JRHHZ">Score: <span id="res-score" class="astro-HG2JRHHZ"></span></p>
+    <p class="astro-HG2JRHHZ">Best: <span id="res-best" class="astro-HG2JRHHZ"></span></p>
+    <button class="restart astro-HG2JRHHZ">Restart</button>
+  </dialog>
+  <dialog id="pauseDialog" class="astro-HG2JRHHZ">
+    <h1 class="astro-HG2JRHHZ">Paused</h1>
+    <button id="resume" class="astro-HG2JRHHZ">Resume</button>
+  </dialog>
   <div id="opts" class="astro-HG2JRHHZ">
     <label id="lbl" for="obs" class="astro-HG2JRHHZ">Options:</label>
     <select id="obs" class="astro-HG2JRHHZ">
       <option id="flat" class="astro-HG2JRHHZ">Cars</option>
       <option id="on" class="astro-HG2JRHHZ">Steps</option>
       <option id="over" class="astro-HG2JRHHZ">Gaps</option>
-
-      <!-- <option id="roofs">Roofs</option>
-      <option id="rope">Rope</option>
-      <option id="hoops">Hoops</option>
-      <option id="hurdles">Hurdles</option>
-      <option id="poles">Poles</option>
-      <option id="walls">Walls</option>
-      <option id="fences">Fences</option>
-      <option id="homes">Homes</option>
-      <option id="towers">Towers</option>
-      <option id="rivers">Rivers</option>
-      <option id="mountains">Mountains</option>
-      <option id="lava">Lava</option>
-      <option id="spikes">Spikes</option>
-      <option id="space">Space</option> -->
     </select>
     <!-- <button id="play">Play</button> -->
     <h3 id="lvl" class="astro-HG2JRHHZ">Lvl 0</h3>
     <h3 id="jumps" class="astro-HG2JRHHZ">Score 0</h3>
     <h3 id="best" class="astro-HG2JRHHZ">Best 0</h3>
-    <h3 id="best" class="astro-HG2JRHHZ">Lives 3</h3>
+    <h3 id="lives" class="astro-HG2JRHHZ">Lives 3</h3>
     
+    <button id="btnGo" class="astro-HG2JRHHZ">Pause</button>
   </div>
 
   <div id="game" class="astro-HG2JRHHZ">
-    <div id="level" class="astro-HG2JRHHZ"></div>
-    <div id="floor" class="astro-HG2JRHHZ"></div>
-    <div id="hole" class="astro-HG2JRHHZ"></div>
+    <div class="bg astro-HG2JRHHZ" id="back"></div>
+    <div class="bg astro-HG2JRHHZ" id="back2"></div>
+    <div class="bg astro-HG2JRHHZ" id="far"></div>
+    <div class="bg astro-HG2JRHHZ" id="far2"></div>
+    <div class="bg astro-HG2JRHHZ" id="mid"></div>
+    <div class="bg astro-HG2JRHHZ" id="mid2"></div>
+    <div class="bg astro-HG2JRHHZ" id="near"></div>
+    <div class="bg astro-HG2JRHHZ" id="near2"></div>
+    <div class="bg astro-HG2JRHHZ" id="top"></div>
+    <div class="bg astro-HG2JRHHZ" id="top2"></div>
+    <!-- <div id="floor"></div> -->
+    <!-- <div id="hole"></div> -->
     <div id="car" class="astro-HG2JRHHZ"></div>
     <div id="player" class="astro-HG2JRHHZ"></div>
-    <div id="obstacle" class="astro-HG2JRHHZ"></div>
+    <!-- <div id="obstacle"></div> -->
   </div>
 
   
   
 
-      <footer class="astro-QO5XHE7C">&copy; 2023, Jake Surrett. All rights reserved.</footer>
+      </article>
     </main>
-    
-
-    
+    <footer class="astro-QO5XHE7C">&copy; 2023, Jake Surrett. All rights reserved.</footer>
   </body>
 </html>
+
