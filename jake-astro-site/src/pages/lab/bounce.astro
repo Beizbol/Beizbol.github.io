@@ -1,5 +1,5 @@
 ---
-import Page from "../../../layouts/Page.astro";
+import Page from "../../layouts/Page.astro";
 ---
 
 <Page title="Bounce">
@@ -39,7 +39,7 @@ import Page from "../../../layouts/Page.astro";
     canvas.height = rect.height * dpr;
     ctx.scale(dpr, dpr);
     state.x = canvas.width / 2;
-    state.y = canvas.height - 25;
+    state.y = canvas.height / 2;
 
     canvas.addEventListener("click", (ev) => {
       if (state.running) {
@@ -61,7 +61,7 @@ import Page from "../../../layouts/Page.astro";
   }
 
   function nextFrame() {
-    console.log("next");
+    // console.log("next");
     state.running = true;
     canvas.classList.remove("paused");
     state.frame = window.requestAnimationFrame(draw);
@@ -75,19 +75,24 @@ import Page from "../../../layouts/Page.astro";
   }
 
   function draw() {
+    const r = 10;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawBall();
+    drawBall(r);
+    // console.log(state);
     state.x += state.dx;
     state.y += state.dy;
 
-    if (state.y + state.dy > canvas.height - 5 || state.y + state.dy < 5) {
+    if (state.y + state.dy >= canvas.height - 4 * r || state.y + state.dy < 5) {
       state.dy *= -1;
       state.bounces += 1;
     }
 
-    if (state.x + state.dx > canvas.width - 5 || state.x + state.dx < 5) {
+    if (state.x + state.dx >= canvas.width - 5 * r || state.x + state.dx < 5) {
       state.dx *= -1;
       state.bounces += 1;
+      console.log("bounce");
+      console.log(state);
+      console.log(canvas.width, canvas.height);
     }
 
     bounces.innerText = `Bounces: ${state.bounces}`;
@@ -96,9 +101,9 @@ import Page from "../../../layouts/Page.astro";
     nextFrame();
   }
 
-  function drawBall() {
+  function drawBall(r: number = 10) {
     ctx.beginPath();
-    ctx.arc(state.x, state.y, 10, 0, Math.PI * 2);
+    ctx.arc(state.x, state.y, r, 0, Math.PI * 2);
     ctx.fillStyle = state.color;
     ctx.fill();
     ctx.closePath();
@@ -108,7 +113,7 @@ import Page from "../../../layouts/Page.astro";
 </script>
 <style>
   #canvas {
-    margin: auto;
+    margin: 0 auto;
   }
 
   #wrap {

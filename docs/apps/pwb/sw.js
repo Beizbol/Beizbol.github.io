@@ -9,18 +9,11 @@ const addResourcesToCache = async (resources) => {
   
 self.addEventListener("install", (event) => {
     
-    // get all the resources to cache from the current directory
-    // const resources = 
+    // glob all the resources to cache from the current directory
+    const resources = Astro.globSync("/games/wordle/*");
 
     event.waitUntil(
-      addResourcesToCache([
-        "/lab/pwb/",
-        "/lab/pwb/index.html",
-        "/lab/pwb/app.js",
-        "/lab/pwa/sw.js",
-        "/lab/pwb/pwb-192x192.png",
-        "/lab/pwb/pwb-512x512.png",
-      ])
+      addResourcesToCache(resources)
     );
   });
   
