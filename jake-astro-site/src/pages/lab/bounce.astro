@@ -82,12 +82,12 @@ import Page from "../../layouts/Page.astro";
     state.x += state.dx;
     state.y += state.dy;
 
-    if (state.y + state.dy >= canvas.height - 4 * r || state.y + state.dy < 5) {
+    if (state.y + state.dy >= canvas.height - r || state.y + state.dy < 5) {
       state.dy *= -1;
       state.bounces += 1;
     }
 
-    if (state.x + state.dx >= canvas.width - 5 * r || state.x + state.dx < 5) {
+    if (state.x + state.dx >= canvas.width - r || state.x + state.dx < 5) {
       state.dx *= -1;
       state.bounces += 1;
       console.log("bounce");
