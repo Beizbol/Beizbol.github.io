@@ -5,9 +5,6 @@ import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
-  experimental: {
-    viewTransitions: true,
-  },
   site: "https://jakesite.ca",
   integrations: [sitemap()],
   // vite: {

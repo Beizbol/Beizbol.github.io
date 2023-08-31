@@ -1,5 +1,5 @@
 <!-- Global color themes -->
-<div class="themes">
+<div class="themes" transition:persist>
   <input type="checkbox" class="chk" />
   <div class="menu">
     <select id="themeSelect" onchange="
@@ -310,20 +310,21 @@
 <script>
   function loadTheme() {
     // console.log("hello theme");
-    const theme = localStorage.getItem("theme");
-    // console.log(theme);
     const sel = document.getElementById("themeSelect") as HTMLSelectElement | null;
+    const theme = localStorage.getItem("theme");
+    const themes = ["Default", "Steel", "Sky", "Denim", "Ocean", "Mint", "Jungle", "Coffee", "Wine", "Pretty"];
+    // console.log(theme);
     // console.log(chk);
-    if (sel === null || sel === undefined) {
-      return;
+
+    if (theme && themes.includes(theme)) {
+      sel!.value = theme;
+    } else {
+      sel!.value = "defaultTheme";
     }
-    if (theme === null || theme === "" || theme === undefined) {
-      sel.value = "defaultTheme";
-      return;
-    }
-    sel.value = theme;
+
     // console.log("theme done.");
   }
 
-  loadTheme();
+  // loadTheme();
+  document.addEventListener("astro:after-swap", loadTheme);
 </script>

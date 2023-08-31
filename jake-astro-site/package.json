@@ -16,7 +16,7 @@
     "@astrojs/sitemap": "^1.0.1",
     "@cheprasov/qrcode": "^0.1.0",
     "@vite-pwa/astro": "^0.0.5",
-    "astro": "^2.0.16",
+    "astro": "^3.0.3",
     "canvas-confetti": "^1.6.0",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.28"

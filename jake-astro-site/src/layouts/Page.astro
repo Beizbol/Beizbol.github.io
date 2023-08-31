@@ -218,6 +218,7 @@ const app = `/apps/${filename}/app.js`;
         min-block-size: 100vh;
         color: var(--color-text);
         background-color: var(--color-bg);
+        overflow: hidden;
       }
 
       /* #jslot {
@@ -228,6 +229,9 @@ const app = `/apps/${filename}/app.js`;
       main {
         margin-top: 3rem;
         padding: 1rem;
+        height: calc(100vh - 3rem);
+        width: 100vw;
+        overflow: auto;
       }
 
       header {
@@ -237,7 +241,7 @@ const app = `/apps/${filename}/app.js`;
         height: 3rem;
         margin: 0 auto;
         background-color: var(--color-bg-alt);
-        z-index: 10;
+        z-index: 100;
       }
 
       .title {
@@ -257,8 +261,8 @@ const app = `/apps/${filename}/app.js`;
 
       footer {
         text-align: center;
-        padding-top: 2rem;
-        margin: 2rem;
+        padding-top: 1rem;
+        margin: 1rem;
       }
     </style>
   </body>
