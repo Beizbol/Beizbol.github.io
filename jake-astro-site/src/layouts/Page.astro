@@ -1,35 +1,53 @@
 ---
 import Nav from "../components/Nav.astro";
 import Theme from "../components/Theme.astro";
+import { ViewTransitions } from "astro:transitions";
+import "../styles/global.css";
 
 export interface Props {
   title: string;
+  filename?: string;
 }
 
-const { title } = Astro.props;
+const { title, filename } = Astro.props;
 
 const year = new Date().getFullYear();
+
+const isApp = filename !== undefined;
+// console.log(isApp);
+// console.log(filename);
+const pwa = `/apps/${filename}/manifest.json`;
+const app = `/apps/${filename}/app.js`;
 ---
 
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content={title} />
     <title>{title}</title>
+    <ViewTransitions />
+    <link rel="stylesheet" href="/themes/light.css" media="(prefers-color-scheme: light)" />
+    <link rel="stylesheet" href="/themes/dark.css" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
+    {isApp && <link rel="manifest" href={pwa} />}
+    {isApp && <script is:inline src={app} />}
   </head>
   <body>
     <header>
       <Nav />
-      <h1 class="title"><a href="/">Jakesite</a> {title}</h1>
+      <h1 class="title">{title}</h1>
       <Theme />
     </header>
     <main>
       <slot />
       <footer>&copy; {year}, Jake Surrett. All rights reserved.</footer>
     </main>
+
     <style>
       :root {
         --font-size-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
@@ -38,36 +56,46 @@ const year = new Date().getFullYear();
       }
 
       body {
-        min-width: 300;
-        font-family: system-ui, sans-serif;
         /* font-size: var(--font-size-base); */
+        display: grid;
+        grid-template-rows: 3rem 1fr;
+        place-content: center;
+        min-block-size: 100vh;
         color: var(--color-text);
         background-color: var(--color-bg);
-        display: grid;
-        margin: 0;
-        grid-template-columns: 1fr;
-        grid-template-rows: 3rem 1fr;
-        overflow-y: hidden;
+        overflow: hidden;
       }
+
+      /* #jslot {
+        text-align: center;
+        width: 100%;
+      } */
 
       main {
         display: flex;
         flex-direction: column;
-        padding: 1rem;
         gap: 1rem;
         margin-top: 3rem;
+        padding: 1rem;
+        min-height: calc(100vh - 3rem);
+        width: 100vw;
         overflow-y: auto;
-        height: calc(96vh - 3rem);
+      }
+
+      @supports (scrollbar-color: black) {
+        main {
+          scrollbar-color: var(--color-bg-alt) var(--color-bg);
+        }
       }
 
       header {
         position: fixed;
         text-align: center;
-        top: 0;
+        inset: 0 0 auto 0; /* top right bottom left */
         height: 3rem;
-        width: 100vw;
+        margin: 0 auto;
         background-color: var(--color-bg-alt);
-        z-index: 1;
+        z-index: 100;
       }
 
       .title {
@@ -87,22 +115,8 @@ const year = new Date().getFullYear();
 
       footer {
         text-align: center;
-        padding: 2rem;
-        margin: 2rem;
-      }
-    </style>
-
-    <style is:global>
-      h1 {
-        font-size: var(--font-size-xl);
-      }
-
-      h2 {
-        font-size: var(--font-size-lg);
-      }
-
-      code {
-        font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+        padding-top: 1rem;
+        margin: 1rem;
       }
     </style>
   </body>

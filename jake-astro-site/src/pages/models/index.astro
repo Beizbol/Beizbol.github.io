@@ -1,0 +1,32 @@
+---
+import Page from "../../layouts/Page.astro";
+import { getCollection } from "astro:content";
+const models = await getCollection("models");
+---
+
+<Page title="3D Models">
+  <ul class="list">
+    {
+      models.map((mdl) => (
+        <li class="card">
+          <a href={`/models/${mdl.slug}`}>{mdl.data.title}</a>
+          <p>{mdl.data.description}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <style>
+    .list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</Page>

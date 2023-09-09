@@ -4,19 +4,29 @@ import Page from "../../layouts/Page.astro";
 ---
 
 <Page title="Lab">
-  <h1>Welcome to my <span class="text-gradient">Lab</span></h1>
-  <p class="instructions">
-    Check out the newest additions and latest upgrades to the arcade.<br />
-    <strong>New:</strong>
-    <code>tic-tac-toe</code> |
-    <strong>Improved:</strong>
-    <code>wordle</code>
-  </p>
+  <h1>Welcome to the <span class="text-gradient">Lab</span></h1>
   <section>
-    <h3>Home-Made</h3>
+    <h3>Under Development</h3>
     <ul role="list" class="link-card-grid">
-      <Card href="/lab/qr" title="Create QR" body="Quick, painless, and free. What more could you want?" />
+      <Card href="/models" title="3D" body="Messing with graphics in the 3rd dimension." />
+      <Card href="/lab/shoes" title="Shoes" body="Mix your own custom colorway on this pair of Nikes." />
+    </ul>
+  </section>
+  <section>
+    <h3>Back Burner</h3>
+    <ul role="list" class="link-card-grid">
+      <Card href="/lab/bounce" title="Bounce" body="DVD screen-saver inspired digital art drawn with html canvas." />
+      <Card href="/lab/pic-text" title="Photo Text" body="Add text to a photo." />
       <Card href="/lab/hover" title="Hover" body="Nice to look at." />
+      <Card href="/lab/hi" title="Hi" body="Hey." />
+    </ul>
+  </section>
+  <section>
+    <h3>PWA Testing</h3>
+    <ul role="list" class="link-card-grid">
+      <Card href="/lab/pwa" title="A" body="PWA Test App A." />
+      <Card href="/lab/pwb" title="B" body="PWA Test App B." />
+
       <!-- <Card href="/games/minecraft" title="Games" body="Explore a voxel world in minecraft js edition." />
         <Card href="/games/2048" title="Contact" body="Stack and combine matching tiles to reach 2048." />
         <Card href="./blog" title="Blog" body="An attempt to make permanent learning progress." /> -->
@@ -29,12 +39,9 @@ import Page from "../../layouts/Page.astro";
     --color-gradient: linear-gradient(0deg, red, orange);
   }
 
-  h1 {
-    margin: 2rem 0;
-  }
-
+  h1,
   section {
-    margin: 1rem 0;
+    margin: 1rem;
     /* background-color: aquamarine; */
   }
 

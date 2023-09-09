@@ -1,16 +1,18 @@
 <!-- Global color themes -->
-<div class="themes">
+<div class="themes" transition:persist>
   <input type="checkbox" class="chk" />
   <div class="menu">
-    <select id="themeSelect" onchange="localStorage.setItem('theme', this.value);">
-      <option id="lightTheme">Light</option>
-      <option id="mintTheme">Mint</option>
+    <select id="themeSelect">
+      <option id="defaultTheme">Default</option>
+      <option id="steelTheme">Steel</option>
       <option id="skyTheme">Sky</option>
-      <option id="prettyTheme">Pretty</option>
-      <option id="forestTheme">Forest</option>
       <option id="denimTheme">Denim</option>
-      <option id="deepTheme">Deep</option>
-      <option id="darkTheme">Dark</option>
+      <option id="oceanTheme">Ocean</option>
+      <option id="mintTheme">Mint</option>
+      <option id="jungleTheme">Jungle</option>
+      <option id="coffeeTheme">Coffee</option>
+      <option id="wineTheme">Wine</option>
+      <option id="prettyTheme">Pretty</option>
     </select>
   </div>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 409.952 409.952" xml:space="preserve">
@@ -73,12 +75,12 @@
 
   svg {
     position: absolute;
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 3rem;
+    height: 3rem;
     fill: var(--color-text);
-    right: 0.1rem;
-    top: 0.25rem;
-    padding: 0.5rem;
+    right: 0;
+    top: 0;
+    padding: 0.69rem;
     z-index: -1;
   }
 
@@ -97,110 +99,34 @@
     height: 2.5rem;
   }
 </style>
-<style is:global>
-  :root:has(#lightTheme:checked) {
-    --color-bg: white;
-    --color-bg-alt: #ddd;
-    --color-border: black;
-    --color-border-alt: black;
-    --color-text: black;
-    --color-text-alt: #bbb;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
-  :root:has(#mintTheme:checked) {
-    --color-bg: aquamarine;
-    --color-bg-alt: rgb(150, 240, 255);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: black;
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
 
-  :root:has(#skyTheme:checked) {
-    --color-bg: hsl(204, 100%, 80%);
-    --color-bg-alt: hsl(204, 100%, 70%);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: black;
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
-
-  :root:has(#prettyTheme:checked) {
-    --color-bg: rgb(255, 180, 255);
-    --color-bg-alt: rgb(200, 170, 255);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: black;
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
-
-  :root:has(#forestTheme:checked) {
-    --color-bg: hsl(126, 95%, 8%);
-    --color-bg-alt: hsl(126, 95%, 12%);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: hsl(10, 21%, 95%);
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
-
-  :root:has(#denimTheme:checked) {
-    --color-bg: hsl(212, 95%, 16%);
-    --color-bg-alt: hsl(212, 95%, 24%);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: hsl(10, 21%, 95%);
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: darkorange;
-  }
-
-  :root:has(#deepTheme:checked) {
-    --color-bg: hsl(265, 96%, 10%);
-    --color-bg-alt: hsl(265, 95%, 16%);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: hsl(10, 21%, 95%);
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
-
-  :root:has(#darkTheme:checked) {
-    --color-bg: hsl(222, 5%, 10%);
-    --color-bg-alt: black;
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: hsl(10, 21%, 95%);
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
-</style>
 <script>
+  const themes = ["Default", "Steel", "Sky", "Denim", "Ocean", "Mint", "Jungle", "Coffee", "Wine", "Pretty"];
+  const themeSelect = document.getElementById("themeSelect") as HTMLSelectElement;
+  themeSelect.addEventListener("change", saveTheme);
+
+  function saveTheme() {
+    const theme = themeSelect.value;
+    localStorage.setItem("theme", theme);
+    console.log("theme saved.", theme);
+  }
+
   function loadTheme() {
     // console.log("hello theme");
-    const theme = localStorage.getItem("theme");
-    // console.log(theme);
-    if (theme === null || theme === "") {
-      return "darkTheme";
-    }
     const sel = document.getElementById("themeSelect") as HTMLSelectElement | null;
+    const theme = localStorage.getItem("theme");
+    console.log(theme);
     // console.log(chk);
-    if (sel === null) {
-      return;
+
+    if (theme && themes.includes(theme)) {
+      sel!.value = theme;
+    } else {
+      sel!.value = themes[0];
     }
-    sel.value = theme;
+
     // console.log("theme done.");
   }
 
   loadTheme();
+  document.addEventListener("astro:after-swap", loadTheme);
 </script>

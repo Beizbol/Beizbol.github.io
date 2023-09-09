@@ -4,75 +4,97 @@ import Page from "../layouts/Page.astro";
 ---
 
 <Page title="Home">
-  <h1>Welcome to <span class="text-gradient">Jakesite</span>.</h1>
-  <div>
-    <h3>Work</h3>
-    <ul role="list" class="link-card-grid">
-      <Card href="/portfolio" title="Portfolio" body="Learn about my skills and experience in computer systems." />
-      <Card href="/contact" title="Contact" body="Feel free to reach out." />
-      <Card href="/tools" title="Tools" body="Handy things I made to use." />
-    </ul>
-  </div>
-  <div>
-    <h3>Play</h3>
-    <ul role="list" class="link-card-grid">
-      <Card href="/games" title="Games" body="Play a round or two... or ten." />
-      <Card href="/consoles" title="Consoles" body="Fun to look at and maybe interact with." />
-    </ul>
-  </div>
+	<div>
+		<h1>Welcome to <span class="text-gradient">Jakesite</span>.</h1>
+		<div>
+			<h3>Work</h3>
+			<ul role="list" class="link-card-grid">
+				<Card
+					href="/portfolio"
+					title="Portfolio"
+					body="Learn about my skills and experience in computer systems."
+				/>
+				<Card
+					href="/contact"
+					title="Contact"
+					body="Feel free to reach out."
+				/>
+				<Card
+					href="/tools"
+					title="Tools"
+					body="Handy things I made to use."
+				/>
+			</ul>
+		</div>
+		<div>
+			<h3>Play</h3>
+			<ul role="list" class="link-card-grid">
+				<Card
+					href="/games"
+					title="Games"
+					body="Play a round or two... or ten."
+				/>
+				<Card
+					href="/lab"
+					title="Lab"
+					body="Steel-toes required beyond this point."
+				/>
+			</ul>
+		</div>
+	</div>
 </Page>
 
 <style>
-  :root {
-    --color-gradient: linear-gradient(0deg, red, orange);
-  }
+	:root {
+		--color-gradient: linear-gradient(0deg, red, orange);
+	}
 
-  .text-gradient {
-    font-weight: 900;
-    background-image: var(--color-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 100% 200%;
-    background-position-y: 100%;
-    border-radius: 0.4rem;
-    animation: pulse 4s ease-in-out infinite;
-  }
+	.text-gradient {
+		font-weight: 900;
+		background-image: var(--color-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 100% 200%;
+		background-position-y: 100%;
+		border-radius: 0.4rem;
+		animation: pulse 4s ease-in-out infinite;
+	}
 
-  @keyframes pulse {
-    0%,
-    100% {
-      background-position-y: 0%;
-    }
-    50% {
-      background-position-y: 80%;
-    }
-  }
+	@keyframes pulse {
+		0%,
+		100% {
+			background-position-y: 0%;
+		}
+		50% {
+			background-position-y: 80%;
+		}
+	}
 
-  .instructions {
-    line-height: 1.6;
-    margin: 1rem 0;
-    background: #4f39fa;
-    padding: 1rem;
-    border-radius: 0.4rem;
-    color: var(--color-bg);
-  }
+	.instructions {
+		line-height: 1.6;
+		margin: 1rem 0;
+		background: #4f39fa;
+		padding: 1rem;
+		border-radius: 0.4rem;
+		color: var(--color-bg);
+	}
 
-  .instructions code {
-    font-size: 0.875em;
-    border: 0.1em solid var(--color-border);
-    border-radius: 4px;
-    padding: 0.15em 0.25em;
-  }
+	.instructions code {
+		font-size: 0.875em;
+		border: 0.1em solid var(--color-border);
+		border-radius: 4px;
+		padding: 0.15em 0.25em;
+	}
 
-  .link-card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-    gap: 1rem;
-    padding: 0;
-  }
+	.link-card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24ch, 56ch));
+		gap: 1rem;
+		padding: 0;
+	}
 
-  h3 {
-    padding: 0;
-    margin: 0;
-  }
+	h3 {
+		padding: 0;
+		margin: 0;
+	}
 </style>

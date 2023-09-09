@@ -285,7 +285,7 @@ import Page from "../../layouts/Page.astro";
         if (targetWord.charAt(i) === guess.charAt(i)) {
           results[i] = "correct";
           running[i] = "";
-        } else if (!running.includes(guess[i])) {
+        } else if (!running.includes(guess[i]) || guess.substring(i).includes(guess[i])) {
           results[i] = "wrong";
         }
       }

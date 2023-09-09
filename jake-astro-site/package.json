@@ -1,7 +1,7 @@
 {
   "name": "jakesite",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "dev": "astro dev",
@@ -15,6 +15,7 @@
   "dependencies": {
     "@astrojs/sitemap": "^1.0.1",
     "@cheprasov/qrcode": "^0.1.0",
+    "@vite-pwa/astro": "^0.1.2",
     "@upstash/redis": "^1.20.2",
     "astro": "^3.0.12",
     "canvas-confetti": "^1.6.0",

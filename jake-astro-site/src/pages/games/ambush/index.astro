@@ -1,0 +1,368 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="TD">
+  <canvas id="canvas" width="600" height="400"> </canvas>
+  <div id="ui">
+    <button id="play">Play ▶</button>
+    <button id="pause">Pause ⏸</button>
+    <h3>
+      Lives: <span id="lives"></span>
+    </h3>
+    <h3>
+      Coins: <span id="coins"></span>
+    </h3>
+    <h3>
+      Round: <span id="round"></span>
+    </h3>
+  </div>
+  <p>Note: click/tap to pause</p>
+  <dialog id="waveDialog">
+    <p>Next wave.</p>
+    <form method="dialog">
+      <button>Start</button>
+    </form>
+  </dialog>
+</Page>
+<script>
+  // import Enemy from "./enemy";
+  import Point from "./point";
+  import Road from "./road";
+  import Tower from "./tower";
+  import Wave from "./wave";
+
+  const waveDialog = document.getElementById("waveDialog") as HTMLDialogElement;
+  const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+  const play = document.getElementById("play");
+  const pause = document.getElementById("pause");
+  const lives = document.getElementById("lives");
+  const round = document.getElementById("round");
+  const coins = document.getElementById("coins");
+  const ctx = canvas.getContext("2d", { alpha: false });
+
+  enum Difficulty {
+    Baby = 0,
+    Easy = 1,
+    Normal = 2,
+    Hard = 3,
+    Pro = 4,
+  }
+
+  let game = {
+    x: 0,
+    y: 0,
+    running: true,
+    frame: 0,
+    lives: 100,
+    name: "JTD",
+    description: "A tower defence game.",
+    version: "0.0.1",
+    round: 1,
+    shield: 0,
+    coins: 0,
+    difficulty: Difficulty.Normal,
+    road: new Road([new Point(100, 0), new Point(100, 100), new Point(500, 100), new Point(500, 200), new Point(300, 200), new Point(300, 300), new Point(400, 300), new Point(400, 400)]),
+    towers: [new Tower()],
+    wave: new Wave(1, Difficulty.Normal),
+  };
+
+  function init() {
+    if (!ctx) {
+      console.error("Canavas not supported :(");
+      return;
+    }
+    const dpr = window.devicePixelRatio;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    game.x = canvas.width / 2;
+    game.y = canvas.height - 25;
+
+    canvas.addEventListener("click", toggle_pause);
+
+    play!.addEventListener("click", toggle_pause);
+    pause!.addEventListener("click", toggle_pause);
+
+    lives!.innerHTML = game.lives.toString();
+    round!.innerHTML = game.round.toString();
+
+    console.log("starting " + game.name);
+    start();
+  }
+
+  function toggle_pause() {
+    if (game.running) {
+      canvas.classList.add("paused");
+      pauseGame();
+    } else {
+      canvas.classList.remove("paused");
+      resume();
+    }
+  }
+
+  function start() {
+    console.log("Game started");
+
+    resume();
+  }
+
+  function nextRound() {
+    console.log("Next Wave");
+    game.round += 1;
+    round!.innerHTML = game.round.toString();
+    game.wave = new Wave(game.round, game.difficulty);
+  }
+
+  waveDialog.addEventListener("close", () => {
+    console.log("close");
+    nextRound();
+    resume();
+  });
+
+  function update() {
+    if (game.wave.isOver) {
+      console.log("Next Wave");
+      waveDialog!.show();
+      pauseGame();
+      // nextRound();
+    }
+
+    // fire bullets at enemies
+    for (let tower of game.towers) {
+      if (tower.cooldown > 0) {
+        tower.cooldown -= 1;
+        tower.color = "darkgrey";
+        continue;
+      }
+
+      for (let i = 0; i < game.wave.mobs.length; i++) {
+        const enemy = game.wave.mobs[i];
+
+        if (enemy.isDead || enemy.isWaiting || distance(tower.pos, enemy.pos) > tower.range) {
+          continue;
+        }
+
+        tower.fire(enemy);
+
+        // check if enemy has been killed
+        if (enemy.isDead) {
+          game.coins += enemy.value;
+          coins!.innerHTML = game.coins.toString();
+
+          //remove enemy
+          game.wave.kill(i);
+
+          if (game.wave.isOver) {
+            console.log("Next Wave");
+            waveDialog!.show();
+            pauseGame();
+            // nextRound();
+          }
+
+          continue;
+        }
+
+        break; // only fire at one enemy
+      }
+    }
+
+    // move enemies
+    for (let i = 0; i < game.wave.mobs.length; i++) {
+      const enemy = game.wave.mobs[i];
+      if (enemy.isDead) {
+        continue;
+      }
+      if (enemy.isWaiting) {
+        enemy.wait();
+        if (enemy.delay == 0) {
+          game.wave.spawn();
+        }
+        continue;
+      }
+      // check for enemies at end of path
+      if (enemy.hasReached(game.road.end)) {
+        // console.log("enemy reached end", game.wave);
+        game.lives -= 1;
+        lives!.innerHTML = game.lives.toString();
+        game.wave.kill(i);
+        // console.log("enemy killed", game.wave);
+        continue;
+      }
+      const pt = game.road.turns[enemy.target];
+      if (pt) enemy.move(pt);
+    }
+    // console.log(game.wave);
+  }
+
+  function draw() {
+    // draw the background
+    // ctx.clearRect(0, 0, 800, 600);
+
+    if (!ctx) {
+      console.log("no ctx");
+      return;
+    }
+
+    ctx.fillStyle = "green";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // draw the towers
+    for (let tower of game.towers) {
+      if (tower.selected) {
+        ctx.fillStyle = "grey";
+        ctx.beginPath();
+        ctx.arc(tower.pos.x, tower.pos.y, tower.range, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+      }
+      ctx.fillStyle = tower.color;
+      ctx.fillRect(tower.pos.x - Math.floor(tower.size / 2), tower.pos.y - Math.floor(tower.size / 2), tower.size, tower.size);
+    }
+
+    // draw the path
+    ctx.fillStyle = "white";
+    for (let i = 0; i < game.road.turns.length - 1; i++) {
+      const turn = game.road.turns[i];
+      const next = game.road.turns[i + 1];
+      ctx.beginPath();
+      ctx.moveTo(turn.x, turn.y);
+      ctx.lineTo(next.x, next.y);
+      ctx.stroke();
+    }
+
+    // draw the enemies
+    for (let enemy of game.wave.mobs) {
+      if (enemy.isDead || enemy.isWaiting) {
+        continue;
+      }
+      ctx.fillStyle = enemy.color;
+      ctx.beginPath();
+      ctx.arc(enemy.pos.x, enemy.pos.y, 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    // draw the bullets???
+
+    update();
+
+    game.frame = window.requestAnimationFrame(draw);
+  }
+
+  function distance(tower: Point, enemy: Point): number {
+    let dx = Math.abs(tower.x - enemy.x);
+    let dy = Math.abs(tower.y - enemy.y);
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function resume() {
+    console.log("resume");
+    game.running = true;
+    game.frame = window.requestAnimationFrame(draw);
+  }
+
+  function pauseGame() {
+    game.running = false;
+    window.cancelAnimationFrame(game.frame);
+    console.log("paused", game);
+  }
+
+  window.addEventListener("load", init);
+
+  // const game = new Game();
+  // console.log("starting " + game.name);
+  // game.start();
+</script>
+<style>
+  #canvas {
+    margin: auto;
+  }
+
+  #ui {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+  }
+
+  #waveDialog {
+    top: 25%;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    box-shadow: 0.3rem 0.3rem 1rem var(--color-bg-alt);
+  }
+
+  button {
+    background-color: var(--color-bg-alt);
+    color: var(--color-text);
+    border: 1px solid var(--color-text);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+  }
+
+  button:active,
+  button:hover {
+    background-color: var(--color-bg-alt);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+  }
+
+  #wrap {
+    display: grid;
+    width: 100%;
+    height: 400px;
+    background-color: darkslateblue;
+  }
+
+  #play {
+    display: none;
+    margin: 1rem 0;
+  }
+
+  #canvas.paused ~ #ui #play {
+    display: block;
+  }
+
+  #pause {
+    display: block;
+    margin: 1rem 0;
+  }
+
+  #canvas.paused ~ #ui #pause {
+    display: none;
+  }
+
+  /* #play,
+  #pause {
+    opacity: 0;
+    display: grid;
+    position: absolute;
+    top: 200px;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.5rem;
+    z-index: 9;
+    justify-content: center;
+    margin: auto;
+    user-select: none;
+    font-size: 2.5rem;
+    background-color: #111;
+  }
+
+  #wrap:active #play,
+  #wrap:active #pause {
+    color: aqua;
+  }
+
+  #wrap:hover #play {
+    opacity: 0;
+  }
+
+  #wrap:hover #pause {
+    opacity: 0.69;
+  }
+*/
+</style>

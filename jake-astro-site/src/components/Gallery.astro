@@ -52,21 +52,50 @@ export interface Props {
       <a href="#item-1" class="arrow-next arrow"></a>
     </div>
   </div>
+  <div id="dots">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
 </div>
 <style>
+  #dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: var(--color-accent);
+    border-radius: 50%;
+  }
+
   .carousel {
-    position: relative;
-    height: 30rem;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 2rem;
     width: 100%;
-    max-width: 20rem;
-    margin-bottom: 0.5rem;
+    max-height: 100%;
+    /* max-width: 1000px; */
     /* border: 2px solid var(--color-accent); */
-    border-radius: 0.25rem;
-    border: solid var(--color-accent);
+    /* border-radius: 0.25rem; */
+    /* border: solid var(--color-accent); */
   }
 
   .viewport {
-    isolation: isolate;
+    position: relative;
+    width: 100%;
+    min-width: 200px;
+    min-height: 300px;
+    max-height: 100vh;
+    /* background-color: aqua; */
   }
 
   .carousel-item {
