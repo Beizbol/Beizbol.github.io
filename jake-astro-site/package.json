@@ -16,11 +16,10 @@
     "@astrojs/sitemap": "^1.0.1",
     "@cheprasov/qrcode": "^0.1.0",
     "@upstash/redis": "^1.20.2",
-    "astro": "^2.0.16",
+    "astro": "^3.0.12",
     "canvas-confetti": "^1.6.0",
     "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.5.28",
-    "vite-plugin-wasm-pack": "^0.1.12"
+    "jspdf-autotable": "^3.5.28"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.6.0",

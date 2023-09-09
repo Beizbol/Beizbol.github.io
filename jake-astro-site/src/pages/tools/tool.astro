@@ -1,0 +1,37 @@
+---
+import Card from "../../components/Card.astro";
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Tool">
+	<div>
+		<a href="github/tool"></a>
+		<h3>Dev</h3>
+		<ul role="list" class="link-card-grid">
+			<Card
+				href="/tools/rsturn"
+				title="Rsturn"
+				body="Decorate implicit returns in Rust code."
+			/>
+			<Card
+				href="/tools/rn-media"
+				title="RnMedia"
+				body="Auto rename media files and folders."
+			/>
+			<Card
+				href="/tools/jwinget"
+				title="J-winget"
+				body="Wrapper for personalized winget update experience."
+			/>
+		</ul>
+	</div>
+</Page>
+
+<style>
+	.link-card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		gap: 1rem;
+		padding: 0;
+	}
+</style>

@@ -1,18 +1,12 @@
 {
-    "[astro]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "spellright.language": [
-        "en"
-    ],
-    "spellright.documentTypes": [
-        "markdown",
-        "latex",
-        "plaintext"
-    ],
-    "spellright.parserByClass": {
-        "astro": {
-            "parser": "plain"
-        }
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  },
+  "spellright.language": ["en"],
+  "spellright.documentTypes": ["markdown", "latex", "plaintext"],
+  "spellright.parserByClass": {
+    "astro": {
+      "parser": "plain"
     }
+  }
 }

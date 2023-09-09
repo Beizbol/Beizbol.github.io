@@ -1,0 +1,27 @@
+---
+import Card from "../../components/Card.astro";
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Rsturn">
+  <div>
+    <a href="https://github.com/Beizbol/rsturn"></a>
+    <h3>Rsturn</h3>
+    <p>Decorate implicit returns in Rust code with Rsturn - an extension for VS Code that inserts "rsturn" before lines that return without using the keyword. No more squinting for semicolons, wondering if you missed a line that returns or not. Rsturn will make it clear with an inline hint.</p>
+    <img src="assets/tools/rsturn" alt="Demo of the rsturn VS Code extension." />
+    <p>I'd been wanting to write a VS Code extension for a while but never really had a good reason. Sure enough while I was wrestling with Rust as a beginner, I found my reason. I wasted an entire evening debugging only to find a single line without a semicolon that returned early. I refused to accept that this safety focussed language would even have such a nasty trap. Especially considering JavaScript, a language one is likely to encounter and learn before Rust, has optional semicolons that don't do anything at all.</p>
+    <p>Ever since I've noticed across far too many blogs, docs, and videos that have a note or disclaimer somewhere with their Rust mentioning that a line of code actually returns. Thinking of all the wasted energy, over something that should not be an issue, I felt I had to get my extension ready for the marketplace. That way I could share my freedom from this class of issue with everyone.</p>
+    <ul role="list" class="link-card-grid">
+      <Card href="/tools/rsturn" title="Rsturn" body="Decorate implicit returns in Rust code." />
+    </ul>
+  </div>
+</Page>
+
+<style>
+  .link-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+    gap: 1rem;
+    padding: 0;
+  }
+</style>
