@@ -191,11 +191,33 @@ declare module 'astro:content' {
   data: InferEntrySchema<"models">
 } & { render(): Render[".md"] };
 };
+"posts": {
+"rsturn.md": {
+	id: "rsturn.md";
+  slug: "rsturn";
+  body: string;
+  collection: "posts";
+  data: any
+} & { render(): Render[".md"] };
+"rust.md": {
+	id: "rust.md";
+  slug: "rust";
+  body: string;
+  collection: "posts";
+  data: any
+} & { render(): Render[".md"] };
+};
 
 	};
 
 	type DataEntryMap = {
-		
+		"games": {
+};
+"tools": {
+};
+"works": {
+};
+
 	};
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
