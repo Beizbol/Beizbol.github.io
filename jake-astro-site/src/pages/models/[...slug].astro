@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import Page from "../../layouts/Page.astro";
+
+export async function getStaticPaths() {
+  const allModels = await getCollection("models");
+  return allModels.map((m) => ({
+    params: { slug: m.slug },
+    props: { m },
+  }));
+}
+
+const { m } = Astro.props;
+---
+
+<Page title={m.data.title}>
+  <script is:inline type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <model-viewer class="viewer" alt={m.data.description} src={m.data.model} shadow-intensity="1" camera-controls touch-action="pan-y"></model-viewer>
+  <style>
+    .viewer {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</Page>
