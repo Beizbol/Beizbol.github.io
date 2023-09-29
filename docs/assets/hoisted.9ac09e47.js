@@ -1,0 +1,1 @@
+import"./hoisted.ed2dda3d.js";const t=new IntersectionObserver(s=>{s.forEach(e=>{const r=e.target;if(e.isIntersecting){r.classList.add("square-animation");return}r.classList.remove("square-animation")})});t.observe(document.querySelector(".square"));

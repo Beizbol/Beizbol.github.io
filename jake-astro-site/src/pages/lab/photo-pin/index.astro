@@ -1,0 +1,364 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="Photo Pin Tool">
+	<div class="ui">
+		<div class="flex">
+			<!-- <label for="pick">Select Photo</label> -->
+			<input id="pick" type="file" accept="image/*" />
+		</div>
+		<div class="flex">
+			<div class="stack">
+				<label for="pinColor">Color</label>
+				<input id="pinColor" type="color" value="#7711BB" />
+			</div>
+
+			<div class="stack">
+				<label for="icons">Icon</label>
+				<select name="icons" id="icons">
+					<optgroup label="Outline">
+						<option
+							value="/assets/pins/outlined/dot.svg"
+							label="Dot"></option>
+						<option
+							value="/assets/pins/outlined/heart.svg"
+							label="Heart"></option>
+						<option
+							value="/assets/pins/outlined/home.svg"
+							label="Home"></option>
+						<option
+							value="/assets/pins/outlined/road.svg"
+							label="Road"></option>
+						<option
+							value="/assets/pins/outlined/star.svg"
+							label="Star"></option>
+					</optgroup>
+					<optgroup label="Filled">
+						<option value="/assets/pins/filled/dot.svg" label="Dot"
+						></option>
+						<option
+							value="/assets/pins/filled/heart.svg"
+							label="Heart"></option>
+						<option
+							value="/assets/pins/filled/home.svg"
+							label="Home"></option>
+						<option
+							value="/assets/pins/filled/road.svg"
+							label="Road"></option>
+						<option
+							value="/assets/pins/filled/star.svg"
+							label="Star"></option>
+					</optgroup>
+				</select>
+				<img
+					style="position:absolute;opacity:0;"
+					id="icon-img"
+					src="/assets/pins/outlined/dot.svg"
+					alt="Pin Icon Preview"
+				/>
+			</div>
+
+			<div class="stack">
+				<label for="pinText">Text</label>
+				<input id="pinText" type="text" value="Pin Text" />
+			</div>
+		</div>
+		<div class="flex">
+			<label for="preview">Preview (Drag and Drop)</label>
+			<button disabled>Download</button>
+		</div>
+
+		<!-- <div id="preview" class="flex">
+        <div id="ppin" class="flex">
+          <img id="icon-img" src="/assets/pins/outlined/dot.svg" alt="Pin Icon Preview" />
+          <span id="ptxt">Pin Text</span>
+        </div>
+      </div> -->
+
+		<canvas id="pcanvas" width="600" height="150"></canvas>
+		<canvas id="canvas" width="600" height="300"></canvas>
+	</div>
+
+	<style>
+		#preview {
+			padding: 1rem;
+		}
+
+		#ppin {
+			user-select: none;
+			cursor: grab;
+			padding: 0.5rem;
+			background-color: #22aaaa;
+			align-items: center;
+			border-radius: 0.25rem;
+		}
+
+		#ppin img {
+			max-width: 1.5rem;
+			max-height: 1.5rem;
+			z-index: 99;
+		}
+
+		.stack {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.flex {
+			display: flex;
+			gap: 1rem;
+		}
+
+		.wrap {
+			display: flex;
+			/* justify-content: center; */
+			gap: 2rem;
+		}
+
+		.pin {
+			align-items: center;
+		}
+
+		.pin svg {
+			height: 2rem;
+		}
+
+		.ui {
+			display: grid;
+			gap: 1rem;
+			margin: 0 auto;
+		}
+
+		.ui img {
+			max-width: 2rem;
+			max-height: 2rem;
+		}
+
+		#pcanvas {
+			border: 1px solid #ffffff;
+		}
+
+		#canvas {
+			margin-top: -1rem;
+			border: 1px solid #ffffff;
+		}
+	</style>
+	<script>
+		import Pin from "./pin.ts";
+
+		const canvas = document.getElementById("canvas");
+		const ctx = canvas.getContext("2d");
+		const pcanvas = document.getElementById("pcanvas");
+		const pctx = pcanvas.getContext("2d");
+
+		const pick = document.getElementById("pick");
+		const photo = new Image();
+		const img = document.getElementById("icon-img");
+		img.onload = () => {
+			console.log("icon loaded");
+			drawPreview();
+		};
+		const icons = document.getElementById("icons");
+		const pinColor = document.getElementById("pinColor");
+		const pinText = document.getElementById("pinText");
+		const ptxt = document.getElementById("ptxt");
+
+		let ppin = new Pin(
+			{ top: 20, left: 40, width: 100, height: 30 },
+			"Pin Text",
+			pinColor.value,
+			img.src
+		);
+		const cpin = document.getElementById("cpin");
+		const state = {
+			placed: [],
+			held: null,
+			canvasHover: false,
+			pin_offset_x: 0,
+			pin_offset_y: 0,
+		};
+
+		drawPreview();
+
+		canvas.addEventListener("mouseenter", (e) => {
+			console.log("entered");
+			state.canvasHover = true;
+		});
+
+		canvas.addEventListener("mouseleave", (e) => {
+			state.canvasHover = false;
+		});
+
+		pcanvas.addEventListener("mouseenter", (e) => {
+			state.pcanvasHover = true;
+		});
+
+		pcanvas.addEventListener("mouseleave", (e) => {
+			if (state.held) {
+				state.held.move(40, 20);
+				drawPreview();
+			}
+			state.pcanvasHover = false;
+		});
+
+		canvas.addEventListener("mousemove", (e) => {
+			if (!state.held || !state.canvasHover) {
+				// console.log("nah");
+				return;
+			}
+			console.log("move");
+			const cbr = canvas.getBoundingClientRect();
+			const px = e.clientX - cbr.left;
+			const py = e.clientY - cbr.top;
+			state.held.move(px, py);
+			draw();
+		});
+
+		pcanvas.addEventListener("mousemove", (e) => {
+			if (!state.held || !state.pcanvasHover) return;
+
+			const pcbr = pcanvas.getBoundingClientRect();
+			const px = e.clientX - pcbr.left;
+			const py = e.clientY - pcbr.top;
+			state.held.move(px, py);
+			drawPreview();
+		});
+
+		canvas.addEventListener("mousedown", (e) => {
+			console.log("canvas click", state.pcanvasHover);
+			if (!state.canvasHover) return;
+			const cbr = canvas.getBoundingClientRect();
+			const px = e.clientX - cbr.left;
+			const py = e.clientY - cbr.top;
+			for (let i = 0; i < state.placed.length; i++) {
+				const pin = state.placed[i];
+				if (pin.isMouseOver(px, py)) {
+					canvas.style.cursor = "grabbing";
+					state.held = pin;
+					state.placed.pop(i);
+					console.log("Holding pin");
+					return;
+				}
+			}
+		});
+
+		pcanvas.addEventListener("mousedown", (e) => {
+			console.log("pcanvas click", state.pcanvasHover);
+			if (!state.pcanvasHover) return;
+			const pcbr = pcanvas.getBoundingClientRect();
+			const px = e.clientX - pcbr.left;
+			const py = e.clientY - pcbr.top;
+			console.log(ppin);
+			if (ppin.isMouseOver(px, py)) {
+				pcanvas.style.cursor = "grabbing";
+				state.held = ppin;
+				console.log("Holding pin");
+			}
+		});
+
+		document.addEventListener("mouseup", (e) => {
+			canvas.style.cursor = "grab";
+			pcanvas.style.cursor = "grab";
+
+			if (!state.held) return;
+
+			if (state.canvasHover) {
+				console.log("placing in canvas");
+				const cbr = canvas.getBoundingClientRect();
+				const x = e.clientX - cbr.left;
+				const y = e.clientY - cbr.top;
+				state.held.move(x, y);
+				const clone = state.held.clone();
+				console.log(clone);
+				state.placed.push(clone);
+				state.held = null;
+				draw();
+			}
+			ppin.move(40, 20);
+			drawPreview();
+
+			// ppin.style.position = "static";
+			state.held = false;
+			state.pin_offset_x = 0;
+			state.pin_offset_y = 0;
+		});
+
+		icons.addEventListener("change", (e) => {
+			console.log("val ", e.target.value);
+			img.src = e.target.value;
+			ppin.updateIcon(e.target.value);
+			drawPreview();
+		});
+
+		pinColor.addEventListener("change", (e) => {
+			// console.log(e.target.value);
+			preview.style.backgroundColor = e.target.value;
+			drawPreview();
+		});
+
+		pinText.addEventListener("change", (e) => {
+			// console.log(e.target.value);
+			ppin.updateText(e.target.value);
+			drawPreview();
+		});
+
+		pick.addEventListener("change", (e) => {
+			if (e.target.files.length < 1) {
+				alert("No image files selected.");
+				return;
+			}
+
+			if (e.target.files.length > 1) {
+				alert("One image file at a time.");
+				return;
+			}
+			const url = URL.createObjectURL(e.target.files[0]);
+			//console.log("url: ", url);
+			photo.src = url;
+			photo.onload = () => {
+				console.log("loaded");
+				draw();
+			};
+		});
+
+		function draw() {
+			// wipe canvas
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			// draw user image
+			console.log(photo.src);
+			if (photo.src) {
+				const { width, height } = photo;
+				console.log(height, width);
+				ctx.canvas.width = width;
+				ctx.canvas.height = height;
+				canvas.style.width = width + "px";
+				canvas.style.height = height + "px";
+				ctx.drawImage(photo, 0, 0);
+			}
+			// draw placed pins
+			for (let i = 0; i < state.placed.length; i++) {
+				const pin = state.placed[i];
+				console.log("pin: ", pin);
+				pin.drawPin(ctx);
+				console.log("placed pin drawn");
+			}
+			// draw held pin
+			if (state.held) {
+				// state.held.move();
+				state.held.drawPin(ctx);
+				// console.log("held pin drawn");
+			}
+
+			// ctx.fillStyle = "#22aaaa";
+			// ctx.fillRect(10, 10, 150, 100);
+		}
+
+		function drawPreview() {
+			pctx.clearRect(0, 0, pctx.canvas.width, pctx.canvas.height);
+			ppin.drawPin(pctx);
+			console.log("preview drawn");
+		}
+	</script>
+</Page>

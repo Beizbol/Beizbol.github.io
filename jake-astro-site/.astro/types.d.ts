@@ -152,14 +152,14 @@ declare module 'astro:content' {
 	): import('astro/zod').ZodEffects<
 		import('astro/zod').ZodString,
 		C extends keyof ContentEntryMap
-		? {
-			collection: C;
-			slug: ValidContentEntrySlug<C>;
-		}
-		: {
-			collection: C;
-			id: keyof DataEntryMap[C];
-		}
+			? {
+					collection: C;
+					slug: ValidContentEntrySlug<C>;
+			  }
+			: {
+					collection: C;
+					id: keyof DataEntryMap[C];
+			  }
 	>;
 	// Allow generic `string` to avoid excessive type errors in the config
 	// if `dev` is not running to update as you edit.
@@ -175,69 +175,79 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"models": {
-			"baseball.md": {
-				id: "baseball.md";
-				slug: "baseball";
-				body: string;
-				collection: "models";
-				data: InferEntrySchema<"models">
-			} & { render(): Render[".md"] };
-			"bugatti.md": {
-				id: "bugatti.md";
-				slug: "bugatti";
-				body: string;
-				collection: "models";
-				data: InferEntrySchema<"models">
-			} & { render(): Render[".md"] };
-			"spacesuit.md": {
-				id: "spacesuit.md";
-				slug: "spacesuit";
-				body: string;
-				collection: "models";
-				data: InferEntrySchema<"models">
-			} & { render(): Render[".md"] };
-		};
-		"shoes": {
-			"converse.md": {
-				id: "converse.md";
-				slug: "converse";
-				body: string;
-				collection: "shoes";
-				data: InferEntrySchema<"shoes">
-			} & { render(): Render[".md"] };
-			"low-top.md": {
-				id: "low-top.md";
-				slug: "low-top";
-				body: string;
-				collection: "shoes";
-				data: InferEntrySchema<"shoes">
-			} & { render(): Render[".md"] };
-			"mid-top.md": {
-				id: "mid-top.md";
-				slug: "mid-top";
-				body: string;
-				collection: "shoes";
-				data: InferEntrySchema<"shoes">
-			} & { render(): Render[".md"] };
-			"nike.md": {
-				id: "nike.md";
-				slug: "nike";
-				body: string;
-				collection: "shoes";
-				data: InferEntrySchema<"shoes">
-			} & { render(): Render[".md"] };
-		};
+"baseball.md": {
+	id: "baseball.md";
+  slug: "baseball";
+  body: string;
+  collection: "models";
+  data: InferEntrySchema<"models">
+} & { render(): Render[".md"] };
+"bugatti.md": {
+	id: "bugatti.md";
+  slug: "bugatti";
+  body: string;
+  collection: "models";
+  data: InferEntrySchema<"models">
+} & { render(): Render[".md"] };
+"spacesuit.md": {
+	id: "spacesuit.md";
+  slug: "spacesuit";
+  body: string;
+  collection: "models";
+  data: InferEntrySchema<"models">
+} & { render(): Render[".md"] };
+};
+"posts": {
+"rsturn.md": {
+	id: "rsturn.md";
+  slug: "rsturn";
+  body: string;
+  collection: "posts";
+  data: any
+} & { render(): Render[".md"] };
+"rust.md": {
+	id: "rust.md";
+  slug: "rust";
+  body: string;
+  collection: "posts";
+  data: any
+} & { render(): Render[".md"] };
+};
+"shoes": {
+"converse.md": {
+	id: "converse.md";
+  slug: "converse";
+  body: string;
+  collection: "shoes";
+  data: InferEntrySchema<"shoes">
+} & { render(): Render[".md"] };
+"low-top.md": {
+	id: "low-top.md";
+  slug: "low-top";
+  body: string;
+  collection: "shoes";
+  data: InferEntrySchema<"shoes">
+} & { render(): Render[".md"] };
+"mid-top.md": {
+	id: "mid-top.md";
+  slug: "mid-top";
+  body: string;
+  collection: "shoes";
+  data: InferEntrySchema<"shoes">
+} & { render(): Render[".md"] };
+"nike.md": {
+	id: "nike.md";
+  slug: "nike";
+  body: string;
+  collection: "shoes";
+  data: InferEntrySchema<"shoes">
+} & { render(): Render[".md"] };
+};
 
 	};
 
 	type DataEntryMap = {
-		"games": {
-		};
-		"tools": {
-		};
-		"works": {
-		};
-
+		
 	};
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;

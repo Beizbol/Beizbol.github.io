@@ -1,1 +1,0 @@
-import"./hoisted.3bf6e513.js";const c=document.querySelector(":root"),t=document.getQuerySelectorAll(".picker");for(let e=0;e<t.length;e++)t[e].addEventListener("change",o=>{const r=o.target.value;c.style.setProperty(`--cls-${e}`,r)});
