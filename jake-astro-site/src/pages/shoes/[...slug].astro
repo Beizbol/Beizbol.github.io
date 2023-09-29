@@ -1,0 +1,112 @@
+---
+import { getCollection } from "astro:content";
+import Page from "../../layouts/Page.astro";
+
+export async function getStaticPaths() {
+  const allModels = await getCollection("shoes");
+  return allModels.map((shoe) => ({
+    params: { slug: shoe.slug },
+    props: { shoe },
+  }));
+}
+
+const { shoe } = Astro.props;
+
+type Color = {
+  id: string;
+  name: string;
+};
+let colors: Color[] = [];
+for (let i = 1; i <= shoe.data.colors; i++) {
+  colors.push({ id: `color${i}`, name: `Color ${i}` });
+}
+const path = shoe.slug;
+
+const { default: svg } = await import(/* @vite-ignore */ `/src/shoes/svg/${path}.svg?raw`);
+// console.log(svg);
+---
+
+<Page title={shoe.data.title}>
+  <div id="colors">
+    {
+      colors.map((c) => (
+        <div class="color">
+          <label for={c.id}>{c.name}</label>
+          <input id={c.id} type="color" class="picker" value="#FFFFFF" />
+        </div>
+      ))
+    }
+  </div>
+  <div id="shoe">
+    <Fragment set:html={svg} />
+  </div>
+
+  <script>
+    const root = document.querySelector(":root");
+    const colors = document.querySelectorAll(".picker");
+    const shoe = document.getElementById("shoe");
+
+    function rgbToHex(r) {
+      var r = parseInt(rgbValues[0], 10).toString(16).slice(-2);
+      if (r.length == 1) r = "0" + r;
+      var g = parseInt(rgbValues[1], 10).toString(16).slice(-2);
+      if (g.length == 1) g = "0" + g;
+      var b = parseInt(rgbValues[2], 10).toString(16).slice(-2);
+      if (b.length == 1) b = "0" + b;
+      return "#" + r + g + b;
+    }
+
+    function init() {
+      for (let i = 0; i < colors.length; i++) {
+        const style = shoe.querySelector("svg defs style");
+        const cls = style.sheet.rules[i];
+        console.log(cls.style);
+        console.log(cls.style.getPropertyValue("fill"));
+
+        // const color = cls.
+
+        // const cls = style.querySelector(`.cls-${i + 1}`);
+        // const starting = cls.style.getPropertyValue("fill");
+        // console.log("default color", starting, `.cls-${i + 1}`);
+
+        // // cls.style.setProperty("fill", `var(--color-${i})`);
+        // const picker = colors[i];
+        // picker.value = starting;
+        // picker.addEventListener("change", (e) => {
+        //   const color = e.target.value;
+        //   root.style.setProperty(`--color-${i}`, color);
+        // });
+      }
+      console.log("ready.");
+    }
+
+    window.addEventListener("load", init);
+  </script>
+
+  <style>
+    #shoe {
+      width: min(90vw, 90vh);
+      margin: 0 auto;
+    }
+
+    #colors {
+      flex-basis: 10rem;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-around;
+      padding: 1rem;
+      background-color: teal;
+    }
+
+    .color {
+      display: flex;
+
+      align-items: center;
+      gap: 1rem;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</Page>

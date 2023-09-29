@@ -10,8 +10,21 @@ const modelsCollection = defineCollection({
         model: z.string(),
     })
 });
+const shoesCollection = defineCollection({
+    schema: z.object({
+        title: z.string(),
+        colors: z.number(),
+    })
+});
+// const svgsCollection = defineCollection({
+//     schema: z.object({
+//         title: z.string(),
+//         colors: z.number(),
+//     })
+// });
 // 3. Export a single `collections` object to register your collection(s)
 //    This key should match your collection directory name in "src/content"
 export const collections = {
     'models': modelsCollection,
+    'shoes': shoesCollection
 };

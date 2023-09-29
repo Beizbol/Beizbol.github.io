@@ -1,0 +1,39 @@
+---
+import Page from "../../layouts/Page.astro";
+import { getCollection } from "astro:content";
+const shoes = await getCollection("shoes");
+---
+
+<Page title="Shoes">
+  <ul class="list">
+    {
+      shoes.map((shoe) => (
+        <li class="card">
+          <a href={`/shoes/${shoe.slug}`}>{shoe.data.title}</a>
+          <img class="icon" src={`./shoes/svg/${shoe.slug}.svg`} alt={shoe.data.title} />
+        </li>
+      ))
+    }
+  </ul>
+
+  <style>
+    .list {
+      display: grid;
+      list-style: none;
+      padding: 0;
+      gap: 1rem;
+    }
+
+    .card {
+      display: grid;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    .icon {
+      width: max(5rem, 25vw);
+    }
+  </style>
+</Page>
