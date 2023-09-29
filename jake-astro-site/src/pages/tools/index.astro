@@ -4,20 +4,34 @@ import Page from "../../layouts/Page.astro";
 ---
 
 <Page title="Tools">
-  <div>
-    <h3>Work</h3>
+	<div>
+		<h3>Dev</h3>
+		<ul role="list" class="link-card-grid">
+			<Card
+				href="/tools/qr"
+				title="QR Code"
+				body="Generate a QR code that points to a link."
+			/>
+			<!-- <Card href="/tools/rsturn" title="Rsturn" body="Decorate implicit returns in Rust code." /> -->
+			<!-- <Card href="/tools/rn-media" title="RnMedia" body="Auto rename media files and folders." /> -->
+			<!-- <Card href="/tools/jwinget" title="J-winget" body="Wrapper for personalized winget update experience." /> -->
+		</ul>
+	</div>
+	<!-- <div>
+    <h3>Misc</h3>
     <ul role="list" class="link-card-grid">
-      <Card href="/tools/qr" title="QR Code" body="Generate a QR code that points to a link." />
+      <Card href="/tools/homeflix" title="Games" body="Watch media from the local network on windows computers." />
+      <Card href="/tools/invoice" title="Invoice" body="Generate an invoice with a single form." />
       <Card href="/contact/" title="Contact" body="Feel free to reach out." />
     </ul>
-  </div>
+  </div> -->
 </Page>
 
 <style>
-  .link-card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-    gap: 1rem;
-    padding: 0;
-  }
+	.link-card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		gap: 1rem;
+		padding: 0;
+	}
 </style>
