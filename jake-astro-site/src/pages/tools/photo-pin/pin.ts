@@ -38,7 +38,7 @@ export default class Pin {
     }
 
     drawPin(_ctx) {
-        console.log("pin img ", this.icon);
+        // console.log("pin img ", this.icon);
         // draw pin bottom
         _ctx.fillStyle = this.bg;
         _ctx.fillRect(this.x - 24, this.y - this.h / 2, this.w, this.h);

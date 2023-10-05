@@ -66,7 +66,7 @@ import Page from "../../../layouts/Page.astro";
 		</div>
 		<div class="flex">
 			<label for="preview">Preview (Drag and Drop)</label>
-			<button disabled>Download</button>
+			<button id="download" disabled>Download / Export</button>
 		</div>
 
 		<!-- <div id="preview" class="flex">
@@ -76,7 +76,7 @@ import Page from "../../../layouts/Page.astro";
         </div>
       </div> -->
 
-		<canvas id="pcanvas" width="600" height="150"></canvas>
+		<canvas id="pcanvas" width="600" height="100"></canvas>
 		<canvas id="canvas" width="600" height="300"></canvas>
 	</div>
 
@@ -152,7 +152,13 @@ import Page from "../../../layouts/Page.astro";
 		const ctx = canvas.getContext("2d");
 		const pcanvas = document.getElementById("pcanvas");
 		const pctx = pcanvas.getContext("2d");
-
+		const download = document.getElementById("download");
+		download.onclick = () => {
+			const link = document.createElement("a");
+			link.download = name;
+			link.href = canvas.toDataURL();
+			link.click();
+		};
 		const pick = document.getElementById("pick");
 		const photo = new Image();
 		const img = document.getElementById("icon-img");
@@ -189,6 +195,9 @@ import Page from "../../../layouts/Page.astro";
 
 		canvas.addEventListener("mouseleave", (e) => {
 			state.canvasHover = false;
+			if (state.held) {
+				place_pin();
+			}
 		});
 
 		pcanvas.addEventListener("mouseenter", (e) => {
@@ -208,7 +217,7 @@ import Page from "../../../layouts/Page.astro";
 				// console.log("nah");
 				return;
 			}
-			console.log("move");
+			// console.log("move");
 			const cbr = canvas.getBoundingClientRect();
 			const px = e.clientX - cbr.left;
 			const py = e.clientY - cbr.top;
@@ -227,7 +236,6 @@ import Page from "../../../layouts/Page.astro";
 		});
 
 		canvas.addEventListener("mousedown", (e) => {
-			console.log("canvas click", state.pcanvasHover);
 			if (!state.canvasHover) return;
 			const cbr = canvas.getBoundingClientRect();
 			const px = e.clientX - cbr.left;
@@ -245,18 +253,24 @@ import Page from "../../../layouts/Page.astro";
 		});
 
 		pcanvas.addEventListener("mousedown", (e) => {
-			console.log("pcanvas click", state.pcanvasHover);
 			if (!state.pcanvasHover) return;
 			const pcbr = pcanvas.getBoundingClientRect();
 			const px = e.clientX - pcbr.left;
 			const py = e.clientY - pcbr.top;
-			console.log(ppin);
+			// console.log(ppin);
 			if (ppin.isMouseOver(px, py)) {
 				pcanvas.style.cursor = "grabbing";
 				state.held = ppin;
 				console.log("Holding pin");
 			}
 		});
+
+		function place_pin() {
+			const clone = state.held.clone();
+			state.placed.push(clone);
+			state.held = null;
+			draw();
+		}
 
 		document.addEventListener("mouseup", (e) => {
 			canvas.style.cursor = "grab";
@@ -265,16 +279,11 @@ import Page from "../../../layouts/Page.astro";
 			if (!state.held) return;
 
 			if (state.canvasHover) {
-				console.log("placing in canvas");
 				const cbr = canvas.getBoundingClientRect();
 				const x = e.clientX - cbr.left;
 				const y = e.clientY - cbr.top;
 				state.held.move(x, y);
-				const clone = state.held.clone();
-				console.log(clone);
-				state.placed.push(clone);
-				state.held = null;
-				draw();
+				place_pin();
 			}
 			ppin.move(40, 20);
 			drawPreview();
@@ -286,7 +295,6 @@ import Page from "../../../layouts/Page.astro";
 		});
 
 		icons.addEventListener("change", (e) => {
-			console.log("val ", e.target.value);
 			img.src = e.target.value;
 			ppin.updateIcon(e.target.value);
 			drawPreview();
@@ -304,6 +312,8 @@ import Page from "../../../layouts/Page.astro";
 			drawPreview();
 		});
 
+		let name = "";
+
 		pick.addEventListener("change", (e) => {
 			if (e.target.files.length < 1) {
 				alert("No image files selected.");
@@ -314,11 +324,18 @@ import Page from "../../../layouts/Page.astro";
 				alert("One image file at a time.");
 				return;
 			}
-			const url = URL.createObjectURL(e.target.files[0]);
-			//console.log("url: ", url);
+			const file = e.target.files[0];
+			const url = URL.createObjectURL(file);
 			photo.src = url;
 			photo.onload = () => {
-				console.log("loaded");
+				name = file.name.slice(0, -3) + "png";
+				download.disabled = false;
+				const { width, height } = photo;
+				ctx.canvas.width = width;
+				ctx.canvas.height = height;
+				pcanvas.style.width = width + "px";
+				canvas.style.width = width + "px";
+				canvas.style.height = height + "px";
 				draw();
 			};
 		});
@@ -327,22 +344,15 @@ import Page from "../../../layouts/Page.astro";
 			// wipe canvas
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			// draw user image
-			console.log(photo.src);
+			// console.log(photo.src);
 			if (photo.src) {
-				const { width, height } = photo;
-				console.log(height, width);
-				ctx.canvas.width = width;
-				ctx.canvas.height = height;
-				canvas.style.width = width + "px";
-				canvas.style.height = height + "px";
 				ctx.drawImage(photo, 0, 0);
 			}
+			// console.log(state.placed);
 			// draw placed pins
 			for (let i = 0; i < state.placed.length; i++) {
 				const pin = state.placed[i];
-				console.log("pin: ", pin);
 				pin.drawPin(ctx);
-				console.log("placed pin drawn");
 			}
 			// draw held pin
 			if (state.held) {
