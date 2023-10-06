@@ -11,6 +11,6 @@ export default defineConfig({
   //   plugins:[wasmPack('./my-crate')],
   // },
   build: {
-    assets: "_assets",
+    assets: "astrosets",
   },
 });
