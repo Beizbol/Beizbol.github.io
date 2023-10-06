@@ -11,7 +11,7 @@ export default class Pin {
     color: string;
 
 
-    constructor(rect: { left: number; top: number; width: number; height: number; }, txt: string, bg: string, img: string, id?: number) {
+    constructor(rect: { left: number; top: number; width: number; height: number; }, txt: string, bg: string, color: string, img: string, id?: number) {
         this.id = id ?? Math.random() * 1000
         this.x = rect.left;
         this.y = rect.top;
@@ -21,8 +21,8 @@ export default class Pin {
         this.icon = new Image()
         this.icon.src = img;
         this.bg = bg;
+        this.color = color;
         this.font = "16px sans-serif";
-        this.color = "#FFFFFF";
     }
 
     updateIcon(img: string) {
@@ -39,7 +39,7 @@ export default class Pin {
         this.y = my;
     }
 
-    drawPin(_ctx) {
+    drawPin(_ctx: CanvasRenderingContext2D) {
         // console.log("pin img ", this.icon);
         // draw pin bottom
         _ctx.fillStyle = this.bg;
@@ -75,10 +75,10 @@ export default class Pin {
     }
 
     twin() {
-        return new Pin({ left: this.x, top: this.y, width: this.w, height: this.h }, this.text, this.bg, this.icon.src);
+        return new Pin({ left: this.x, top: this.y, width: this.w, height: this.h }, this.text, this.bg, this.color, this.icon.src);
     }
 
     clone() {
-        return new Pin({ left: this.x, top: this.y, width: this.w, height: this.h }, this.text, this.bg, this.icon.src, this.id);
+        return new Pin({ left: this.x, top: this.y, width: this.w, height: this.h }, this.text, this.bg, this.color, this.icon.src, this.id);
     }
 }

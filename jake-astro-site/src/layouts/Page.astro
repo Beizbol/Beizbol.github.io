@@ -5,8 +5,8 @@ import { ViewTransitions } from "astro:transitions";
 import "../styles/global.css";
 
 export interface Props {
-  title: string;
-  filename?: string;
+	title: string;
+	filename?: string;
 }
 
 const { title, filename } = Astro.props;
@@ -21,103 +21,111 @@ const app = `/apps/${filename}/app.js`;
 ---
 
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="msapplication-TileColor" content="#FFFFFF" />
-    <meta name="theme-color" content="#ffffff" />
-    <meta name="description" content={title} />
-    <title>{title}</title>
-    <ViewTransitions />
-    <link rel="stylesheet" href="/themes/light.css" media="(prefers-color-scheme: light)" />
-    <link rel="stylesheet" href="/themes/dark.css" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
-    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
-    {isApp && <link rel="manifest" href={pwa} />}
-    {isApp && <script is:inline src={app} />}
-  </head>
-  <body>
-    <header>
-      <Nav />
-      <h1 class="title">{title}</h1>
-      <Theme />
-    </header>
-    <main>
-      <slot />
-      <footer>&copy; {year}, Jake Surrett. All rights reserved.</footer>
-    </main>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="msapplication-TileColor" content="#FFFFFF" />
+		<meta name="theme-color" content="#ffffff" />
+		<meta name="description" content={title} />
+		<title>{title}</title>
+		<ViewTransitions />
+		<link
+			rel="stylesheet"
+			href="/themes/light.css"
+			media="(prefers-color-scheme: light)"
+		/>
+		<link
+			rel="stylesheet"
+			href="/themes/dark.css"
+			media="(prefers-color-scheme: dark)"
+		/>
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="apple-touch-icon" href="/pwa-192x192.png" />
+		<link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
+		<!-- {isApp && <link rel="manifest" href={pwa} />}
+		{isApp && <script is:inline src={app} />} -->
+	</head>
+	<body>
+		<header>
+			<Nav />
+			<h1 class="title">{title}</h1>
+			<Theme />
+		</header>
+		<main>
+			<slot />
+			<footer>&copy; {year}, Jake Surrett. All rights reserved.</footer>
+		</main>
 
-    <style>
-      :root {
-        --font-size-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
-        --font-size-lg: clamp(1.2rem, 0.7vw + 1.2rem, 1.5rem);
-        --font-size-xl: clamp(1rem, 3vw + 1.5rem, 3.25rem);
-      }
+		<style>
+			:root {
+				--font-size-base: clamp(1rem, 0.34vw + 0.91rem, 1.19rem);
+				--font-size-lg: clamp(1.2rem, 0.7vw + 1.2rem, 1.5rem);
+				--font-size-xl: clamp(1rem, 3vw + 1.5rem, 3.25rem);
+			}
 
-      body {
-        /* font-size: var(--font-size-base); */
-        display: grid;
-        grid-template-rows: 3rem 1fr;
-        place-content: center;
-        min-block-size: 100vh;
-        color: var(--color-text);
-        background-color: var(--color-bg);
-        overflow: hidden;
-      }
+			body {
+				/* font-size: var(--font-size-base); */
+				display: grid;
+				grid-template-rows: 3rem 1fr;
+				place-content: center;
+				min-block-size: 100vh;
+				color: var(--color-text);
+				background-color: var(--color-bg);
+				overflow: hidden;
+			}
 
-      /* #jslot {
+			/* #jslot {
         text-align: center;
         width: 100%;
       } */
 
-      main {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        margin-top: 3rem;
-        padding: 1rem;
-        min-height: calc(100vh - 3rem);
-        min-width: 100vw;
-        overflow: auto;
-      }
+			main {
+				display: flex;
+				flex-direction: column;
+				gap: 1rem;
+				margin-top: 3rem;
+				padding: 1rem;
+				min-height: calc(100vh - 3rem);
+				min-width: 100vw;
+				overflow: auto;
+			}
 
-      @supports (scrollbar-color: black) {
-        main {
-          scrollbar-color: var(--color-bg-alt) var(--color-bg);
-        }
-      }
+			@supports (scrollbar-color: black) {
+				main {
+					scrollbar-color: var(--color-bg-alt) var(--color-bg);
+				}
+			}
 
-      header {
-        position: fixed;
-        text-align: center;
-        inset: 0 0 auto 0; /* top right bottom left */
-        height: 3rem;
-        margin: 0 auto;
-        background-color: var(--color-bg-alt);
-        z-index: 100;
-      }
+			header {
+				position: fixed;
+				text-align: center;
+				inset: 0 0 auto 0; /* top right bottom left */
+				height: 3rem;
+				margin: 0 auto;
+				background-color: var(--color-bg-alt);
+				z-index: 100;
+			}
 
-      .title {
-        margin-top: 0.5rem;
-        color: var(--color-text);
-        font-size: x-large;
-      }
+			.title {
+				margin-top: 0.5rem;
+				color: var(--color-text);
+				font-size: x-large;
+			}
 
-      .title a:hover {
-        color: var(--color-accent);
-      }
+			.title a:hover {
+				color: var(--color-accent);
+			}
 
-      .title a {
-        text-decoration: none;
-        color: var(--color-text);
-      }
+			.title a {
+				text-decoration: none;
+				color: var(--color-text);
+			}
 
-      footer {
-        text-align: center;
-        padding-top: 1rem;
-        margin: 1rem;
-      }
-    </style>
-  </body>
+			footer {
+				text-align: center;
+				padding-top: 1rem;
+				margin: 1rem;
+			}
+		</style>
+	</body>
 </html>
