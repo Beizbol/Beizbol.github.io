@@ -5,7 +5,7 @@ import fs from "fs-extra";
 
 const srcDir = 'dist';
 const destDir = path.join('..', 'docs');
-const assetsDir = path.join(destDir, 'assets');
+const assetsDir = path.join(destDir, 'astrosets');
 
 
 // delete assets folder to ensure new css
