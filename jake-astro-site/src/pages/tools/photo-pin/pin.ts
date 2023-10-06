@@ -1,4 +1,5 @@
 export default class Pin {
+    id: number;
     x: number;
     y: number;
     w: number;
@@ -10,7 +11,8 @@ export default class Pin {
     color: string;
 
 
-    constructor(rect: { left: number; top: number; width: number; height: number; }, txt: string, bg: string, img: string) {
+    constructor(rect: { left: number; top: number; width: number; height: number; }, txt: string, bg: string, img: string, id?: number) {
+        this.id = id ?? Math.random() * 1000
         this.x = rect.left;
         this.y = rect.top;
         this.w = rect.width;
@@ -72,7 +74,11 @@ export default class Pin {
         return mx > this.x - 36 && mx < this.x - 12 + this.w && my > this.y - 20 && my < this.y + this.h;
     }
 
-    clone() {
+    twin() {
         return new Pin({ left: this.x, top: this.y, width: this.w, height: this.h }, this.text, this.bg, this.icon.src);
+    }
+
+    clone() {
+        return new Pin({ left: this.x, top: this.y, width: this.w, height: this.h }, this.text, this.bg, this.icon.src, this.id);
     }
 }

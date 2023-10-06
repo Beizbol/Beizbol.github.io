@@ -163,7 +163,7 @@ import Page from "../../../layouts/Page.astro";
 		const photo = new Image();
 		const img = document.getElementById("icon-img");
 		img.onload = () => {
-			console.log("icon loaded");
+			// console.log("icon loaded");
 			drawPreview();
 		};
 		const icons = document.getElementById("icons");
@@ -189,7 +189,7 @@ import Page from "../../../layouts/Page.astro";
 		drawPreview();
 
 		canvas.addEventListener("mouseenter", (e) => {
-			console.log("entered");
+			// console.log("entered");
 			state.canvasHover = true;
 		});
 
@@ -217,7 +217,7 @@ import Page from "../../../layouts/Page.astro";
 				// console.log("nah");
 				return;
 			}
-			// console.log("move");
+			// console.log("moving held pin", state.held.id);
 			const cbr = canvas.getBoundingClientRect();
 			const px = e.clientX - cbr.left;
 			const py = e.clientY - cbr.top;
@@ -225,9 +225,10 @@ import Page from "../../../layouts/Page.astro";
 			draw();
 		});
 
+		let isPrev = false;
 		pcanvas.addEventListener("mousemove", (e) => {
 			if (!state.held || !state.pcanvasHover) return;
-
+			isPrev = true;
 			const pcbr = pcanvas.getBoundingClientRect();
 			const px = e.clientX - pcbr.left;
 			const py = e.clientY - pcbr.top;
@@ -235,18 +236,31 @@ import Page from "../../../layouts/Page.astro";
 			drawPreview();
 		});
 
+		function print_placed() {
+			for (let i = 0; i < state.placed.length; i++) {
+				const p = state.placed[i];
+				// console.log(i, p);
+			}
+		}
+
 		canvas.addEventListener("mousedown", (e) => {
 			if (!state.canvasHover) return;
 			const cbr = canvas.getBoundingClientRect();
 			const px = e.clientX - cbr.left;
 			const py = e.clientY - cbr.top;
+
 			for (let i = 0; i < state.placed.length; i++) {
 				const pin = state.placed[i];
 				if (pin.isMouseOver(px, py)) {
 					canvas.style.cursor = "grabbing";
+					// console.log("pre Held pin", state.held);
 					state.held = pin;
-					state.placed.pop(i);
-					console.log("Holding pin");
+					// console.log("Held pin", state.held);
+					// console.log("pre pop placed pins:");
+					// print_placed();
+					state.placed.splice(i, 1);
+					// console.log(i, "post pop placed pins:");
+					// print_placed();
 					return;
 				}
 			}
@@ -261,13 +275,23 @@ import Page from "../../../layouts/Page.astro";
 			if (ppin.isMouseOver(px, py)) {
 				pcanvas.style.cursor = "grabbing";
 				state.held = ppin;
-				console.log("Holding pin");
+				// console.log("Holding pin");
 			}
 		});
 
 		function place_pin() {
-			const clone = state.held.clone();
-			state.placed.push(clone);
+			if (!state.held) return;
+			// console.log("placing pin: ", state.held.id);
+			// print_placed();
+			if (isPrev) {
+				// console.log("twin pin");
+				state.placed.push(state.held.twin());
+			} else {
+				// console.log("clone pin");
+				state.placed.push(state.held.clone());
+			}
+			// console.log("placed pin");
+			// print_placed();
 			state.held = null;
 			draw();
 		}
@@ -279,17 +303,17 @@ import Page from "../../../layouts/Page.astro";
 			if (!state.held) return;
 
 			if (state.canvasHover) {
-				const cbr = canvas.getBoundingClientRect();
-				const x = e.clientX - cbr.left;
-				const y = e.clientY - cbr.top;
-				state.held.move(x, y);
+				// const cbr = canvas.getBoundingClientRect();
+				// const x = e.clientX - cbr.left;
+				// const y = e.clientY - cbr.top;
+				// state.held.move(x, y);
 				place_pin();
 			}
 			ppin.move(40, 20);
 			drawPreview();
 
 			// ppin.style.position = "static";
-			state.held = false;
+			isPrev = false;
 			state.pin_offset_x = 0;
 			state.pin_offset_y = 0;
 		});
@@ -368,7 +392,7 @@ import Page from "../../../layouts/Page.astro";
 		function drawPreview() {
 			pctx.clearRect(0, 0, pctx.canvas.width, pctx.canvas.height);
 			ppin.drawPin(pctx);
-			console.log("preview drawn");
+			// console.log("preview drawn");
 		}
 	</script>
 </Page>
