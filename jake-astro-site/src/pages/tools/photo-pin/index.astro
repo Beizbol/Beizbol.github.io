@@ -140,282 +140,298 @@ import Page from "../../../layouts/Page.astro";
 			border: 1px solid #ffffff;
 		}
 	</style>
-</Page>
-<script>
-	import Pin from "./pin";
 
-	function init() {
-		const pcanvas = document.getElementById("pcanvas") as HTMLCanvasElement;
+	<script>
+		import Pin from "./pin";
 
-		if (!pcanvas) {
-			console.log("no canvas");
-			return;
-		}
+		function init() {
+			const pcanvas = document.getElementById(
+				"pcanvas"
+			) as HTMLCanvasElement;
 
-		const pctx = pcanvas.getContext("2d") as CanvasRenderingContext2D;
-		const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-		const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-		const download = document.getElementById(
-			"download"
-		) as HTMLButtonElement;
-		download.onclick = () => {
-			const link = document.createElement("a");
-			link.download = name;
-			link.href = canvas.toDataURL();
-			link.click();
-		};
-		const pick = document.getElementById("pick") as HTMLInputElement;
-		const photo = new Image();
-		let ppin = new Pin(
-			{ top: 20, left: 40, width: 100, height: 30 },
-			"Pin Text",
-			"Indigo",
-			"white",
-			"/assets/pins/outlined/dot.svg"
-		);
-		function drawPreview() {
-			pctx.clearRect(0, 0, pctx.canvas.width, pctx.canvas.height);
-			ppin.drawPin(pctx);
-			console.log("preview drawn");
-		}
-		const img = new Image();
-		img.src = "/assets/pins/outlined/dot.svg";
-		img.onload = () => {
-			console.log("icon loaded");
-			drawPreview();
-		};
-
-		const icons = document.getElementById("icons") as HTMLSelectElement;
-		const pinColor = document.getElementById(
-			"pinColor"
-		) as HTMLInputElement;
-		const txtColor = document.getElementById(
-			"txtColor"
-		) as HTMLInputElement;
-		const pinText = document.getElementById("pinText") as HTMLInputElement;
-
-		const state = {
-			placed: [] as Pin[],
-			held: null as Pin | null,
-			canvasHover: false,
-			pin_offset_x: 0,
-			pin_offset_y: 0,
-		};
-
-		canvas.addEventListener("mouseenter", (e) => {
-			// console.log("entered");
-			state.canvasHover = true;
-		});
-
-		canvas.addEventListener("mouseleave", (e) => {
-			state.canvasHover = false;
-			if (state.held) {
-				place_pin();
-			}
-		});
-
-		pcanvas.addEventListener("mouseleave", (e) => {
-			if (state.held) {
-				state.held.move(40, 20);
-				drawPreview();
-			}
-		});
-
-		canvas.addEventListener("mousemove", (e) => {
-			if (!state.held || !state.canvasHover) {
-				// console.log("nah");
+			if (!pcanvas) {
+				console.log("no canvas");
 				return;
 			}
-			// console.log("moving held pin", state.held.id);
-			const cbr = canvas.getBoundingClientRect();
-			const px = e.clientX - cbr.left;
-			const py = e.clientY - cbr.top;
-			state.held.move(px, py);
-			draw();
-		});
 
-		let isPrev = false;
-		pcanvas.addEventListener("mousemove", (e) => {
-			if (!state.held) return;
-			isPrev = true;
-			const pcbr = pcanvas.getBoundingClientRect();
-			const px = e.clientX - pcbr.left;
-			const py = e.clientY - pcbr.top;
-			state.held.move(px, py);
-			drawPreview();
-		});
+			const pctx = pcanvas.getContext("2d") as CanvasRenderingContext2D;
+			const canvas = document.getElementById(
+				"canvas"
+			) as HTMLCanvasElement;
+			const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+			const download = document.getElementById(
+				"download"
+			) as HTMLButtonElement;
+			download.onclick = () => {
+				const link = document.createElement("a");
+				link.download = name;
+				link.href = canvas.toDataURL();
+				link.click();
+			};
+			const pick = document.getElementById("pick") as HTMLInputElement;
+			const photo = new Image();
+			let ppin = new Pin(
+				{ top: 20, left: 40, width: 100, height: 30 },
+				"Pin Text",
+				"Indigo",
+				"white",
+				"/assets/pins/outlined/dot.svg"
+			);
+			function drawPreview() {
+				pctx.clearRect(0, 0, pctx.canvas.width, pctx.canvas.height);
+				ppin.drawPin(pctx);
+				console.log("preview drawn");
+			}
+			const img = new Image();
+			img.src = "/assets/pins/outlined/dot.svg";
+			img.onload = () => {
+				console.log("icon loaded");
+				drawPreview();
+			};
 
-		canvas.addEventListener("mousedown", (e) => {
-			if (!state.canvasHover) return;
-			const cbr = canvas.getBoundingClientRect();
-			const px = e.clientX - cbr.left;
-			const py = e.clientY - cbr.top;
+			const icons = document.getElementById("icons") as HTMLSelectElement;
+			const pinColor = document.getElementById(
+				"pinColor"
+			) as HTMLInputElement;
+			const txtColor = document.getElementById(
+				"txtColor"
+			) as HTMLInputElement;
+			const pinText = document.getElementById(
+				"pinText"
+			) as HTMLInputElement;
 
-			for (let i = 0; i < state.placed.length; i++) {
-				const pin = state.placed[i] as Pin;
-				if (pin.isMouseOver(px, py)) {
-					canvas.style.cursor = "grabbing";
-					// console.log("pre Held pin", state.held);
-					state.held = pin;
-					// console.log("Held pin", state.held);
-					// console.log("pre pop placed pins:");
-					// print_placed();
-					state.placed.splice(i, 1);
-					// console.log(i, "post pop placed pins:");
-					// print_placed();
+			const state = {
+				placed: [] as Pin[],
+				held: null as Pin | null,
+				canvasHover: false,
+				pin_offset_x: 0,
+				pin_offset_y: 0,
+				dirty: false,
+			};
+
+			canvas.addEventListener("mouseenter", (e) => {
+				// console.log("entered");
+				state.canvasHover = true;
+			});
+
+			canvas.addEventListener("mouseleave", (e) => {
+				state.canvasHover = false;
+				if (state.held) {
+					place_pin();
+				}
+			});
+
+			pcanvas.addEventListener("mouseleave", (e) => {
+				if (state.held) {
+					state.held.move(40, 20);
+					drawPreview();
+				}
+			});
+
+			canvas.addEventListener("mousemove", (e) => {
+				if (!state.held || !state.canvasHover) {
+					// console.log("nah");
 					return;
 				}
-			}
-		});
-
-		pcanvas.addEventListener("mousedown", (e) => {
-			const pcbr = pcanvas.getBoundingClientRect();
-			const px = e.clientX - pcbr.left;
-			const py = e.clientY - pcbr.top;
-			// console.log(ppin);
-			if (ppin.isMouseOver(px, py)) {
-				pcanvas.style.cursor = "grabbing";
-				state.held = ppin;
-				// console.log("Holding pin");
-			}
-		});
-
-		function place_pin() {
-			if (!state.held) return;
-			// console.log("placing pin: ", state.held.id);
-			// print_placed();
-			if (isPrev) {
-				// console.log("twin pin");
-				state.placed.push(state.held.twin());
-			} else {
-				// console.log("clone pin");
-				state.placed.push(state.held.clone());
-			}
-			// console.log("placed pin");
-			// print_placed();
-			state.held = null;
-			draw();
-		}
-
-		document.addEventListener("mouseup", (e) => {
-			canvas.style.cursor = "grab";
-			pcanvas.style.cursor = "grab";
-
-			if (!state.held) return;
-
-			if (state.canvasHover) {
-				// const cbr = canvas.getBoundingClientRect();
-				// const x = e.clientX - cbr.left;
-				// const y = e.clientY - cbr.top;
-				// state.held.move(x, y);
-				place_pin();
-			}
-			ppin.move(40, 20);
-			drawPreview();
-
-			// ppin.style.position = "static";
-			isPrev = false;
-			state.pin_offset_x = 0;
-			state.pin_offset_y = 0;
-		});
-
-		icons.addEventListener("change", (e) => {
-			const sel = e.target as HTMLSelectElement;
-			img.src = sel.value;
-			ppin.updateIcon(sel.value);
-			drawPreview();
-		});
-
-		pinColor.addEventListener("change", (e) => {
-			// console.log(e.target.value);
-			const cInput = e.target as HTMLInputElement;
-			ppin.bg = cInput.value;
-			drawPreview();
-		});
-
-		txtColor.addEventListener("change", (e) => {
-			// console.log(e.target.value);
-			const cInput = e.target as HTMLInputElement;
-			ppin.color = cInput.value;
-			drawPreview();
-		});
-
-		pinText.addEventListener("change", (e) => {
-			// console.log(e.target.value);
-			const tInput = e.target as HTMLInputElement;
-			ppin.updateText(tInput.value);
-			drawPreview();
-		});
-
-		let name = "";
-
-		pick.addEventListener("change", (e) => {
-			const picker = e.target as HTMLInputElement;
-
-			if (!picker.files || picker.files.length < 1) {
-				alert("No image files selected.");
-				return;
-			}
-
-			if (picker.files.length > 1) {
-				alert("One image file at a time.");
-				return;
-			}
-			const file = picker.files[0];
-			const url = URL.createObjectURL(file);
-			photo.src = url;
-			photo.onload = () => {
-				name = file.name.slice(0, -3) + "png";
-				download.disabled = false;
-				const { width, height } = photo;
-				ctx.canvas.width = width;
-				ctx.canvas.height = height;
-				pctx.canvas.width = width;
-				pcanvas.style.width = width + "px";
-				canvas.style.width = width + "px";
-				canvas.style.height = height + "px";
-				drawPreview();
+				// console.log("moving held pin", state.held.id);
+				const cbr = canvas.getBoundingClientRect();
+				const px = e.clientX - cbr.left;
+				const py = e.clientY - cbr.top;
+				state.held.move(px, py);
 				draw();
-			};
+			});
+
+			let isPrev = false;
+			pcanvas.addEventListener("mousemove", (e) => {
+				if (!state.held) return;
+				isPrev = true;
+				const pcbr = pcanvas.getBoundingClientRect();
+				const px = e.clientX - pcbr.left;
+				const py = e.clientY - pcbr.top;
+				state.held.move(px, py);
+				drawPreview();
+			});
+
+			canvas.addEventListener("mousedown", (e) => {
+				if (!state.canvasHover) return;
+				const cbr = canvas.getBoundingClientRect();
+				const px = e.clientX - cbr.left;
+				const py = e.clientY - cbr.top;
+
+				for (let i = 0; i < state.placed.length; i++) {
+					const pin = state.placed[i] as Pin;
+					if (pin.isMouseOver(px, py)) {
+						canvas.style.cursor = "grabbing";
+						// console.log("pre Held pin", state.held);
+						state.held = pin;
+						// console.log("Held pin", state.held);
+						// console.log("pre pop placed pins:");
+						// print_placed();
+						state.placed.splice(i, 1);
+						// console.log(i, "post pop placed pins:");
+						// print_placed();
+						return;
+					}
+				}
+			});
+
+			pcanvas.addEventListener("mousedown", (e) => {
+				const pcbr = pcanvas.getBoundingClientRect();
+				const px = e.clientX - pcbr.left;
+				const py = e.clientY - pcbr.top;
+				// console.log(ppin);
+				if (ppin.isMouseOver(px, py)) {
+					pcanvas.style.cursor = "grabbing";
+					state.held = ppin;
+					// console.log("Holding pin");
+				}
+			});
+
+			function place_pin() {
+				if (!state.held) return;
+				// console.log("placing pin: ", state.held.id);
+				// print_placed();
+				if (isPrev) {
+					// console.log("twin pin");
+					state.placed.push(state.held.twin());
+				} else {
+					// console.log("clone pin");
+					state.placed.push(state.held.clone());
+				}
+				// console.log("placed pin");
+				// print_placed();
+				state.held = null;
+				draw();
+			}
+
+			document.addEventListener("mouseup", (e) => {
+				canvas.style.cursor = "grab";
+				pcanvas.style.cursor = "grab";
+
+				if (!state.held) return;
+
+				if (state.canvasHover) {
+					// const cbr = canvas.getBoundingClientRect();
+					// const x = e.clientX - cbr.left;
+					// const y = e.clientY - cbr.top;
+					// state.held.move(x, y);
+					place_pin();
+				}
+				ppin.move(40, 20);
+				drawPreview();
+
+				// ppin.style.position = "static";
+				isPrev = false;
+				state.pin_offset_x = 0;
+				state.pin_offset_y = 0;
+			});
+
+			icons.addEventListener("change", (e) => {
+				const sel = e.target as HTMLSelectElement;
+				img.src = sel.value;
+				ppin.updateIcon(sel.value);
+				drawPreview();
+			});
+
+			pinColor.addEventListener("change", (e) => {
+				// console.log(e.target.value);
+				const cInput = e.target as HTMLInputElement;
+				ppin.bg = cInput.value;
+				drawPreview();
+			});
+
+			txtColor.addEventListener("change", (e) => {
+				// console.log(e.target.value);
+				const cInput = e.target as HTMLInputElement;
+				ppin.color = cInput.value;
+				drawPreview();
+			});
+
+			pinText.addEventListener("change", (e) => {
+				// console.log(e.target.value);
+				const tInput = e.target as HTMLInputElement;
+				ppin.updateText(tInput.value);
+				drawPreview();
+			});
+
+			let name = "";
+
+			pick.addEventListener("change", (e) => {
+				const picker = e.target as HTMLInputElement;
+
+				if (!picker.files || picker.files.length < 1) {
+					alert("No image files selected.");
+					return;
+				}
+
+				if (picker.files.length > 1) {
+					alert("One image file at a time.");
+					return;
+				}
+				const file = picker.files[0];
+				const url = URL.createObjectURL(file);
+				photo.src = url;
+				photo.onload = () => {
+					name = file.name.slice(0, -3) + "png";
+					download.disabled = false;
+					state.dirty = true;
+					const { width, height } = photo;
+					ctx.canvas.width = width;
+					ctx.canvas.height = height;
+					pctx.canvas.width = width;
+					pcanvas.style.width = width + "px";
+					canvas.style.width = width + "px";
+					canvas.style.height = height + "px";
+					drawPreview();
+					draw();
+				};
+			});
+
+			function draw() {
+				// wipe canvas
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				// draw user image
+				// console.log(photo.src);
+				if (photo.src) {
+					ctx.drawImage(photo, 0, 0);
+				}
+				// console.log(state.placed);
+				// draw placed pins
+				for (let i = 0; i < state.placed.length; i++) {
+					const pin = state.placed[i];
+					pin.drawPin(ctx);
+				}
+				// draw held pin
+				if (state.held) {
+					// state.held.move();
+					state.held.drawPin(ctx);
+					// console.log("held pin drawn");
+				}
+
+				// ctx.fillStyle = "#22aaaa";
+				// ctx.fillRect(10, 10, 150, 100);
+			}
+		}
+
+		// run on std page load
+		console.log("raw");
+		init();
+		// Runs after astro page load
+		document.addEventListener("astro:page-load", () => {
+			console.log("astro page load");
+			// init();
+		});
+		// Runs immediately after the new page replaces the old page
+		document.addEventListener("astro:after-swap", () => {
+			console.log("astro page swap");
+			init();
 		});
 
-		function draw() {
-			// wipe canvas
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			// draw user image
-			// console.log(photo.src);
-			if (photo.src) {
-				ctx.drawImage(photo, 0, 0);
-			}
-			// console.log(state.placed);
-			// draw placed pins
-			for (let i = 0; i < state.placed.length; i++) {
-				const pin = state.placed[i];
-				pin.drawPin(ctx);
-			}
-			// draw held pin
-			if (state.held) {
-				// state.held.move();
-				state.held.drawPin(ctx);
-				// console.log("held pin drawn");
-			}
-
-			// ctx.fillStyle = "#22aaaa";
-			// ctx.fillRect(10, 10, 150, 100);
-		}
-	}
-
-	// run on std page load
-	console.log("raw");
-	// init();
-	// Runs after astro page load
-	// document.addEventListener("astro:page-load", () => {
-	// 	console.log("astro page load");
-	// 	init();
-	// });
-	// Runs immediately after the new page replaces the old page
-	document.addEventListener("astro:after-swap", () => {
-		console.log("astro page swap");
-		init();
-	});
-</script>
+		window.addEventListener("beforeunload", (e) => {
+			if (!state.dirty) return;
+			e.preventDefault();
+			e.returnValue = "";
+			alert("Are you sure you want to leave?");
+		});
+	</script>
+</Page>

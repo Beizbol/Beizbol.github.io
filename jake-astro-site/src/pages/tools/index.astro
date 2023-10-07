@@ -7,11 +7,13 @@ import Page from "../../layouts/Page.astro";
 	<div>
 		<h3>Dev</h3>
 		<ul role="list" class="link-card-grid">
+			<a href="/tools/photo-pin">Tools</a>
 			<Card
 				href="/tools/photo-pin"
 				title="Photo Pin"
 				body="Add text pins to a photo."
 			/>
+
 			<Card
 				href="/tools/qr"
 				title="QR Code"
@@ -22,8 +24,7 @@ import Page from "../../layouts/Page.astro";
 			<!-- <Card href="/tools/rn-media" title="RnMedia" body="Auto rename media files and folders." /> -->
 			<!-- <Card href="/tools/jwinget" title="J-winget" body="Wrapper for personalized winget update experience." /> -->
 		</ul>
-	</div>
-	<!-- <div>
+		<!-- <div>
     <h3>Misc</h3>
     <ul role="list" class="link-card-grid">
       <Card href="/tools/homeflix" title="Games" body="Watch media from the local network on windows computers." />
@@ -31,13 +32,14 @@ import Page from "../../layouts/Page.astro";
       <Card href="/contact/" title="Contact" body="Feel free to reach out." />
     </ul>
   </div> -->
-</Page>
+	</div>
 
-<style>
-	.link-card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-		gap: 1rem;
-		padding: 0;
-	}
-</style>
+	<style>
+		.link-card-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+			gap: 1rem;
+			padding: 0;
+		}
+	</style>
+</Page>
