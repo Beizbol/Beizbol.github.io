@@ -3,7 +3,7 @@ import Page from "../../../layouts/Page.astro";
 ---
 
 <Page title="TD">
-  <canvas id="canvas" width="600" height="400"> </canvas>
+  <canvas id="canvas" width="600" height="600"> </canvas>
   <div id="ui">
     <button id="play">Play ▶</button>
     <button id="pause">Pause ⏸</button>
@@ -31,6 +31,8 @@ import Page from "../../../layouts/Page.astro";
   import Road from "./road";
   import Tower from "./tower";
   import Wave from "./wave";
+  import Shop from "./shop";
+  import Enemy from "./enemy";
 
   const waveDialog = document.getElementById("waveDialog") as HTMLDialogElement;
   const canvas = document.getElementById("canvas") as HTMLCanvasElement;
@@ -62,8 +64,18 @@ import Page from "../../../layouts/Page.astro";
     shield: 0,
     coins: 0,
     difficulty: Difficulty.Normal,
-    road: new Road([new Point(100, 0), new Point(100, 100), new Point(500, 100), new Point(500, 200), new Point(300, 200), new Point(300, 300), new Point(400, 300), new Point(400, 400)]),
-    towers: [new Tower()],
+    road: new Road([
+      new Point(100, 0),
+      new Point(100, 100),
+      new Point(500, 100),
+      new Point(500, 200),
+      new Point(300, 200),
+      new Point(300, 300),
+      new Point(400, 300),
+      new Point(400, 400),
+    ]),
+    shop: new Shop(canvas.width, canvas.height),
+    towers: [new Tower(280, 160, 30, 30)],
     wave: new Wave(1, Difficulty.Normal),
   };
 
@@ -122,6 +134,8 @@ import Page from "../../../layouts/Page.astro";
   });
 
   function update() {
+    if (!game.running) return;
+
     if (game.wave.isOver) {
       console.log("Next Wave");
       waveDialog!.show();
@@ -140,7 +154,11 @@ import Page from "../../../layouts/Page.astro";
       for (let i = 0; i < game.wave.mobs.length; i++) {
         const enemy = game.wave.mobs[i];
 
-        if (enemy.isDead || enemy.isWaiting || distance(tower.pos, enemy.pos) > tower.range) {
+        if (
+          enemy.isDead ||
+          enemy.isWaiting ||
+          distance(tower, enemy) > tower.range
+        ) {
           continue;
         }
 
@@ -197,14 +215,12 @@ import Page from "../../../layouts/Page.astro";
   }
 
   function draw() {
-    // draw the background
-    // ctx.clearRect(0, 0, 800, 600);
-
     if (!ctx) {
       console.log("no ctx");
       return;
     }
 
+    // draw the background
     ctx.fillStyle = "green";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -213,12 +229,12 @@ import Page from "../../../layouts/Page.astro";
       if (tower.selected) {
         ctx.fillStyle = "grey";
         ctx.beginPath();
-        ctx.arc(tower.pos.x, tower.pos.y, tower.range, 0, Math.PI * 2);
+        ctx.arc(tower.x, tower.y, tower.range, 0, Math.PI * 2);
         ctx.fill();
         ctx.closePath();
       }
       ctx.fillStyle = tower.color;
-      ctx.fillRect(tower.pos.x - Math.floor(tower.size / 2), tower.pos.y - Math.floor(tower.size / 2), tower.size, tower.size);
+      ctx.fillRect(tower.x, tower.y, tower.w, tower.h);
     }
 
     // draw the path
@@ -232,6 +248,15 @@ import Page from "../../../layouts/Page.astro";
       ctx.stroke();
     }
 
+    // draw the goal
+    ctx.fillStyle = "black";
+    ctx.fillRect(game.road.end.x - 40, game.road.end.y, 80, 40);
+    ctx.fillStyle = "white";
+    ctx.fillRect(game.road.end.x, game.road.end.y, 20, 20);
+    ctx.fillRect(game.road.end.x - 40, game.road.end.y, 20, 20);
+    ctx.fillRect(game.road.end.x - 20, game.road.end.y + 20, 20, 20);
+    ctx.fillRect(game.road.end.x + 20, game.road.end.y + 20, 20, 20);
+
     // draw the enemies
     for (let enemy of game.wave.mobs) {
       if (enemy.isDead || enemy.isWaiting) {
@@ -239,19 +264,22 @@ import Page from "../../../layouts/Page.astro";
       }
       ctx.fillStyle = enemy.color;
       ctx.beginPath();
-      ctx.arc(enemy.pos.x, enemy.pos.y, 10, 0, Math.PI * 2);
+      ctx.arc(enemy.x, enemy.y, 10, 0, Math.PI * 2);
       ctx.fill();
       ctx.closePath();
     }
 
     // draw the bullets???
 
+    // draw the shop
+    game.shop.draw(ctx);
+
     update();
 
     game.frame = window.requestAnimationFrame(draw);
   }
 
-  function distance(tower: Point, enemy: Point): number {
+  function distance(tower: Tower, enemy: Enemy): number {
     let dx = Math.abs(tower.x - enemy.x);
     let dy = Math.abs(tower.y - enemy.y);
     return Math.sqrt(dx * dx + dy * dy);
@@ -266,7 +294,7 @@ import Page from "../../../layouts/Page.astro";
   function pauseGame() {
     game.running = false;
     window.cancelAnimationFrame(game.frame);
-    console.log("paused", game);
+    // console.log("paused", game);
   }
 
   window.addEventListener("load", init);

@@ -1,0 +1,41 @@
+2023-11-04 23:27:07 URL:http://127.0.0.1:4321/index.html [24735] -> "index.html.tmp.tmp" [1]
+2023-11-04 23:27:09 URL:http://127.0.0.1:4321/robots.txt [22/22] -> "robots.txt" [1]
+2023-11-04 23:27:13 URL:http://127.0.0.1:4321/themes/light.css [2502/2502] -> "light.css.tmp.tmp" [1]
+2023-11-04 23:27:17 URL:http://127.0.0.1:4321/themes/dark.css [1343/1343] -> "dark.css.tmp.tmp" [1]
+2023-11-04 23:27:19 URL: http://127.0.0.1:4321/favicon.svg 200 OK
+unlink: No such file or directory
+http://127.0.0.1:4321/pwa-192x192.png:
+Remote file does not exist -- broken link!!!
+2023-11-04 23:27:23 URL: http://127.0.0.1:4321/src/components/Theme.astro?astro&type=script&index=0&lang.ts 200 OK
+unlink: No such file or directory
+2023-11-04 23:27:25 URL: http://127.0.0.1:4321/node_modules/astro/components/ViewTransitions.astro?astro&type=script&index=0&lang.ts 200 OK
+unlink: No such file or directory
+http://127.0.0.1:4321/@vite/client:
+Remote file does not exist -- broken link!!!
+2023-11-04 23:27:29 URL: http://127.0.0.1:4321/src/components/Card.astro?astro&type=style&index=0&lang.css 200 OK
+unlink: No such file or directory
+2023-11-04 23:27:31 URL: http://127.0.0.1:4321/src/components/Nav.astro?astro&type=style&index=0&lang.css 200 OK
+unlink: No such file or directory
+2023-11-04 23:27:35 URL:http://127.0.0.1:4321/node_modules/astro/components/viewtransitions.css [1379/1379] -> "viewtransitions.css.tmp.tmp" [1]
+2023-11-04 23:27:37 URL: http://127.0.0.1:4321/src/components/Theme.astro?astro&type=style&index=0&lang.css 200 OK
+unlink: No such file or directory
+2023-11-04 23:27:41 URL:http://127.0.0.1:4321/src/styles/global.css [3704/3704] -> "global.css.tmp.tmp" [1]
+2023-11-04 23:27:43 URL: http://127.0.0.1:4321/src/layouts/Page.astro?astro&type=style&index=0&lang.css 200 OK
+unlink: No such file or directory
+2023-11-04 23:27:45 URL: http://127.0.0.1:4321/src/pages/index.astro?astro&type=style&index=0&lang.css 200 OK
+unlink: No such file or directory
+2023-11-04 23:27:49 URL:http://127.0.0.1:4321/ [24741] -> "index.html.tmp.tmp" [1]
+2023-11-04 23:27:53 URL:http://127.0.0.1:4321/portfolio [72562] -> "portfolio.tmp.tmp" [1]
+2023-11-04 23:27:57 URL:http://127.0.0.1:4321/games [29650] -> "games.tmp.tmp" [1]
+2023-11-04 23:28:01 URL:http://127.0.0.1:4321/tools [22835] -> "tools.tmp.tmp" [1]
+2023-11-04 23:28:05 URL:http://127.0.0.1:4321/works [22604] -> "works.tmp.tmp" [1]
+2023-11-04 23:28:09 URL:http://127.0.0.1:4321/lab [25535] -> "lab.tmp.tmp" [1]
+2023-11-04 23:28:13 URL:http://127.0.0.1:4321/contact [30870] -> "contact.tmp.tmp" [1]
+Found 2 broken links.
+
+http://127.0.0.1:4321/@vite/client
+http://127.0.0.1:4321/pwa-192x192.png
+
+FINISHED --2023-11-04 23:28:13--
+Total wall clock time: 1m 8s
+Downloaded: 13 files, 256K in 0.005s (51.3 MB/s)

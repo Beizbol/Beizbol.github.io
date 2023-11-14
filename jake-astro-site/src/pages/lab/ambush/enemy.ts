@@ -2,7 +2,9 @@ import Point from "./point";
 
 
 export default class Enemy {
-    pos: Point = new Point(0, 0);
+    x: number = 0;
+    y: number = 0;
+    size: number = 20;
     health: number = 100;
     color: string = 'hsl(100, 100%, 50%)';
     delay: number = 0;
@@ -11,8 +13,6 @@ export default class Enemy {
     shield: number = 0;
     description: string;
     target: number = 0;
-
-
 
     get isWaiting() {
         return this.delay >= 0;
@@ -29,7 +29,7 @@ export default class Enemy {
 
     hasReached(end: Point) {
 
-        return (this.pos.x == end.x && this.pos.y == end.y)
+        return (this.x == end.x && this.y == end.y)
     }
 
     kill() {
@@ -42,19 +42,19 @@ export default class Enemy {
 
     move(pt: Point) {
 
-        let dx = pt.x - this.pos.x;
-        let dy = pt.y - this.pos.y;
+        let dx = pt.x - this.x;
+        let dy = pt.y - this.y;
 
         if (dx == 0 && dy == 0) {
             this.target += 1;
         } else if (dx > 0) {
-            this.pos.x += this.speed;
+            this.x += this.speed;
         } else if (dx < 0) {
-            this.pos.x -= this.speed;
+            this.x -= this.speed;
         } else if (dy > 0) {
-            this.pos.y += this.speed;
+            this.y += this.speed;
         } else if (dy < 0) {
-            this.pos.y -= this.speed;
+            this.y -= this.speed;
         }
 
     }

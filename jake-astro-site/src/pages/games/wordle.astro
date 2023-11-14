@@ -68,296 +68,418 @@ import Page from "../../layouts/Page.astro";
       <button class="key" data-key="N">N</button>
       <button class="key" data-key="M">M</button>
       <button class="key large del">
-        <svg class="svg-icon" viewBox="0 0 24 24" aria-labelledby="button-label" focusable="false">
+        <svg
+          class="svg-icon"
+          viewBox="0 0 24 24"
+          aria-labelledby="button-label"
+          focusable="false"
+        >
           <title id="button-label">Delete</title>
-          <path fill="var(--color-tone-1)" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"> </path>
+          <path
+            fill="white"
+            d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"
+          >
+          </path>
         </svg>
       </button>
     </div>
   </div>
+
+  <dialog>
+    <form class="grid" method="dialog">
+      <h3>Welcome back! :)</h3>
+
+      <p>View today's word or play a random word?</p>
+
+      <div class="flex">
+        <button>Daily</button>
+        <button>Random</button>
+      </div>
+    </form>
+  </dialog>
+
   <script src="/scripts/js/words.js" is:inline></script>
 
   <script>
     import confetti from "canvas-confetti";
+    function init() {
+      console.log("init");
 
-    const WORD_LENGTH = 5;
-    const FLIP_ANIMATION_DURATION = 500;
-    const DANCE_ANIMATION_DURATION = 500;
-    const keyboard = document.querySelector("[data-keyboard]");
-    const alert = document.querySelector("[data-alert]");
-    const guessGrid = document.querySelector("[data-guess-grid]");
-    const ms = Date.now() - Date.UTC(new Date().getFullYear(), 0, 1);
-    const day = Math.floor(ms / 1000 / 60 / 60 / 24);
-    const targetWord = targetWords[day];
+      const loaded = null;
 
-    loadTiles();
-    startInteraction();
-
-    function loadTiles() {
-      const today = new Date();
-      const strDate = [today.getDate(), today.getMonth(), today.getFullYear()].join(" ");
-      const date = localStorage.getItem("date");
-      if (date != strDate) {
+      if (loaded) {
         return;
       }
 
-      const tileElems = [...queryTiles("*")];
-      const strTiles = localStorage.getItem("tiles");
-      const letters = strTiles.split(" ");
-      let words = [];
-      letters.forEach((char, i, arr) => {
-        // console.log(char)
-        tileElems[i].dataset.letter = char;
-        tileElems[i].textContent = char.toUpperCase();
-        tileElems[i].dataset.state = "active";
-        if ((i + 1) % 5 == 0) {
-          const word = arr.slice(i - 4, i + 1).join("");
-          // console.log(word)
-          words.push(word);
+      const WORD_LENGTH = 5;
+      const FLIP_ANIMATION_DURATION = 500;
+      const DANCE_ANIMATION_DURATION = 500;
+      const keyboard = document.querySelector("[data-keyboard]") as HTMLElement;
+      const alert = document.querySelector("[data-alert]") as HTMLElement;
+      const guessGrid = document.querySelector(
+        "[data-guess-grid]",
+      ) as HTMLElement;
+      const ms = Date.now() - Date.UTC(new Date().getFullYear(), 0, 1);
+      const day = Math.floor(ms / 1000 / 60 / 60 / 24);
+      const state = { targetWord: targetWords[day] };
+
+      function loadTiles() {
+        console.log("load tiles");
+        const today = new Date();
+        const strDate = [
+          today.getDate(),
+          today.getMonth(),
+          today.getFullYear(),
+        ].join(" ");
+        const saved = localStorage.getItem("date");
+
+        if (!saved || saved != strDate) {
+          return;
         }
-      });
 
-      words.forEach((word, idx) => {
-        // console.log(word)
-        const results = judgeGuess(word);
-        const tiles = tileElems.slice(5 * idx, 5 * idx + 5);
-        tiles.forEach((tile, idx) => flipTile(tile, results[idx], (idx * FLIP_ANIMATION_DURATION) / 2));
-      });
+        // Player is returning to the page on the same day
+        const dialog = document.querySelector("dialog") as HTMLDialogElement;
 
-      setTimeout(() => checkDone(words[words.length - 1]), 1500);
-    }
+        dialog.addEventListener("close", () => {
+          const val = dialog.returnValue;
 
-    function submitGuess() {
-      const activeTiles = [...queryTiles('[data-state="active"]')];
-      if (activeTiles.length !== WORD_LENGTH) {
-        showAlert("Not enough letters");
-        shakeTiles(activeTiles);
-        return;
+          switch (val) {
+            case "Load":
+              loadGame();
+              break;
+
+            default:
+              newGame();
+              break;
+          }
+          loadGame();
+        });
+
+        dialog.showModal();
       }
 
-      const guess = activeTiles.reduce((word, tile) => {
-        return word + tile.dataset.letter;
-      }, "");
-
-      if (!guess) {
-        return;
+      function newGame() {
+        const n = Math.floor(Math.random() * targetWords.length);
+        state.targetWord = targetWords[n];
       }
 
-      if (!dictionary.includes(guess)) {
-        showAlert("Not in word list");
-        shakeTiles(activeTiles);
-        return;
+      function loadGame() {
+        const tileElems = [...queryTiles("*")];
+        const strTiles = localStorage.getItem("tiles");
+        if (!strTiles) {
+          return;
+        }
+        const letters = strTiles.split(" ");
+        let words: string[] = [];
+        letters.forEach((char, i, arr) => {
+          // console.log(char)
+          tileElems[i].dataset.letter = char;
+          tileElems[i].textContent = char.toUpperCase();
+          tileElems[i].dataset.state = "active";
+          if ((i + 1) % 5 == 0) {
+            const word = arr.slice(i - 4, i + 1).join("");
+            // console.log(word)
+            words.push(word);
+          }
+        });
+
+        console.log(words);
+
+        words.forEach((word, idx) => {
+          // console.log(word)
+          const results = judgeGuess(word);
+          const tiles = tileElems.slice(5 * idx, 5 * idx + 5);
+          tiles.forEach((tile, idx) =>
+            flipTile(tile, results[idx], (idx * FLIP_ANIMATION_DURATION) / 2),
+          );
+        });
+
+        setTimeout(() => checkDone(words[words.length - 1]), 1500);
+
+        console.log("loaded");
       }
 
-      stopInteraction();
-      saveTiles();
+      function submitGuess() {
+        const activeTiles = [...queryTiles('[data-state="active"]')];
+        if (activeTiles.length !== WORD_LENGTH) {
+          showAlert("Not enough letters");
+          shakeTiles(activeTiles);
+          return;
+        }
 
-      const results = judgeGuess(guess);
-      activeTiles.forEach((tile, idx) => {
-        flipTile(tile, results[idx], (idx * FLIP_ANIMATION_DURATION) / 2);
-      });
-      checkDone(guess);
-    }
+        const guess = activeTiles.reduce((word, tile) => {
+          return word + tile.dataset.letter;
+        }, "");
 
-    function queryTiles(queryStr) {
-      const elems = guessGrid.querySelectorAll(queryStr);
-      const tiles: HTMLElement[] = [...elems]
-        .filter((e) => {
-          return e instanceof HTMLElement;
-        })
-        .map((e) => e as HTMLElement);
-      return tiles;
-    }
+        if (!guess) {
+          return;
+        }
 
-    function queryTile(queryStr) {
-      const elem = guessGrid.querySelector(queryStr);
-      if (elem instanceof HTMLElement) {
-        return elem as HTMLElement;
-      }
-      return null;
-    }
+        if (!dictionary.includes(guess)) {
+          showAlert("Not in word list");
+          shakeTiles(activeTiles);
+          return;
+        }
 
-    function startInteraction() {
-      console.log("start");
-      console.log(targetWord);
-      const btnDel = document.querySelector("button.del");
-      btnDel.addEventListener("click", deleteKey);
-      document.addEventListener("click", handleMouseClick);
-      document.addEventListener("keydown", handleKeyPress);
-    }
-
-    function stopInteraction() {
-      console.log("stop");
-      document.removeEventListener("click", handleMouseClick);
-      document.removeEventListener("keydown", handleKeyPress);
-    }
-
-    function handleMouseClick(e) {
-      if (e.target.matches("[data-key]")) {
-        pressKey(e.target.dataset.key);
-        return;
-      }
-
-      if (e.target.matches("[data-enter]")) {
-        submitGuess();
-        return;
-      }
-    }
-
-    function pressKey(key) {
-      const activeTiles = queryTiles('[data-state="active"]');
-      if (activeTiles.length >= WORD_LENGTH) return;
-      const nextTile = queryTile(":not([data-letter])");
-      nextTile.dataset.letter = key.toLowerCase();
-      nextTile.textContent = key;
-      nextTile.dataset.state = "active";
-    }
-
-    function deleteKey() {
-      const activeTiles = queryTiles('[data-state="active"]');
-      console.log(activeTiles);
-      const lastTile = activeTiles[activeTiles.length - 1];
-      console.log(lastTile);
-      if (lastTile == null) {
-        console.log("no last tile");
-        return;
-      }
-      lastTile.textContent = "";
-      delete lastTile.dataset.state;
-      delete lastTile.dataset.letter;
-    }
-
-    function handleKeyPress(e) {
-      if (e.key === "Enter") {
-        submitGuess();
-        return;
-      }
-
-      if (e.key === "Backspace" || e.key === "Delete") {
-        deleteKey();
-        return;
-      }
-
-      if (e.key.match(/^[a-z]$/)) {
-        pressKey(e.key);
-        return;
-      }
-    }
-
-    function saveTiles() {
-      const tileElems = [...queryTiles("[data-letter]")];
-      const tiles = tileElems.map((tile, _i, _arr) => {
-        return tile.dataset.letter;
-      });
-      const strTiles = tiles.join(" ");
-      localStorage.setItem("tiles", strTiles);
-      // console.log(strTiles)
-      const today = new Date();
-      const strDate = [today.getDate(), today.getMonth(), today.getFullYear()].join(" ");
-      localStorage.setItem("date", strDate);
-    }
-
-    function checkDone(guess: string) {
-      if (guess === targetWord) {
-        showAlert("You Win", 5000);
-        danceTiles();
-        confetti();
         stopInteraction();
-        return;
+        saveTiles();
+
+        const results = judgeGuess(guess);
+        activeTiles.forEach((tile, idx) => {
+          flipTile(tile, results[idx], (idx * FLIP_ANIMATION_DURATION) / 2);
+        });
+        checkDone(guess);
       }
 
-      const remainingTiles = guessGrid.querySelectorAll(":not([data-letter])");
-      if (remainingTiles.length === 0) {
-        showAlert(targetWord.toUpperCase(), null);
-        stopInteraction();
+      function queryTiles(queryStr: string) {
+        const elems = guessGrid.querySelectorAll(queryStr);
+        const tiles: HTMLElement[] = [...elems]
+          .filter((e) => {
+            return e instanceof HTMLElement;
+          })
+          .map((e) => e as HTMLElement);
+        return tiles;
       }
 
+      function queryTile(queryStr: string) {
+        const elem = guessGrid.querySelector(queryStr);
+        if (elem instanceof HTMLElement) {
+          return elem as HTMLElement;
+        }
+        return null;
+      }
+
+      function startInteraction() {
+        console.log("start");
+        console.log(state.targetWord);
+        const btnDel = document.querySelector(
+          "button.del",
+        ) as HTMLButtonElement;
+        btnDel.addEventListener("click", deleteKey);
+        document.addEventListener("click", handleMouseClick);
+        document.addEventListener("keydown", handleKeyPress);
+      }
+
+      function stopInteraction() {
+        console.log("stop");
+        document.removeEventListener("click", handleMouseClick);
+        document.removeEventListener("keydown", handleKeyPress);
+      }
+
+      function handleMouseClick(e: any) {
+        if (e.target.matches("[data-key]")) {
+          pressKey(e.target.dataset.key);
+          return;
+        }
+
+        if (e.target.matches("[data-enter]")) {
+          submitGuess();
+          return;
+        }
+      }
+
+      function pressKey(key: string) {
+        const activeTiles = queryTiles('[data-state="active"]');
+        if (activeTiles.length >= WORD_LENGTH) return;
+        const nextTile = queryTile(":not([data-letter])");
+        if (nextTile == null) return;
+        nextTile.dataset.letter = key.toLowerCase();
+        nextTile.textContent = key;
+        nextTile.dataset.state = "active";
+      }
+
+      function deleteKey() {
+        const activeTiles = queryTiles('[data-state="active"]');
+        console.log(activeTiles);
+        const lastTile = activeTiles[activeTiles.length - 1];
+        console.log(lastTile);
+        if (lastTile == null) {
+          console.log("no last tile");
+          return;
+        }
+        lastTile.textContent = "";
+        delete lastTile.dataset.state;
+        delete lastTile.dataset.letter;
+      }
+
+      function handleKeyPress(e: { key: string }) {
+        if (e.key === "Enter") {
+          submitGuess();
+          return;
+        }
+
+        if (e.key === "Backspace" || e.key === "Delete") {
+          deleteKey();
+          return;
+        }
+
+        if (e.key.match(/^[a-z]$/)) {
+          pressKey(e.key);
+          return;
+        }
+      }
+
+      function saveTiles() {
+        const tileElems = [...queryTiles("[data-letter]")];
+        const tiles = tileElems.map((tile, _i, _arr) => {
+          return tile.dataset.letter;
+        });
+        const strTiles = tiles.join(" ");
+        localStorage.setItem("tiles", strTiles);
+        // console.log(strTiles)
+        const today = new Date();
+        const strDate = [
+          today.getDate(),
+          today.getMonth(),
+          today.getFullYear(),
+        ].join(" ");
+        localStorage.setItem("date", strDate);
+      }
+
+      function checkDone(guess: string) {
+        if (guess === state.targetWord) {
+          showAlert("You Win", 5000);
+          danceTiles();
+          confetti();
+          stopInteraction();
+          return;
+        }
+
+        const remainingTiles = guessGrid.querySelectorAll(
+          ":not([data-letter])",
+        );
+        if (remainingTiles.length === 0) {
+          showAlert(state.targetWord.toUpperCase());
+          stopInteraction();
+        }
+
+        startInteraction();
+      }
+
+      function judgeGuess(guess: string) {
+        if (guess === state.targetWord) {
+          return Array(5).fill("correct");
+        }
+        let results = Array(5).fill("wrong-location");
+        let unused = state.targetWord.split("");
+        for (let i = 0; i < guess.length; i++) {
+          const guess_letter = guess.charAt(i);
+          const target_letter = state.targetWord.charAt(i);
+          const pos = state.targetWord.indexOf(guess_letter);
+          switch (pos) {
+            case i:
+              results[i] = "correct";
+              unused[i] = "";
+              break;
+
+            case -1:
+              results[i] = "wrong";
+              break;
+
+            default:
+              results[i] = "wrong-location";
+              unused[pos] = "";
+              break;
+          }
+        }
+        return results;
+      }
+
+      function flipTile(tile: HTMLElement, result: string, delay: number) {
+        const letter = tile.dataset.letter;
+        const key = keyboard.querySelector(`[data-key="${letter}"i]`);
+
+        setTimeout(() => {
+          tile.classList.add("flip");
+        }, delay);
+
+        // console.log("flip")
+
+        tile.addEventListener(
+          "transitionend",
+          () => {
+            tile.classList.remove("flip");
+            if (key) {
+              key.classList.add(result);
+            }
+            tile.dataset.state = result;
+          },
+          { once: true },
+        );
+      }
+
+      function showAlert(message: string | null, duration = 5000) {
+        alert.textContent = message;
+        alert.classList.remove("hide");
+
+        if (duration == null) return;
+
+        setTimeout(() => {
+          alert.classList.add("hide");
+        }, duration);
+      }
+
+      function shakeTiles(tiles: any[]) {
+        tiles.forEach(
+          (tile: {
+            classList: {
+              add: (arg0: string) => void;
+              remove: (arg0: string) => void;
+            };
+            addEventListener: (
+              arg0: string,
+              arg1: () => void,
+              arg2: { once: boolean },
+            ) => void;
+          }) => {
+            tile.classList.add("shake");
+            tile.addEventListener(
+              "animationend",
+              () => {
+                tile.classList.remove("shake");
+              },
+              { once: true },
+            );
+          },
+        );
+      }
+
+      function danceTiles() {
+        const tiles = queryTiles("*");
+        tiles.forEach((tile, index) => {
+          setTimeout(
+            () => {
+              tile.classList.add("dance");
+              tile.addEventListener(
+                "animationend",
+                () => {
+                  tile.classList.remove("dance");
+                },
+                { once: true },
+              );
+            },
+            (index * DANCE_ANIMATION_DURATION) / 5,
+          );
+        });
+      }
+
+      loadTiles();
       startInteraction();
     }
 
-    function judgeGuess(guess: string) {
-      if (guess === targetWord) {
-        return Array(5).fill("correct");
-      }
-      let results = Array(5).fill("wrong-location");
-      let running = targetWord.split("");
-      for (let i = 0; i < guess.length; i++) {
-        if (targetWord.charAt(i) === guess.charAt(i)) {
-          results[i] = "correct";
-          running[i] = "";
-        } else if (!running.includes(guess[i]) || guess.substring(i).includes(guess[i])) {
-          results[i] = "wrong";
-        }
-      }
-      return results;
-    }
-
-    function flipTile(tile, result: string, delay: number) {
-      const letter = tile.dataset.letter;
-      const key = keyboard.querySelector(`[data-key="${letter}"i]`);
-      setTimeout(() => {
-        tile.classList.add("flip");
-      }, delay);
-
-      // console.log("flip")
-
-      tile.addEventListener(
-        "transitionend",
-        () => {
-          tile.classList.remove("flip");
-          key.classList.add(result);
-          tile.dataset.state = result;
-        },
-        { once: true }
-      );
-    }
-
-    function showAlert(message, duration = 5000) {
-      alert.textContent = message;
-      alert.classList.remove("hide");
-
-      if (duration == null) return;
-
-      setTimeout(() => {
-        alert.classList.add("hide");
-      }, duration);
-    }
-
-    function shakeTiles(tiles) {
-      tiles.forEach((tile) => {
-        tile.classList.add("shake");
-        tile.addEventListener(
-          "animationend",
-          () => {
-            tile.classList.remove("shake");
-          },
-          { once: true }
-        );
-      });
-    }
-
-    function danceTiles() {
-      const tiles = queryTiles("*");
-      tiles.forEach((tile, index) => {
-        setTimeout(() => {
-          tile.classList.add("dance");
-          tile.addEventListener(
-            "animationend",
-            () => {
-              tile.classList.remove("dance");
-            },
-            { once: true }
-          );
-        }, (index * DANCE_ANIMATION_DURATION) / 5);
-      });
-    }
+    init();
+    // Runs after astro page load
+    document.addEventListener("astro:after-swap", () => {
+      console.log("astro page load");
+      init();
+    });
   </script>
   <style>
-    *,
-    *::after,
-    *::before {
-      box-sizing: border-box;
-      font-family: Arial;
+    .flex {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
     }
 
     .wrap {

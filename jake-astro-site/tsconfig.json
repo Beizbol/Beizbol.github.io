@@ -2,9 +2,6 @@
     "extends": "astro/tsconfigs/strict",
     "compilerOptions": {
         "baseUrl": ".",
-        "allowJs": true,
-        "types": [
-            "vite-plugin-pwa/info"
-        ]
+        "allowJs": true
     }
 }

@@ -1,10 +1,13 @@
+import { log } from "node_modules/astro/dist/core/logger/core";
 import type Enemy from "./enemy";
 import Point from "./point";
 
 export default class Tower {
-    size = 30;
-    pos: Point = new Point(340, 135);
-    get center() { return { x: this.pos.x + this.size / 2, y: this.pos.y + this.size / 2 } }
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    get center() { return { x: this.x + this.w / 2, y: this.y + this.h / 2 } }
 
     name: string;
     description: string;
@@ -18,16 +21,26 @@ export default class Tower {
     selected: boolean = true;
     bullets: Point[] = [];
 
-    constructor() {
+    constructor(x: number, y: number, w: number, h: number) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
         this.name = 'Tower';
         this.description = 'A tower';
+    }
+
+    draw(ctx: CanvasRenderingContext2D) {
+        ctx.fillStyle = "navy";
+        ctx.fillRect(this.x, this.y, this.w, this.h);
+        // console.log("tower.draw:", this);
     }
 
     fire(enemy: Enemy) {
         // console.log("tower.firing:", this);
         enemy.damage(this.damage);
         this.cooldown = this.shot_delay;
-        this.color = 'darkblue';
+        this.color = 'purple';
     }
 
     getName() {

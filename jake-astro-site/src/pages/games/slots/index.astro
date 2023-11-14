@@ -1,0 +1,615 @@
+---
+import Page from "../../../layouts/Page.astro";
+import Slots from "./slots";
+---
+
+<Page title="Sunny Slots">
+  <div class="wrap">
+    <div class="pts">Points: <span class="pts" id="score">0000</span></div>
+    <div id="stage" class="perspective-on">
+      <div id="rotate">
+        <div id="ring1" class="ring">
+          {
+            Slots.symbols.map((path) => (
+              <div class="slot">
+                <img src={path} />
+              </div>
+            ))
+          }
+        </div>
+        <div id="ring2" class="ring">
+          {
+            Slots.symbols.map((path) => (
+              <div class="slot">
+                <img src={path} />
+              </div>
+            ))
+          }
+        </div>
+
+        <div id="ring3" class="ring">
+          {
+            Slots.symbols.map((path) => (
+              <div class="slot">
+                <img src={path} />
+              </div>
+            ))
+          }
+        </div>
+        <div id="ring4" class="ring">
+          {
+            Slots.symbols.map((path) => (
+              <div class="slot">
+                <img src={path} />
+              </div>
+            ))
+          }
+        </div>
+        <div id="ring5" class="ring">
+          {
+            Slots.symbols.map((path) => (
+              <div class="slot">
+                <img src={path} />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+    <div class="flex">
+      <div class="bets">
+        {Slots.bets.map((n) => <button class="bet circle-btn">{n}</button>)}
+      </div>
+      <button id="spin" class="go circle-btn">Spin</button>
+    </div>
+    <div class="float">
+      <input type="checkbox" id="xray" />
+      <label for="xray"> Show 3D</label>
+    </div>
+  </div>
+</Page>
+
+<script>
+  import confetti from "canvas-confetti";
+
+  function init() {
+    function toggleTilt() {
+      if (rotate.classList.contains("tilted")) {
+        rotate.classList.remove("tilted");
+      } else {
+        rotate.classList.add("tilted");
+      }
+    }
+
+    function toggle_xray() {
+      //var isChecked = $('#xray:checked');
+
+      if (xray.checked) {
+        document.querySelectorAll(".slot").forEach((slot) => {
+          slot.classList.add("backface-on");
+        });
+        rotate.style.animation = "tiltin 2s 1";
+        setTimeout(toggleTilt, 2000);
+        return;
+      }
+
+      rotate.style.animation = "tiltout 2s 1";
+      setTimeout(() => {
+        toggleTilt();
+        document.querySelectorAll(".slot").forEach((slot) => {
+          if (slot.classList.contains("backface-on")) {
+            slot.classList.remove("backface-on");
+          }
+        });
+      }, 1900);
+    }
+
+    const rotate = document.getElementById("rotate") as HTMLElement;
+    const xray = document.getElementById("xray") as HTMLInputElement;
+    xray.addEventListener("click", toggle_xray);
+
+    const btnSpin = document.getElementById("spin") as HTMLButtonElement;
+    btnSpin.addEventListener("click", spin);
+
+    const SLOTS_PER_REEL = 12;
+
+    const ring1 = document.getElementById("ring1") as HTMLElement;
+    const ring2 = document.getElementById("ring2") as HTMLElement;
+    const ring3 = document.getElementById("ring3") as HTMLElement;
+    const ring4 = document.getElementById("ring4") as HTMLElement;
+    const ring5 = document.getElementById("ring5") as HTMLElement;
+
+    function createSlots(ring: any) {
+      const slots = ring.querySelectorAll(".slot");
+
+      for (var i = 0; i < SLOTS_PER_REEL; i++) {
+        const slot = slots[i] as HTMLElement;
+        slot.classList.add("pos-" + i);
+      }
+    }
+
+    function clearSeeds(ring: any) {
+      for (let i = 0; i < 13; i++) {
+        const s = "spin-" + i;
+        if (ring.classList.contains(s)) {
+          ring.classList.remove(s);
+        }
+      }
+    }
+
+    function _judge(seeds: number[]) {
+      let max = 1;
+      let run = 1;
+      const flip = false;
+      const last = seeds.length - 1;
+      let prev = flip ? seeds[last] : seeds[0];
+      const half = Math.floor(SLOTS_PER_REEL / 2);
+      // console.log("half", half);
+      let str = "" + (prev % half) + " ";
+      // console.log("seeds", seeds);
+      for (let i = 1; i < seeds.length; i++) {
+        const seed = flip ? seeds[last - i] : seeds[i];
+        if (seed % half === prev % half) {
+          run += 1;
+        } else {
+          run = 1;
+        }
+        max = Math.max(max, run);
+        str += "" + (seed % half) + " ";
+        prev = seed;
+      }
+      // console.log("max", max);
+
+      // console.log("mods", str);
+      return max;
+    }
+
+    function judgeSeeds(seeds: number[]) {
+      const max = _judge(seeds);
+      switch (max) {
+        case 5:
+          console.log("5 in a row");
+          return 500;
+        case 4:
+          console.log("4 in a row");
+          return 250;
+        case 3:
+          console.log("3 in a row");
+          return 100;
+        case 2:
+          console.log("2 in a row");
+          return 20;
+        default:
+          console.log("L");
+          return 0;
+      }
+    }
+
+    function generateSeeds(len = 5) {
+      const seeds = [];
+      // generate random number smaller than 13 then floor it to settle between 0 and 12 inclusive
+      for (let i = 0; i < len; i++) {
+        const seed = Math.floor(Math.random() * SLOTS_PER_REEL);
+        seeds.push(seed);
+      }
+      return seeds;
+    }
+
+    function getSeeds(reels: number, wr = 1) {
+      while (true) {
+        const seeds = generateSeeds(reels);
+
+        const score = judgeSeeds(seeds);
+        const ret = { seeds: seeds, score: score };
+
+        if (wr < 0.3) {
+          if (score > 40) {
+            return ret;
+          }
+        } else if (wr < 0.5) {
+          if (score > 0) {
+            return ret;
+          }
+        } else {
+          return ret;
+        }
+      }
+    }
+
+    function showWin(ring: any, seed: number) {
+      const slots = ring.querySelectorAll(".slot");
+      const slot = slots[seed] as HTMLElement;
+      slot.classList.add("win");
+    }
+
+    function clearWins(ring: any) {
+      const slots = ring.querySelectorAll(".slot");
+      for (let i = 0; i < slots.length; i++) {
+        const slot = slots[i] as HTMLElement;
+        if (slot.classList.contains("win")) {
+          slot.classList.remove("win");
+        }
+      }
+    }
+
+    function celebrate(score: number) {
+      // if (score > 0) {
+      //   const win = document.getElementById("win") as HTMLElement;
+      //   win.innerHTML = "You won " + score + " points!";
+      //   win.style.display = "block";
+      //   setTimeout(() => {
+      //     win.style.display = "none";
+      //   }, 3000);
+      // }
+      if (score > 200) {
+        confetti();
+      }
+    }
+
+    function tests() {
+      const n = 3;
+      for (let i = 0; i < n; i++) {
+        const x = generateSeeds();
+        test(x);
+      }
+      test([6, 6, 0, 8, 2]);
+    }
+
+    function test(lst: number[]) {
+      const x = _judge(lst);
+      console.log("test: ", lst, "n:", x);
+    }
+
+    function spin() {
+      // tests();
+      // return;
+      const placed = document.querySelector(".bet.placed") as HTMLElement;
+      const bet = parseInt(placed.innerHTML);
+      if (bet > points) {
+        alert("Not enough points!");
+        return;
+      }
+      updatePts(-bet);
+
+      const rings = document.querySelectorAll(".ring");
+      const spin_data = getSeeds(rings.length);
+      for (let i = 0; i < rings.length; i++) {
+        const ring = rings[i] as HTMLElement;
+        const seed = spin_data.seeds[i] as any;
+        clearSeeds(ring);
+        clearWins(ring);
+        ring.classList.add("spin");
+        setTimeout(
+          () => {
+            ring.classList.remove("spin");
+            ring.classList.add("spin-" + seed);
+            showWin(ring, seed);
+          },
+          3000 + i * 250,
+        );
+      }
+      setTimeout(() => {
+        if (spin_data.score > 0) {
+          console.log("win", spin_data.score);
+          updatePts(spin_data.score);
+          celebrate(spin_data.score);
+        }
+      }, 4500);
+    }
+
+    function loadPoints() {
+      let pts = parseInt(localStorage.getItem("slots-pts") || "2500");
+      const game_wins = parseInt(localStorage.getItem("game-wins") || "0");
+      const prev_wins = parseInt(localStorage.getItem("prev-wins") || "0");
+      pts += (game_wins - prev_wins) * 2500;
+      localStorage.setItem("slots-pts", pts.toString());
+      localStorage.setItem("prev-wins", game_wins.toString());
+      return pts;
+    }
+
+    function clearBets() {
+      const bets = document.querySelectorAll(".bet");
+      for (let i = 0; i < bets.length; i++) {
+        const bet = bets[i];
+        if (bet.classList.contains("placed")) {
+          bet.classList.remove("placed");
+        }
+      }
+    }
+
+    function initBets() {
+      const bets = document.querySelectorAll(".bet");
+      bets[0].classList.add("placed");
+      for (let i = 0; i < bets.length; i++) {
+        const bet = bets[i];
+        bet.addEventListener("click", () => {
+          clearBets();
+          bet.classList.add("placed");
+        });
+      }
+    }
+
+    function updatePts(n: number) {
+      points += n;
+      const score = document.getElementById("score") as HTMLElement;
+      score.innerHTML = points.toString();
+      localStorage.setItem("slots-pts", points.toString());
+    }
+
+    // initiate slots
+    createSlots(ring1);
+    createSlots(ring2);
+    createSlots(ring3);
+    createSlots(ring4);
+    createSlots(ring5);
+
+    initBets();
+
+    //load points
+    let points = 0;
+    updatePts(loadPoints());
+  }
+  init();
+  document.addEventListener("astro:after-swap", () => {
+    console.log("astro page load");
+    init();
+  });
+</script>
+
+<style>
+  .float {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    padding: 4rem 1rem;
+  }
+
+  .pts {
+    font-size: 1.25em;
+  }
+
+  .bets {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .flex {
+    display: flex;
+    width: 100%;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100%;
+  }
+
+  #stage {
+    margin: 0 auto;
+    width: 600px;
+    height: 400px;
+  }
+
+  .perspective-on {
+    -webkit-perspective: 1000px;
+    -moz-perspective: 1000px;
+    perspective: 1000px; /* Setting the perspective of the contents of the stage but not the stage itself*/
+  }
+  .perspective-off {
+    -webkit-perspective: 0;
+    -moz-perspective: 0;
+    perspective: 0;
+  }
+
+  #rotate {
+    margin: 0 auto 0;
+    width: 450px;
+    height: 220px;
+    padding-top: 155px;
+    /* Ensure that we're in 3D space */
+    transform-style: preserve-3d;
+  }
+
+  .ring {
+    margin: 0 auto;
+    height: 80px;
+    width: 90px;
+    float: left;
+    transform: rotateX(0deg);
+    transform-style: preserve-3d;
+  }
+  .slot.backface-on {
+    -webkit-backface-visibility: visible;
+    -moz-backface-visibility: visible;
+    backface-visibility: visible;
+    opacity: 0.8;
+  }
+
+  .slot.win {
+    opacity: 1;
+    background-color: var(--color-accent);
+  }
+
+  .slot {
+    position: absolute;
+    width: 90px;
+    height: 80px;
+    box-sizing: border-box;
+    opacity: 1;
+    color: rgba(0, 0, 0, 0.9);
+    background-color: var(--color-bg-alt);
+    border: solid 2px var(--color-text);
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  .circle-btn {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 3px solid #fff6;
+    cursor: pointer;
+    transition: ease-in-out 0.25s;
+    opacity: 0.9;
+    font-size: 1.25em;
+    padding: 1rem;
+  }
+
+  .circle-btn:hover {
+    scale: 1.05;
+    opacity: 1;
+  }
+
+  .go {
+    padding: 2rem;
+    font-size: 1.5em;
+    background-color: var(--color-accent);
+  }
+
+  .bet.placed,
+  .circle-btn:active {
+    background-color: var(--color-accent-alt);
+  }
+
+  input,
+  label {
+    cursor: pointer;
+  }
+
+  .tilted {
+    transform: rotateY(45deg);
+  }
+
+  .pos-0 {
+    transform: rotateX(0deg) translateZ(150px);
+  }
+  .pos-1 {
+    transform: rotateX(30deg) translateZ(150px);
+  }
+  .pos-2 {
+    transform: rotateX(60deg) translateZ(150px);
+  }
+  .pos-3 {
+    transform: rotateX(90deg) translateZ(150px);
+  }
+  .pos-4 {
+    transform: rotateX(120deg) translateZ(150px);
+  }
+  .pos-5 {
+    transform: rotateX(150deg) translateZ(150px);
+  }
+  .pos-6 {
+    transform: rotateX(180deg) translateZ(150px);
+  }
+  .pos-7 {
+    transform: rotateX(210deg) translateZ(150px);
+  }
+  .pos-8 {
+    transform: rotateX(240deg) translateZ(150px);
+  }
+  .pos-9 {
+    transform: rotateX(270deg) translateZ(150px);
+  }
+  .pos-10 {
+    transform: rotateX(300deg) translateZ(150px);
+  }
+  .pos-11 {
+    transform: rotateX(330deg) translateZ(150px);
+  }
+
+  @keyframes spin-loop {
+    0% {
+      transform: rotateX(360deg);
+    }
+    100% {
+      transform: rotateX(0deg);
+    }
+  }
+
+  .spin {
+    animation: spin-loop 0.5s linear infinite;
+    transition: transform 2s ease-in-out;
+  }
+
+  /*=====*/
+  .spin-0 {
+    transform: rotateX(-719deg);
+  }
+  .spin-1 {
+    transform: rotateX(-749deg);
+  }
+  .spin-2 {
+    transform: rotateX(-779deg);
+  }
+  .spin-3 {
+    transform: rotateX(-809deg);
+  }
+  .spin-4 {
+    transform: rotateX(-839deg);
+  }
+  .spin-5 {
+    transform: rotateX(-869deg);
+  }
+  .spin-6 {
+    transform: rotateX(-899deg);
+  }
+  .spin-7 {
+    transform: rotateX(-929deg);
+  }
+  .spin-8 {
+    transform: rotateX(-959deg);
+  }
+  .spin-9 {
+    transform: rotateX(-989deg);
+  }
+  .spin-10 {
+    transform: rotateX(-1019deg);
+  }
+  .spin-11 {
+    transform: rotateX(-1049deg);
+  }
+  .spin-12 {
+    transform: rotateX(-1079deg);
+  }
+  /*=====*/
+  @keyframes back-spin {
+    0% {
+      transform: rotateX(0deg);
+    }
+    100% {
+      transform: rotateX(30deg);
+    }
+  }
+  @keyframes tiltin {
+    0% {
+      transform: rotateY(0deg);
+    }
+    50% {
+      transform: rotateY(0deg);
+    }
+    100% {
+      transform: rotateY(45deg);
+    }
+  }
+  @keyframes tiltout {
+    0% {
+      transform: rotateY(45deg);
+    }
+    100% {
+      transform: rotateY(0deg);
+    }
+  }
+</style>
