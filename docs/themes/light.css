@@ -1,87 +1,62 @@
+:root {
+  color-scheme: light;
+
+  --color-bg: hsl(17, 24%, 80%);
+  --color-bg-alt: hsl(17, 24%, 80%);
+  --color-border: hsl(222, 4%, 8%);
+  --color-border-alt: black;
+  --color-text: black;
+  --color-text-alt: red;
+  --color-accent: darkorange;
+  --color-accent-alt: deepskyblue;
+}
+
 :root:has(#defaultTheme:checked) {
-    --color-bg: white;
-    --color-bg-alt: #ddd;
-    --color-border: black;
-    --color-border-alt: black;
-    --color-text: black;
-    --color-text-alt: #bbb;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
+  --color-bg: white;
+  --color-bg-alt: hsl(222, 88%, 88%);
+}
 
-  :root:has(#steelTheme:checked) {
-    --color-bg: hsl(210, 8%, 80%);
-    --color-bg-alt: hsl(210, 8%, 6 0%);
-    --color-border: black;
-    --color-border-alt: black;
-    --color-text: black;
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
+:root:has(#steelTheme:checked) {
+  --color-bg: hsl(210, 5%, 92%);
+  --color-bg-alt: hsl(210, 5%, 82%);
+}
 
-  :root:has(#skyTheme:checked) {
-    --color-bg: hsl(204, 100%, 80%);
-    --color-bg-alt: hsl(204, 100%, 70%);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: black;
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
+:root:has(#denimTheme:checked) {
+  --color-bg: hsl(210, 95%, 92%);
+  --color-bg-alt: hsl(210, 95%, 82%);
+}
 
-  :root:has(#denimTheme:checked) {
-    --color-bg: hsl(212, 95%, 16%);
-    --color-bg-alt: hsl(212, 95%, 24%);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: hsl(10, 21%, 95%);
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: darkorange;
-  }
+:root:has(#skyTheme:checked) {
+  --color-bg: hsl(200, 95%, 92%);
+  --color-bg-alt: hsl(200, 95%, 82%);
+}
 
-  :root:has(#oceanTheme:checked) {
-    --color-bg: hsl(265, 96%, 10%);
-    --color-bg-alt: hsl(265, 95%, 16%);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: hsl(10, 21%, 95%);
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
+:root:has(#oceanTheme:checked) {
+  --color-bg: hsl(180, 95%, 92%);
+  --color-bg-alt: hsl(180, 94%, 82%);
+}
 
-  :root:has(#forestTheme:checked) {
-    --color-bg: hsl(126, 95%, 8%);
-    --color-bg-alt: hsl(126, 95%, 12%);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: hsl(10, 21%, 95%);
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
+:root:has(#mintTheme:checked) {
+  --color-bg: hsl(160, 95%, 92%);
+  --color-bg-alt: hsl(160, 95%, 82%);
+}
 
-  :root:has(#mintTheme:checked) {
-    --color-bg: aquamarine;
-    --color-bg-alt: rgb(150, 240, 255);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: black;
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
+:root:has(#jungleTheme:checked) {
+  --color-bg: hsl(100, 95%, 92%);
+  --color-bg-alt: hsl(100, 95%, 82%);
+}
 
-  :root:has(#prettyTheme:checked) {
-    --color-bg: rgb(255, 180, 255);
-    --color-bg-alt: rgb(200, 170, 255);
-    --color-border: hsl(17, 24%, 90%);
-    --color-border-alt: hsl(17, 24%, 90%);
-    --color-text: black;
-    --color-text-alt: red;
-    --color-accent: darkorange;
-    --color-accent-alt: deepskyblue;
-  }
+:root:has(#coffeeTheme:checked) {
+  --color-bg: hsl(30, 96%, 92%);
+  --color-bg-alt: hsl(30, 95%, 84%);
+}
+
+:root:has(#wineTheme:checked) {
+  --color-bg: hsl(350, 95%, 92%);
+  --color-bg-alt: hsl(350, 95%, 84%);
+}
+
+:root:has(#prettyTheme:checked) {
+  --color-bg: hsl(290, 100%, 92%);
+  --color-bg-alt: hsl(290, 100%, 84%);
+}

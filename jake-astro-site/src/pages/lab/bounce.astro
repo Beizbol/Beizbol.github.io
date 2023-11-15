@@ -4,7 +4,9 @@ import Page from "../../layouts/Page.astro";
 
 <Page title="Bounce">
   <div id="wrap">
-    <canvas id="canvas" width="600" height="400"> </canvas>
+    <div id="crt">
+      <canvas id="canvas" width="600" height="400"> </canvas>
+    </div>
     <div id="pause">&#x23F8</div>
     <div id="play">&#x23F5</div>
   </div>
@@ -16,6 +18,15 @@ import Page from "../../layouts/Page.astro";
   const play = document.getElementById("play");
   const bounces = document.getElementById("bounces");
   const ctx = canvas.getContext("2d", { alpha: false });
+  const wrap = document.getElementById("wrap") as HTMLDivElement;
+
+  function glow() {
+    const hue_glow = Math.max(state.bounces - 15, 0) % 361;
+    wrap.style.setProperty("--glow", `hsl(${hue_glow} 42% 42%)`);
+
+    const hue_bg = Math.max(state.bounces - 90, 0) % 361;
+    wrap.style.setProperty("--bg", `hsl(${hue_bg} 100% 4%)`);
+  }
 
   let state = {
     running: true,
@@ -57,6 +68,9 @@ import Page from "../../layouts/Page.astro";
       }
     });
 
+    ctx.fillStyle = "#000808";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     nextFrame();
   }
 
@@ -76,18 +90,20 @@ import Page from "../../layouts/Page.astro";
 
   function draw() {
     const r = 10;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // ctx.fillStyle = "#0000";
+    // ctx.fillRect(0, 0, canvas.width, canvas.height);
     drawBall(r);
+    glow();
     // console.log(state);
     state.x += state.dx;
     state.y += state.dy;
 
-    if (state.y + state.dy >= canvas.height - r || state.y + state.dy < 5) {
+    if (state.y + state.dy >= canvas.height - r || state.y + state.dy < r) {
       state.dy *= -1;
       state.bounces += 1;
     }
 
-    if (state.x + state.dx >= canvas.width - r || state.x + state.dx < 5) {
+    if (state.x + state.dx >= canvas.width - r || state.x + state.dx < r) {
       state.dx *= -1;
       state.bounces += 1;
       console.log("bounce");
@@ -96,7 +112,7 @@ import Page from "../../layouts/Page.astro";
     }
 
     bounces.innerText = `Bounces: ${state.bounces}`;
-    state.color = `hsl(${state.bounces % 255} 100% 70%)`;
+    state.color = `hsl(${state.bounces % 361} 100% 69%)`;
 
     nextFrame();
   }
@@ -112,34 +128,35 @@ import Page from "../../layouts/Page.astro";
   init();
 </script>
 <style>
-  #canvas {
+  #crt {
     margin: 0 auto;
+    padding: 10px;
+    border-radius: 40px;
+    box-shadow: 0 0 30px 60px #000;
+    background-color: #000808;
   }
 
   #wrap {
+    --glow: #001a1a;
+    --bg: #000808;
+    position: relative;
     display: grid;
-    width: 100%;
-    height: 400px;
-    background-color: darkslateblue;
+    padding: 5rem;
+    background: radial-gradient(circle at 50% 50%, var(--glow), var(--bg));
   }
 
   #play,
   #pause {
     opacity: 0;
-    display: grid;
     position: absolute;
-    top: 200px;
     left: 50%;
-    transform: translate(-50%, 50%);
-    width: 4rem;
-    height: 4rem;
-    border-radius: 0.5rem;
-    z-index: 9;
-    justify-content: center;
-    margin: auto;
-    user-select: none;
-    font-size: 2.5rem;
+    top: 50%;
+    transform: translate(-50%, -50%);
     background-color: #111;
+    border-radius: 0.5rem;
+    font-size: 2.5rem;
+    padding: 0.5rem 0.4rem 0.69rem 0.4rem; /* top right bottom left */
+    user-select: none;
   }
 
   #wrap:active #play,
