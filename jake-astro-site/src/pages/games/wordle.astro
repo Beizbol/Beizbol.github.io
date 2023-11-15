@@ -86,14 +86,15 @@ import Page from "../../layouts/Page.astro";
   </div>
 
   <dialog>
-    <form class="grid welcome" method="dialog">
-      <h3>Welcome back! :)</h3>
-
-      <p>View today's word or play a random word?</p>
-
-      <div class="flex">
-        <button>Daily</button>
-        <button>Random</button>
+    <form class="grid" method="dialog">
+      <h3>Welcome back! &#128075;</h3>
+      <div class="pad">
+        <p>You have a word in progress.</p>
+        <p>Continue where you left off?</p>
+      </div>
+      <div class="flex pad">
+        <button class="pad">Ok &#x1f607;</button>
+        <button class="pad" value="restart">Restart &#x1f608;</button>
       </div>
     </form>
   </dialog>
@@ -102,7 +103,7 @@ import Page from "../../layouts/Page.astro";
 
   <script>
     import confetti from "canvas-confetti";
-    function init() {
+    function init_wordle() {
       console.log("init");
 
       const loaded = null;
@@ -119,48 +120,49 @@ import Page from "../../layouts/Page.astro";
       const guessGrid = document.querySelector(
         "[data-guess-grid]",
       ) as HTMLElement;
-      const ms = Date.now() - Date.UTC(new Date().getFullYear(), 0, 1);
-      const day = Math.floor(ms / 1000 / 60 / 60 / 24);
-      const state = { targetWord: targetWords[day] };
+
+      const n = Math.floor(Math.random() * targetWords.length);
+      const state = { targetWord: targetWords[n] };
+      // Player is returning to the page on the same day
+      const dialog = document.querySelector("dialog") as HTMLDialogElement;
+
+      dialog.addEventListener("close", () => {
+        const val = dialog.returnValue;
+        console.log(val);
+
+        switch (val) {
+          case "restart":
+            restartGame();
+            break;
+
+          default:
+            loadGame();
+            break;
+        }
+      });
 
       function loadTiles() {
         console.log("load tiles");
-        const today = new Date();
-        const strDate = [
-          today.getDate(),
-          today.getMonth(),
-          today.getFullYear(),
-        ].join(" ");
-        const saved = localStorage.getItem("date");
 
-        if (!saved || saved != strDate) {
+        const target = localStorage.getItem("target");
+        if (target) {
+          dialog.showModal();
+          state.targetWord = target;
           return;
         }
 
-        // Player is returning to the page on the same day
-        const dialog = document.querySelector("dialog") as HTMLDialogElement;
+        const return_visit = localStorage.getItem("wordle-visit");
+        if (return_visit) {
+          showAlert("Welcome back!", 3000);
+          return;
+        }
 
-        dialog.addEventListener("close", () => {
-          const val = dialog.returnValue;
-
-          switch (val) {
-            case "Load":
-              loadGame();
-              break;
-
-            default:
-              newGame();
-              break;
-          }
-          loadGame();
-        });
-
-        dialog.showModal();
+        localStorage.setItem("wordle-visit", "true");
+        showAlert("Welcome!", 3000);
       }
 
-      function newGame() {
-        const n = Math.floor(Math.random() * targetWords.length);
-        state.targetWord = targetWords[n];
+      function restartGame() {
+        localStorage.removeItem("tiles");
       }
 
       function loadGame() {
@@ -250,7 +252,7 @@ import Page from "../../layouts/Page.astro";
       }
 
       function startInteraction() {
-        console.log("start");
+        // console.log("start");
         console.log(state.targetWord);
         const btnDel = document.querySelector(
           "button.del",
@@ -261,7 +263,7 @@ import Page from "../../layouts/Page.astro";
       }
 
       function stopInteraction() {
-        console.log("stop");
+        // console.log("stop");
         document.removeEventListener("click", handleMouseClick);
         document.removeEventListener("keydown", handleKeyPress);
       }
@@ -290,11 +292,11 @@ import Page from "../../layouts/Page.astro";
 
       function deleteKey() {
         const activeTiles = queryTiles('[data-state="active"]');
-        console.log(activeTiles);
+        // console.log(activeTiles);
         const lastTile = activeTiles[activeTiles.length - 1];
-        console.log(lastTile);
+        // console.log(lastTile);
         if (lastTile == null) {
-          console.log("no last tile");
+          // console.log("no last tile");
           return;
         }
         lastTile.textContent = "";
@@ -326,20 +328,19 @@ import Page from "../../layouts/Page.astro";
         });
         const strTiles = tiles.join(" ");
         localStorage.setItem("tiles", strTiles);
-        // console.log(strTiles)
-        const today = new Date();
-        const strDate = [
-          today.getDate(),
-          today.getMonth(),
-          today.getFullYear(),
-        ].join(" ");
-        localStorage.setItem("date", strDate);
+        localStorage.setItem("target", state.targetWord);
       }
 
       function updateWins() {
         let game_wins = parseInt(localStorage.getItem("game-wins") || "0");
         game_wins += 1;
         localStorage.setItem("game-wins", game_wins.toString());
+      }
+
+      function newGame() {
+        localStorage.removeItem("tiles");
+        localStorage.removeItem("target");
+        window.location.reload();
       }
 
       function checkDone(guess: string) {
@@ -349,6 +350,7 @@ import Page from "../../layouts/Page.astro";
           confetti();
           stopInteraction();
           updateWins();
+          setTimeout(newGame, 3000);
           return;
         }
 
@@ -456,7 +458,6 @@ import Page from "../../layouts/Page.astro";
         tiles.forEach((tile, index) => {
           setTimeout(
             () => {
-              tile.classList.add("dance");
               tile.addEventListener(
                 "animationend",
                 () => {
@@ -464,6 +465,7 @@ import Page from "../../layouts/Page.astro";
                 },
                 { once: true },
               );
+              tile.classList.add("dance");
             },
             (index * DANCE_ANIMATION_DURATION) / 5,
           );
@@ -474,14 +476,24 @@ import Page from "../../layouts/Page.astro";
       startInteraction();
     }
 
-    init();
+    init_wordle();
     // Runs after astro page load
     document.addEventListener("astro:after-swap", () => {
       console.log("astro page load");
-      init();
+      init_wordle();
     });
   </script>
   <style>
+    dialog {
+      padding: 1.5rem;
+      font-size: larger;
+      text-align: center;
+    }
+
+    .pad {
+      padding: 0.5rem;
+    }
+
     .flex {
       display: flex;
       justify-content: center;
