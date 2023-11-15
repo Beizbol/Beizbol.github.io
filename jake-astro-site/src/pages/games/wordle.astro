@@ -336,12 +336,19 @@ import Page from "../../layouts/Page.astro";
         localStorage.setItem("date", strDate);
       }
 
+      function updateWins() {
+        let game_wins = parseInt(localStorage.getItem("game-wins") || "0");
+        game_wins += 1;
+        localStorage.setItem("game-wins", game_wins.toString());
+      }
+
       function checkDone(guess: string) {
         if (guess === state.targetWord) {
           showAlert("You Win", 5000);
           danceTiles();
           confetti();
           stopInteraction();
+          updateWins();
           return;
         }
 
