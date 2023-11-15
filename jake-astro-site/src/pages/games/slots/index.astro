@@ -67,6 +67,16 @@ import Slots from "./slots";
       <label for="xray"> Show 3D</label>
     </div>
   </div>
+  <dialog>
+    <form class="pts-msg" method="dialog">
+      <h3>Whoops! Not enough points :(</h3>
+      <p>Solve a wordle to earn more.</p>
+      <div class="flex">
+        <button>Ok</button>
+        <button><a href="/games/wordle">Wordle</a></button>
+      </div>
+    </form>
+  </dialog>
 </Page>
 
 <script>
@@ -103,6 +113,7 @@ import Slots from "./slots";
         });
       }, 1900);
     }
+    const dialog = document.querySelector("dialog") as HTMLDialogElement;
 
     const rotate = document.getElementById("rotate") as HTMLElement;
     const xray = document.getElementById("xray") as HTMLInputElement;
@@ -266,7 +277,8 @@ import Slots from "./slots";
       const placed = document.querySelector(".bet.placed") as HTMLElement;
       const bet = parseInt(placed.innerHTML);
       if (bet > points) {
-        alert("Not enough points!");
+        // alert("Not enough points!");
+        dialog.showModal();
         return;
       }
       updatePts(-bet);
@@ -357,6 +369,18 @@ import Slots from "./slots";
 </script>
 
 <style>
+  button a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .flex {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
   .float {
     position: absolute;
     top: 0;
@@ -460,7 +484,7 @@ import Slots from "./slots";
   .circle-btn {
     aspect-ratio: 1;
     border-radius: 50%;
-    border: 3px solid #fff6;
+    border: 0.25rem solid #fff6;
     cursor: pointer;
     transition: ease-in-out 0.25s;
     opacity: 0.9;
