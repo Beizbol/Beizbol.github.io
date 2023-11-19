@@ -298,16 +298,16 @@ const jdev = false;
     }
   </style>
   <script>
-    const resBtn = document.getElementById("resume");
+    const resBtn = document.getElementById("resume") as HTMLButtonElement;
     resBtn.addEventListener("click", resume);
     const root = document.documentElement;
-    const go = document.getElementById("btnGo");
+    const go = document.getElementById("btnGo") as HTMLButtonElement;
     go.addEventListener("click", pause);
-    const player = document.getElementById("player");
-    const game = document.getElementById("game");
-    const obstacle = document.getElementById("obstacle");
-    const hole = document.getElementById("hole");
-    const car = document.getElementById("car");
+    const player = document.getElementById("player") as HTMLDivElement;
+    const obstacle = document.getElementById("obstacle") as HTMLDivElement;
+    const hole = document.getElementById("hole") as HTMLDivElement;
+    const car = document.getElementById("car") as HTMLDivElement;
+    const game = document.getElementById("game") as HTMLDivElement;
     game.addEventListener("mousedown", squat);
     game.addEventListener("mouseup", jump);
     document.addEventListener("keydown", squat);
@@ -321,7 +321,8 @@ const jdev = false;
     let jump_start_ms = 0;
     let start_time = 0;
     let score = 0;
-    let highscore = +localStorage.getItem("best");
+    const n = localStorage.getItem("best") || "0";
+    let highscore = +n;
     if (!highscore) {
       highscore = 0;
     }
@@ -361,8 +362,19 @@ const jdev = false;
         console.log("spaused");
         return;
       }
-      if (player.classList.contains("squat") || player.classList.contains("jump") || player.classList.contains("fall")) return;
-      if (event.key !== " " && event.key !== "ArrowUp" && event.key !== "w" && event.button !== 0) return;
+      if (
+        player.classList.contains("squat") ||
+        player.classList.contains("jump") ||
+        player.classList.contains("fall")
+      )
+        return;
+      if (
+        event.key !== " " &&
+        event.key !== "ArrowUp" &&
+        event.key !== "w" &&
+        event.button !== 0
+      )
+        return;
       jump_start_ms = performance.now();
       player.classList.add("squat");
       console.log("squat");
@@ -373,11 +385,21 @@ const jdev = false;
         console.log("jpaused");
         return;
       }
-      if (player.classList.contains("jump") || player.classList.contains("fall") || !player.classList.contains("squat")) {
+      if (
+        player.classList.contains("jump") ||
+        player.classList.contains("fall") ||
+        !player.classList.contains("squat")
+      ) {
         console.log("already jumping");
         return;
       }
-      if (event.key !== " " && event.key !== "ArrowUp" && event.key !== "w" && event.button !== 0) return;
+      if (
+        event.key !== " " &&
+        event.key !== "ArrowUp" &&
+        event.key !== "w" &&
+        event.button !== 0
+      )
+        return;
       // console.log("jump");
 
       const t = performance.now();
@@ -419,7 +441,7 @@ const jdev = false;
     }
 
     function judgeJump(t) {
-      const floor = document.getElementById("floor");
+      const floor = document.getElementById("floor") as HTMLDivElement;
       // Check if jump was good
       const dt = t - jump_time_ms;
       const dt_div = document.getElementById("dt");
@@ -450,8 +472,8 @@ const jdev = false;
     }
 
     function updateScore(isGood) {
-      const jumps = document.getElementById("jumps");
-      const best = document.getElementById("best");
+      const jumps = document.getElementById("jumps") as HTMLHeadingElement;
+      const best = document.getElementById("best") as HTMLHeadingElement;
       if (isGood) {
         score += 1;
       } else {
@@ -489,11 +511,15 @@ const jdev = false;
     updateScore(false);
 
     function showResults() {
-      const resultsDialog = document.getElementById("resultsDialog") as HTMLDialogElement;
+      const resultsDialog = document.getElementById(
+        "resultsDialog",
+      ) as HTMLDialogElement;
       resultsDialog.showModal();
     }
 
-    const pauseDialog = document.getElementById("pauseDialog") as HTMLDialogElement;
+    const pauseDialog = document.getElementById(
+      "pauseDialog",
+    ) as HTMLDialogElement;
     const bgs = document.getElementsByClassName("bg");
     function pause() {
       isPaused = true;

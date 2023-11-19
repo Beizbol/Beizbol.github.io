@@ -45,91 +45,109 @@ import Page from "../../layouts/Page.astro";
 
   <script>
     import confetti from "canvas-confetti";
-    const tiles = [...document.querySelectorAll<HTMLButtonElement>(".tile")];
-    init();
+    const ttt = () => {
+      const tiles = [...document.querySelectorAll<HTMLButtonElement>(".tile")];
+      init();
 
-    function init() {
-      tiles.forEach((btn, idx) => {
-        btn.dataset.letter = "";
-        btn.innerText = "";
-        btn.onclick = () => {
-          flip(idx);
-        };
-      });
-    }
-
-    function flip(idx: number) {
-      if (tiles[idx].dataset.letter !== "") {
-        return;
+      function init() {
+        tiles.forEach((btn, idx) => {
+          btn.dataset.letter = "";
+          btn.innerText = "";
+          btn.onclick = () => {
+            flip(idx);
+          };
+        });
       }
 
-      // console.log(idx);
-      flip_tile(tiles[idx], "X");
-      if (checkWinner()) {
-        youWin();
-        return;
-      }
-      const spots = [...document.querySelectorAll<HTMLButtonElement>('[data-letter=""]')];
-      // console.log(spots);
-      if (spots.length === 0) {
-        youDraw();
-        return;
-      }
-      const pick = spots[Math.floor(Math.random() * spots.length)];
-      flip_tile(pick, "O");
-      if (checkWinner()) {
-        youLose();
-        return;
-      }
-    }
-
-    function flip_tile(tile: HTMLButtonElement, char: string) {
-      tile.dataset.letter = char;
-      tile.textContent = char;
-    }
-
-    function checkWinner(): boolean {
-      // Check row and column matches
-      const board = tiles.flatMap((tile) => {
-        return tile.textContent;
-      });
-      // console.log(board);
-      for (let i = 0; i < 3; i++) {
-        const row = 3 * i;
-        if (board[row] !== "" && board[row] === board[row + 1] && board[row] === board[row + 2]) {
-          // console.log("row win");
-          return true;
+      function flip(idx: number) {
+        if (tiles[idx].dataset.letter !== "") {
+          return;
         }
-        if (board[i] !== "" && board[i] === board[i + 3] && board[i] === board[i + 6]) {
-          // console.log("col win");
-          return true;
+
+        // console.log(idx);
+        flip_tile(tiles[idx], "X");
+        if (checkWinner()) {
+          youWin();
+          return;
+        }
+        const spots = [
+          ...document.querySelectorAll<HTMLButtonElement>('[data-letter=""]'),
+        ];
+        // console.log(spots);
+        if (spots.length === 0) {
+          youDraw();
+          return;
+        }
+        const pick = spots[Math.floor(Math.random() * spots.length)];
+        flip_tile(pick, "O");
+        if (checkWinner()) {
+          youLose();
+          return;
         }
       }
 
-      if (board[4] != "" && ((board[0] === board[4] && board[4] === board[8]) || (board[2] === board[4] && board[4] === board[6]))) {
-        // console.log("cross win");
-        return true;
+      function flip_tile(tile: HTMLButtonElement, char: string) {
+        tile.dataset.letter = char;
+        tile.textContent = char;
       }
 
-      return false;
-    }
+      function checkWinner(): boolean {
+        // Check row and column matches
+        const board = tiles.flatMap((tile) => {
+          return tile.textContent;
+        });
+        // console.log(board);
+        for (let i = 0; i < 3; i++) {
+          const row = 3 * i;
+          if (
+            board[row] !== "" &&
+            board[row] === board[row + 1] &&
+            board[row] === board[row + 2]
+          ) {
+            // console.log("row win");
+            return true;
+          }
+          if (
+            board[i] !== "" &&
+            board[i] === board[i + 3] &&
+            board[i] === board[i + 6]
+          ) {
+            // console.log("col win");
+            return true;
+          }
+        }
 
-    function youWin() {
-      confetti().then(init);
-    }
+        if (
+          board[4] != "" &&
+          ((board[0] === board[4] && board[4] === board[8]) ||
+            (board[2] === board[4] && board[4] === board[6]))
+        ) {
+          // console.log("cross win");
+          return true;
+        }
 
-    function youLose() {
-      setTimeout(() => {
-        alert("You lose. Better luck next time.");
-        init();
-      }, 50);
-    }
+        return false;
+      }
 
-    function youDraw() {
-      setTimeout(() => {
-        alert("It's a draw. Try again.");
-        init();
-      }, 50);
-    }
+      function youWin() {
+        confetti()!.then(init);
+      }
+
+      function youLose() {
+        setTimeout(() => {
+          alert("You lose. Better luck next time.");
+          init();
+        }, 50);
+      }
+
+      function youDraw() {
+        setTimeout(() => {
+          alert("It's a draw. Try again.");
+          init();
+        }, 50);
+      }
+    };
+    ttt();
+    document.addEventListener("astro:after-swap", ttt);
   </script>
 </Page>

@@ -115,33 +115,34 @@
 </style>
 
 <script>
-	const themes = [
-		"Default",
-		"Steel",
-		"Sky",
-		"Denim",
-		"Ocean",
-		"Mint",
-		"Jungle",
-		"Coffee",
-		"Wine",
-		"Pretty",
-	];
-	const themeSelect = document.getElementById(
-		"themeSelect"
-	) as HTMLSelectElement;
-	themeSelect.addEventListener("change", saveTheme);
+	const loadTheme = () => {
+		const themes = [
+			"Default",
+			"Steel",
+			"Sky",
+			"Denim",
+			"Ocean",
+			"Mint",
+			"Jungle",
+			"Coffee",
+			"Wine",
+			"Pretty",
+		];
 
-	function saveTheme() {
-		const theme = themeSelect.value;
-		localStorage.setItem("theme", theme);
-		console.log("theme saved.", theme);
-	}
+		const saveTheme = () => {
+			const theme = themeSelect.value;
+			localStorage.setItem("theme", theme);
+			console.log("theme saved.", theme);
+		};
+		const themeSelect = document.getElementById(
+			"themeSelect",
+		) as HTMLSelectElement;
+		themeSelect.removeEventListener("change", saveTheme);
+		themeSelect.addEventListener("change", saveTheme);
 
-	function loadTheme() {
 		// console.log("hello theme");
 		const sel = document.getElementById(
-			"themeSelect"
+			"themeSelect",
 		) as HTMLSelectElement | null;
 		const theme = localStorage.getItem("theme");
 		console.log(theme);
@@ -154,8 +155,8 @@
 		}
 
 		// console.log("theme done.");
-	}
+	};
 
 	loadTheme();
-	// document.addEventListener("astro:after-swap", loadTheme);
+	document.addEventListener("astro:after-swap", loadTheme);
 </script>

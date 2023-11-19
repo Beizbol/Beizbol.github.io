@@ -174,7 +174,44 @@ declare module 'astro:content' {
 	>;
 
 	type ContentEntryMap = {
-		"models": {
+		"flash-games": {
+"age-of-war.md": {
+	id: "age-of-war.md";
+  slug: "age-of-war";
+  body: string;
+  collection: "flash-games";
+  data: InferEntrySchema<"flash-games">
+} & { render(): Render[".md"] };
+"motherload.md": {
+	id: "motherload.md";
+  slug: "motherload";
+  body: string;
+  collection: "flash-games";
+  data: InferEntrySchema<"flash-games">
+} & { render(): Render[".md"] };
+"sniper-assassin-4.md": {
+	id: "sniper-assassin-4.md";
+  slug: "sniper-assassin-4";
+  body: string;
+  collection: "flash-games";
+  data: InferEntrySchema<"flash-games">
+} & { render(): Render[".md"] };
+"tanks.md": {
+	id: "tanks.md";
+  slug: "tanks";
+  body: string;
+  collection: "flash-games";
+  data: InferEntrySchema<"flash-games">
+} & { render(): Render[".md"] };
+"worlds-hardest-game.md": {
+	id: "worlds-hardest-game.md";
+  slug: "worlds-hardest-game";
+  body: string;
+  collection: "flash-games";
+  data: InferEntrySchema<"flash-games">
+} & { render(): Render[".md"] };
+};
+"models": {
 "baseball.md": {
 	id: "baseball.md";
   slug: "baseball";

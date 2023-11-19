@@ -14,8 +14,18 @@ const { m } = Astro.props;
 ---
 
 <Page title={m.data.title}>
-  <script is:inline type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <model-viewer class="viewer" alt={m.data.description} src={m.data.model} shadow-intensity="1" camera-controls touch-action="pan-y"></model-viewer>
+  <script
+    is:inline
+    type="module"
+    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+  ></script>
+  <model-viewer
+    class="viewer"
+    alt={m.data.description}
+    src={m.data.model}
+    shadow-intensity="1"
+    camera-controls
+    touch-action="pan-y"></model-viewer>
   <style>
     .viewer {
       width: 100%;

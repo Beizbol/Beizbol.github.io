@@ -16,6 +16,13 @@ const shoesCollection = defineCollection({
         colors: z.number(),
     })
 });
+const flashGamesCollection = defineCollection({
+    schema: z.object({
+        title: z.string(),
+        description: z.string(),
+        path: z.string(),
+    })
+});
 // const svgsCollection = defineCollection({
 //     schema: z.object({
 //         title: z.string(),
@@ -26,5 +33,6 @@ const shoesCollection = defineCollection({
 //    This key should match your collection directory name in "src/content"
 export const collections = {
     'models': modelsCollection,
-    'shoes': shoesCollection
+    'shoes': shoesCollection,
+    'flash-games': flashGamesCollection
 };

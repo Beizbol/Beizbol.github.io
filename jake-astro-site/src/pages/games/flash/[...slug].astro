@@ -1,0 +1,59 @@
+---
+import { getCollection } from "astro:content";
+import Page from "../../../layouts/Page.astro";
+
+export async function getStaticPaths() {
+    const allFlashGames = await getCollection("flash-games");
+    return allFlashGames.map((fg) => ({
+        params: { slug: fg.slug },
+        props: { fg },
+    }));
+}
+
+const { fg } = Astro.props;
+---
+
+<Page title={fg.data.title}>
+    <div id="container" data-path={fg.data.path}>
+        <div id="full">Fullscreen</div>
+    </div>
+</Page>
+<script>
+    const init = () => {
+        window.RufflePlayer = window.RufflePlayer || {};
+    };
+    const run = () => {
+        const ruffle = window.RufflePlayer.newest();
+        const player = ruffle.createPlayer();
+        player.volume = 0.25;
+        const container = document.getElementById(
+            "container",
+        ) as HTMLDivElement;
+        container.appendChild(player);
+        player.style.width = "64rem";
+        player.style.height = "48rem";
+        player.load(container.dataset.path);
+    };
+    init();
+    document.addEventListener("astro:after-swap", init);
+    document.addEventListener("astro:page-load", run);
+</script>
+<script src="/ruffle-js/ruffle.js" is:inline></script>
+<style>
+    #container {
+        position: relative;
+        display: flex;
+        margin: 0 auto;
+        flex-grow: 1;
+    }
+
+    #full {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 0.5rem;
+        background-color: #fff2;
+        color: #fff;
+        cursor: pointer;
+    }
+</style>

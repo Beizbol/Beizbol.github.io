@@ -103,7 +103,7 @@ import Page from "../../layouts/Page.astro";
 
   <script>
     import confetti from "canvas-confetti";
-    function init_wordle() {
+    const init_wordle = () => {
       console.log("init");
 
       const loaded = null;
@@ -474,14 +474,11 @@ import Page from "../../layouts/Page.astro";
 
       loadTiles();
       startInteraction();
-    }
+    };
 
     init_wordle();
     // Runs after astro page load
-    document.addEventListener("astro:after-swap", () => {
-      console.log("astro page load");
-      init_wordle();
-    });
+    document.addEventListener("astro:after-swap", init_wordle);
   </script>
   <style>
     dialog {
