@@ -289,6 +289,7 @@ import Slots from "./slots";
     function spin() {
       // tests();
       // return;
+
       const placed = document.querySelector(".bet.placed") as HTMLElement;
       const bet = parseInt(placed.innerHTML);
       if (bet > points) {
@@ -296,6 +297,11 @@ import Slots from "./slots";
         dialog.showModal();
         return;
       }
+      document.querySelectorAll(".bets .bet").forEach((bet) => {
+        (bet as HTMLButtonElement).disabled = true;
+      });
+      btnSpin.disabled = true;
+
       updatePts(-bet);
 
       const rings = document.querySelectorAll(".ring");
@@ -322,6 +328,10 @@ import Slots from "./slots";
           updatePts(pts);
           celebrate(pts);
         }
+        document.querySelectorAll(".bets .bet").forEach((bet) => {
+          (bet as HTMLButtonElement).disabled = false;
+        });
+        btnSpin.disabled = false;
       }, 4500);
     }
 
@@ -501,14 +511,14 @@ import Slots from "./slots";
     aspect-ratio: 1;
     border-radius: 50%;
     border: 0.25rem solid #fff6;
-    cursor: pointer;
     transition: ease-in-out 0.25s;
     opacity: 0.9;
     font-size: 1.25em;
     padding: 1rem;
   }
 
-  .circle-btn:hover {
+  .circle-btn:not(:disabled):hover {
+    cursor: pointer;
     scale: 1.05;
     opacity: 1;
   }
