@@ -400,22 +400,21 @@ import Page from "../../../layouts/Page.astro";
         const key = keyboard.querySelector(`[data-key="${letter}"i]`);
 
         setTimeout(() => {
+          tile.addEventListener(
+            "animationend",
+            () => {
+              tile.classList.remove("flip");
+              if (key) {
+                key.classList.add(result);
+              }
+              tile.dataset.state = result;
+            },
+            { once: true },
+          );
           tile.classList.add("flip");
         }, delay);
 
         // console.log("flip")
-
-        tile.addEventListener(
-          "transitionend",
-          () => {
-            tile.classList.remove("flip");
-            if (key) {
-              key.classList.add(result);
-            }
-            tile.dataset.state = result;
-          },
-          { once: true },
-        );
       }
 
       function showAlert(message: string | null, duration = 5000) {
@@ -430,28 +429,16 @@ import Page from "../../../layouts/Page.astro";
       }
 
       function shakeTiles(tiles: any[]) {
-        tiles.forEach(
-          (tile: {
-            classList: {
-              add: (arg0: string) => void;
-              remove: (arg0: string) => void;
-            };
-            addEventListener: (
-              arg0: string,
-              arg1: () => void,
-              arg2: { once: boolean },
-            ) => void;
-          }) => {
-            tile.classList.add("shake");
-            tile.addEventListener(
-              "animationend",
-              () => {
-                tile.classList.remove("shake");
-              },
-              { once: true },
-            );
-          },
-        );
+        tiles.forEach((tile) => {
+          tile.addEventListener(
+            "animationend",
+            () => {
+              tile.classList.remove("shake");
+            },
+            { once: true },
+          );
+          tile.classList.add("shake");
+        });
       }
 
       function danceTiles() {
@@ -584,7 +571,6 @@ import Page from "../../../layouts/Page.astro";
       justify-content: center;
       align-items: center;
       user-select: none;
-      transition: transform 250ms linear;
     }
 
     .tile[data-state="active"] {
@@ -615,7 +601,13 @@ import Page from "../../../layouts/Page.astro";
     }
 
     .tile.flip {
-      transform: rotateX(90deg);
+      animation: flipover 250ms ease-in 2 alternate;
+    }
+
+    @keyframes flipover {
+      100% {
+        transform: rotateX(90deg);
+      }
     }
 
     @keyframes shake {
