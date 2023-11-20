@@ -362,11 +362,12 @@ import Page from "../../../layouts/Page.astro";
         if (guess === state.targetWord) {
           return Array(5).fill("correct");
         }
+        // default to wrong-location
         let results = Array(5).fill("wrong-location");
         let unused = state.targetWord.split("");
+        // mark matches as correct and misses as wrong
         for (let i = 0; i < guess.length; i++) {
           const guess_letter = guess.charAt(i);
-          const target_letter = state.targetWord.charAt(i);
           const pos = state.targetWord.indexOf(guess_letter);
           switch (pos) {
             case i:
@@ -377,11 +378,18 @@ import Page from "../../../layouts/Page.astro";
             case -1:
               results[i] = "wrong";
               break;
-
-            default:
-              results[i] = "wrong-location";
+          }
+        }
+        // mark used/spoken-for letters as wrong
+        for (let i = 0; i < guess.length; i++) {
+          if (results[i] === "wrong-location") {
+            const guess_letter = guess.charAt(i);
+            const pos = unused.indexOf(guess_letter);
+            if (pos === -1) {
+              results[i] = "wrong";
+            } else {
               unused[pos] = "";
-              break;
+            }
           }
         }
         return results;
