@@ -86,11 +86,22 @@ import Page from "../../../layouts/Page.astro";
   </div>
 
   <dialog>
-    <form class="grid" method="dialog">
+    <form class="welcome grid" method="dialog">
       <h3>Welcome back! &#128075;</h3>
       <div class="pad">
         <p>You have a word in progress.</p>
         <p>Continue where you left off?</p>
+      </div>
+      <div class="flex pad">
+        <button class="pad">Ok &#x1f607;</button>
+        <button class="pad" value="restart">Restart &#x1f608;</button>
+      </div>
+    </form>
+    <form class="congrats grid" method="dialog">
+      <h3><strong><span id="cword"></span></strong></h3>
+      <div class="pad">
+        <p>You got it, nicely done!</p>
+        <p>points</p>
       </div>
       <div class="flex pad">
         <button class="pad">Ok &#x1f607;</button>
@@ -115,12 +126,13 @@ import Page from "../../../layouts/Page.astro";
       ) as HTMLElement;
 
       const n = Math.floor(Math.random() * Words.targetWords.length);
-      const state = { targetWord: Words.targetWords[n] };
+      const state = { targetWord: "smell" }; //Words.targetWords[n]
       // Player is returning to the page on the same day
       const dialog = document.querySelector("dialog") as HTMLDialogElement;
 
       dialog.addEventListener("close", () => {
         const val = dialog.returnValue;
+        delete dialog.dataset.state;
         console.log(val);
 
         switch (val) {
@@ -139,6 +151,7 @@ import Page from "../../../layouts/Page.astro";
 
         const target = localStorage.getItem("target");
         if (target) {
+          dialog.dataset.state = "welcome";
           dialog.showModal();
           state.targetWord = target;
           return;
@@ -182,7 +195,7 @@ import Page from "../../../layouts/Page.astro";
 
         words.forEach((word, idx) => {
           // console.log(word)
-          const results = judgeGuess(word);
+          const results = judgeGuess(word, state.targetWord);
           const tiles = tileElems.slice(5 * idx, 5 * idx + 5);
           tiles.forEach((tile, idx) =>
             flipTile(tile, results[idx], (idx * FLIP_ANIMATION_DURATION) / 2),
@@ -219,7 +232,7 @@ import Page from "../../../layouts/Page.astro";
         stopInteraction();
         saveTiles();
 
-        const results = judgeGuess(guess);
+        const results = judgeGuess(guess, state.targetWord);
         activeTiles.forEach((tile, idx) => {
           flipTile(tile, results[idx], (idx * FLIP_ANIMATION_DURATION) / 2);
         });
@@ -333,7 +346,11 @@ import Page from "../../../layouts/Page.astro";
       function newGame() {
         localStorage.removeItem("tiles");
         localStorage.removeItem("target");
-        window.location.reload();
+
+        dialog.dataset.state = "congrats";
+        dialog.showModal();
+
+        // window.location.reload();
       }
 
       function checkDone(guess: string) {
@@ -343,7 +360,7 @@ import Page from "../../../layouts/Page.astro";
           confetti();
           stopInteraction();
           updateWins();
-          setTimeout(newGame, 3000);
+          setTimeout(newGame, 5000);
           return;
         }
 
@@ -358,26 +375,29 @@ import Page from "../../../layouts/Page.astro";
         startInteraction();
       }
 
-      function judgeGuess(guess: string) {
-        if (guess === state.targetWord) {
+      function judgeGuess(guess: string, target: string) {
+        if (guess === target) {
           return Array(5).fill("correct");
         }
         // default to wrong-location
         let results = Array(5).fill("wrong-location");
-        let unused = state.targetWord.split("");
+        let unused = target.split("");
+
         // mark matches as correct and misses as wrong
         for (let i = 0; i < guess.length; i++) {
           const guess_letter = guess.charAt(i);
-          const pos = state.targetWord.indexOf(guess_letter);
-          switch (pos) {
-            case i:
-              results[i] = "correct";
-              unused[i] = "";
-              break;
+          const target_letter = target.charAt(i);
 
-            case -1:
-              results[i] = "wrong";
-              break;
+          if (guess_letter === target_letter) {
+            results[i] = "correct";
+            unused[i] = "";
+            continue;
+          }
+
+          const pos = target.indexOf(guess_letter);
+          if (pos === -1) {
+            results[i] = "wrong-location";
+            unused[pos] = "";
           }
         }
         // mark used/spoken-for letters as wrong
@@ -475,8 +495,17 @@ import Page from "../../../layouts/Page.astro";
       text-align: center;
     }
 
-    .pad {
-      padding: 0.5rem;
+    dialog[data-state="welcome"] .welcome {
+      display: auto;
+    }
+    dialog[data-state="welcome"] .congrats {
+      display: none;
+    }
+    dialog[data-state="congrats"] .welcome {
+      display: none;
+    }
+    dialog[data-state="congrats"] .congrats {
+      display: auto;
     }
 
     .flex {
