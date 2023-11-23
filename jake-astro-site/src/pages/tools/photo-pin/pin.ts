@@ -5,7 +5,7 @@ export default class Pin {
     w: number;
     h: number;
     text: string;
-    icon: any;
+    icon: HTMLImageElement;
     bg: string;
     font: string;
     color: string;
@@ -41,10 +41,9 @@ export default class Pin {
 
     drawPin(_ctx: CanvasRenderingContext2D) {
         // console.log("pin img ", this.icon);
-        // draw pin bottom
+
         _ctx.fillStyle = this.bg;
-        _ctx.fillRect(this.x - 24, this.y - this.h / 2, this.w, this.h);
-        // draw pin body
+        // draw pin tip
         _ctx.beginPath();
         const mid = this.x + this.w / 2 - 24;
         _ctx.moveTo(mid - 10, this.y + 5);
@@ -52,10 +51,23 @@ export default class Pin {
         _ctx.lineTo(mid + 10, this.y + 5);
         _ctx.closePath();
         _ctx.fill();
+
+        // draw pin body
+        _ctx.beginPath();
+        _ctx.roundRect(this.x - 24, this.y - this.h / 2, this.w, this.h, 5);
+        _ctx.closePath();
+        _ctx.fill();
+
         // // draw pin icon
-        _ctx.drawImage(this.icon, this.x - 20, this.y - 12, 24, 24);
-        // // draw pin text
         _ctx.fillStyle = this.color;
+        if (this.color) {
+            _ctx.filter = "invert(1)";
+        }
+        _ctx.drawImage(this.icon, this.x - 20, this.y - 12, 24, 24);
+        _ctx.filter = "none";
+
+        // // draw pin text
+        // _ctx.fillStyle = this.color;
         _ctx.font = this.font;
         _ctx.fillText(this.text, this.x + 8, this.y + 6);
         // console.log("drawn");

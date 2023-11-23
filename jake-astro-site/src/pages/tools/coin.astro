@@ -1,0 +1,222 @@
+---
+import Page from "../../layouts/Page.astro";
+// import Video from "../components/Video.astro";
+---
+
+<Page title="Coin Flip">
+  <div class="wrap">
+    <div class="grid">
+      <label for="heads">Heads:</label>
+      <input id="heads" type="text" placeholder="Heads" />
+      <label for="tails">Tails:</label>
+      <input id="tails" type="text" placeholder="Tails" />
+      <button id="btn" class="btn wide">Flip</button>
+    </div>
+    <div class="flip-wrap">
+      <div id="coin" class="flip-inner">
+        <div class="flip-front">Heads</div>
+        <div class="flip-back">Tails</div>
+      </div>
+    </div>
+  </div>
+</Page>
+
+<script>
+  const init = () => {
+    const coin = document.getElementById("coin") as HTMLDivElement;
+
+    const heads = document.getElementById("heads") as HTMLInputElement;
+    const front = coin.querySelector(".flip-front") as HTMLDivElement;
+    heads.addEventListener("input", () => {
+      front.textContent = heads.value;
+    });
+
+    const tails = document.getElementById("tails") as HTMLInputElement;
+    tails.addEventListener("focus", () => {
+      console.log("peek");
+      if (coin.classList.contains("flipping")) {
+        return;
+      }
+      coin.classList.add("peek");
+    });
+    tails.addEventListener("blur", () => {
+      console.log("blur");
+      coin.classList.remove("peek");
+    });
+    const back = coin.querySelector(".flip-back") as HTMLDivElement;
+    tails.addEventListener("input", () => {
+      back.textContent = tails.value;
+    });
+
+    const btn = document.getElementById("btn") as HTMLButtonElement;
+    btn.addEventListener("click", () => {
+      // Clear the coin
+      if (coin.classList.contains("peek")) {
+        coin.classList.remove("peek");
+      }
+      if (coin.classList.contains("flipping")) {
+        coin.classList.remove("flipping");
+      }
+      if (coin.classList.contains("heads")) {
+        coin.classList.remove("heads");
+      }
+      if (coin.classList.contains("tails")) {
+        coin.classList.remove("tails");
+      }
+      // Flip the coin
+      setTimeout(() => {
+        const result = Math.random() < 0.5 ? "heads" : "tails";
+        coin.classList.add("flipping");
+        console.log(result);
+        coin.addEventListener(
+          "animationend",
+          () => {
+            console.log("animationend");
+            coin.classList.remove("flipping");
+            coin.classList.add(result);
+          },
+          { once: true },
+        );
+      }, 100);
+    });
+  };
+  init();
+  // Runs immediately after the new page replaces the old page
+  document.addEventListener("astro:after-swap", init);
+</script>
+
+<style>
+  .flip-wrap {
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  }
+
+  #coin {
+    background-color: var(--color-accent);
+    border-radius: 50%;
+    height: 15rem;
+    width: 15rem;
+    padding: 1rem;
+    position: relative;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    /* transform: rotateY(0); */
+  }
+
+  @keyframes floop {
+    0% {
+      transform: rotateY(0deg);
+    }
+    100% {
+      transform: rotateY(360deg);
+    }
+  }
+  @keyframes fhead {
+    0% {
+      transform: rotateY(360deg);
+    }
+    100% {
+      transform: rotateY(720deg);
+    }
+  }
+  @keyframes ftail {
+    0% {
+      transform: rotateY(360deg);
+    }
+    100% {
+      transform: rotateY(540deg);
+    }
+  }
+
+  /* Do an horizontal flip when you move the mouse over the flip box container */
+  #coin.flipping {
+    animation: 0.5s floop linear 6;
+  }
+
+  #coin.heads {
+    animation: 1s fhead linear forwards;
+  }
+
+  #coin.tails {
+    animation: 0.5s ftail linear forwards;
+  }
+  /* Style the back side */
+  #coin.peek {
+    transform: rotateY(180deg);
+  }
+  /* .flip-wrap:hover .flip-inner {
+    transform: rotateY(180deg);
+  } */
+
+  /* Position the front and back side */
+  .flip-front,
+  .flip-back {
+    position: absolute;
+    inset: 1rem;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+    color: var(--color-text);
+    font-size: 3rem;
+    display: grid;
+    place-items: center;
+  }
+
+  /* Style the back side */
+  .flip-back {
+    transform: rotateY(180deg);
+  }
+
+  label {
+    font-size: 1.25rem;
+    justify-self: right;
+  }
+
+  #heads,
+  #tails {
+    resize: none;
+    padding: 1rem;
+    overflow-y: none;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  .grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 7ch 1fr;
+    place-items: center;
+    text-align: center;
+  }
+
+  .wide {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .btn {
+    border: 2px solid;
+    color: black;
+    padding: 0.75rem;
+    margin: 0.5rem;
+    font-size: 1.25rem;
+    border-radius: 0.5rem;
+    background-color: var(--color-accent);
+  }
+
+  .btn:focus,
+  .btn:hover {
+    color: var(--color-text);
+  }
+</style>
