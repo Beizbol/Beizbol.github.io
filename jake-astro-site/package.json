@@ -14,9 +14,9 @@
     "hint": "hint https://www.jakesite.ca/"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.0.1",
+    "@astrojs/sitemap": "^3.0.3",
     "@cheprasov/qrcode": "^0.1.0",
-    "astro": "^3.3.1",
+    "astro": "^4.0.3",
     "canvas-confetti": "^1.9.0",
     "fs-extra": "^11.1.1"
   },

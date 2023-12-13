@@ -84,16 +84,9 @@ const app = `/apps/${filename}/app.js`;
 				flex-direction: column;
 				gap: 1rem;
 				margin-top: 3rem;
-				padding: 1rem;
 				min-height: calc(100vh - 3rem);
 				min-width: 100vw;
 				overflow: auto;
-			}
-
-			@supports (scrollbar-color: black) {
-				main {
-					scrollbar-color: var(--color-bg-alt) var(--color-bg);
-				}
 			}
 
 			header {

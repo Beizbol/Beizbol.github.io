@@ -1,30 +1,23 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"os"
+	"log"
+	"jakesite/jserver/handlers"
+	"github.com/gofiber/fiber/v2"
 )
 
-// func handler(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Fprintf(w, "Hello, %s", r.URL.Path[1:])
-// }
-
+// https://github.com/gofiber/boilerplate/tree/master
 func main() {
-	err := os.Chdir("..")
-	if err != nil {
-		fmt.Println(err)
-	}
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		fmt.Println(err)
-	}
+	log.Println("Starting fiber...")
 
-	fmt.Printf("Starting JServer! %s", cwd)
-	// http.HandleFunc("/", handler)
-	// http.Handle("/j", http.NotFoundHandler())
-	http.Handle("/", http.FileServer(http.Dir("www")))
+	// todo - make these configurable
+	path := "../docs" // dist | output | public | www
+	port := ":3000"   // 80 | 8080 | 4321
 
-	http.ListenAndServe(":8080", nil)
+	app := fiber.New()
+	app.Static("/", path) // serve files
+	app.Use("/api", handlers.api)
+	err := app.Listen(port)
+	log.Fatal(err)
 }

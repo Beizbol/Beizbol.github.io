@@ -10,8 +10,18 @@ import Page from "../../../layouts/Page.astro";
 		</div>
 		<div class="flex">
 			<div class="stack">
-				<label for="pinColor">Color</label>
+				<label for="pinColor">Body</label>
 				<input id="pinColor" type="color" value="#7711BB" />
+			</div>
+
+			<div class="stack">
+				<label for="sides">Side</label>
+				<select name="sides" id="sides">
+					<option value="bottom">Bottom</option>
+					<option value="left">Left</option>
+					<option value="top">Top</option>
+					<option value="right">Right</option>
+				</select>
 			</div>
 
 			<div class="stack">
@@ -142,12 +152,12 @@ import Page from "../../../layouts/Page.astro";
 	</style>
 
 	<script>
-		import Pin from "./pin";
+		import Pin, { type PinSide } from "./pin";
 
 		function init() {
 			console.log("init");
 			const pcanvas = document.getElementById(
-				"pcanvas"
+				"pcanvas",
 			) as HTMLCanvasElement;
 
 			if (!pcanvas) {
@@ -157,11 +167,11 @@ import Page from "../../../layouts/Page.astro";
 
 			const pctx = pcanvas.getContext("2d") as CanvasRenderingContext2D;
 			const canvas = document.getElementById(
-				"canvas"
+				"canvas",
 			) as HTMLCanvasElement;
 			const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 			const download = document.getElementById(
-				"download"
+				"download",
 			) as HTMLButtonElement;
 			download.onclick = () => {
 				const link = document.createElement("a");
@@ -173,11 +183,11 @@ import Page from "../../../layouts/Page.astro";
 			const pick = document.getElementById("pick") as HTMLInputElement;
 			const photo = new Image();
 			let ppin = new Pin(
-				{ top: 20, left: 40, width: 100, height: 30 },
+				{ top: 40, left: 40, width: 100, height: 30 },
 				"Pin Text",
 				"#7711BB",
 				"white",
-				"/assets/pins/outlined/dot.svg"
+				"/assets/pins/outlined/dot.svg",
 			);
 
 			function drawPreview() {
@@ -193,15 +203,17 @@ import Page from "../../../layouts/Page.astro";
 				drawPreview();
 			};
 
+			const sides = document.getElementById("sides") as HTMLSelectElement;
+
 			const icons = document.getElementById("icons") as HTMLSelectElement;
 			const pinColor = document.getElementById(
-				"pinColor"
+				"pinColor",
 			) as HTMLInputElement;
 			const txtColor = document.getElementById(
-				"txtColor"
+				"txtColor",
 			) as HTMLInputElement;
 			const pinText = document.getElementById(
-				"pinText"
+				"pinText",
 			) as HTMLInputElement;
 
 			const state = {
@@ -234,7 +246,7 @@ import Page from "../../../layouts/Page.astro";
 			pcanvas.addEventListener("mouseleave", (e) => {
 				state.pcanvasHover = false;
 				if (state.held) {
-					state.held.move(40, 20);
+					state.held.move(40, 40);
 					// state.held = null;
 					drawPreview();
 				}
@@ -334,13 +346,19 @@ import Page from "../../../layouts/Page.astro";
 				} else if (state.pcanvasHover) {
 					state.held = null;
 				}
-				ppin.move(40, 20);
+				ppin.move(40, 40); // reset preview pin
 				drawPreview();
 
 				// ppin.style.position = "static";
 				isPrev = false;
 				state.pin_offset_x = 0;
 				state.pin_offset_y = 0;
+			});
+
+			sides.addEventListener("change", (e) => {
+				const sel = e.target as HTMLSelectElement;
+				ppin.side = sel.value as PinSide;
+				drawPreview();
 			});
 
 			icons.addEventListener("change", (e) => {
@@ -428,25 +446,22 @@ import Page from "../../../layouts/Page.astro";
 				// ctx.fillStyle = "#22aaaa";
 				// ctx.fillRect(10, 10, 150, 100);
 			}
+
+			window.addEventListener("beforeunload", (e) => {
+				if (!state.dirty) return;
+				e.preventDefault();
+				e.returnValue = "";
+				alert("Are you sure you want to leave?");
+			});
 		}
 
-		init();
+		// init();
 		// Runs after astro page load
-		document.addEventListener("astro:page-load", () => {
-			console.log("astro page load");
-			// init();
-		});
-		// Runs immediately after the new page replaces the old page
-		document.addEventListener("astro:after-swap", () => {
-			console.log("astro page swap");
-			init();
-		});
-
-		window.addEventListener("beforeunload", (e) => {
-			if (!state.dirty) return;
-			e.preventDefault();
-			e.returnValue = "";
-			alert("Are you sure you want to leave?");
-		});
+		document.addEventListener("astro:page-load", init);
+		// // Runs immediately after the new page replaces the old page
+		// document.addEventListener("astro:after-swap", () => {
+		// 	console.log("astro page swap");
+		// 	init();
+		// });
 	</script>
 </Page>

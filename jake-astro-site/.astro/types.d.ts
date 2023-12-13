@@ -250,6 +250,22 @@ declare module 'astro:content' {
   data: any
 } & { render(): Render[".md"] };
 };
+"projects": {
+"arcade.md": {
+	id: "arcade.md";
+  slug: "arcade";
+  body: string;
+  collection: "projects";
+  data: any
+} & { render(): Render[".md"] };
+"photo-pin.md": {
+	id: "photo-pin.md";
+  slug: "photo-pin";
+  body: string;
+  collection: "projects";
+  data: any
+} & { render(): Render[".md"] };
+};
 "shoes": {
 "converse.md": {
 	id: "converse.md";
