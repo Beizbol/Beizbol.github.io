@@ -4,7 +4,7 @@ import Page from "../../layouts/Page.astro";
 ---
 
 <Page title="Tools">
-	<div>
+	<div class="wrap">
 		<h3>Dev</h3>
 		<ul role="list" class="link-card-grid">
 			<Card
@@ -31,11 +31,14 @@ import Page from "../../layouts/Page.astro";
 	</div>
 
 	<style>
+		.wrap {
+			margin: 0 auto;
+		}
+
 		.link-card-grid {
 			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+			grid-template-columns: repeat(auto-fit, minmax(24ch, 20rem));
 			gap: 1rem;
-			padding: 0;
 		}
 	</style>
 </Page>

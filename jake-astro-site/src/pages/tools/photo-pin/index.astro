@@ -4,11 +4,7 @@ import Page from "../../../layouts/Page.astro";
 
 <Page title="Photo Pin Tool">
 	<div class="ui">
-		<div class="flex">
-			<!-- <label for="pick">Select Photo</label> -->
-			<input id="pick" type="file" accept="image/*" />
-		</div>
-		<div class="flex">
+		<div id="edit" class="flex">
 			<div class="stack">
 				<label for="pinColor">Body</label>
 				<input id="pinColor" type="color" value="#7711BB" />
@@ -80,14 +76,74 @@ import Page from "../../../layouts/Page.astro";
 		<div class="flex">
 			<label for="pcanvas">Preview (Drag and Drop)</label>
 			<button id="download" disabled>Download / Export</button>
-		</div>
 
+			<button id="zoomOut">Zoom Out -</button>
+			<button id="zoomReset">Reset</button>
+			<button id="zoomIn">Zoom In +</button>
+		</div>
 		<canvas id="pcanvas" width="600" height="100"></canvas>
+
+		<!-- <label for="pick">Select Photo</label> -->
 		<canvas id="canvas" width="600" height="300"></canvas>
 	</div>
+	<dialog>
+		<h1>Welcome 👋</h1>
+		<ol>
+			<li><strong>Drag</strong> to place pins.</li>
+			<li><strong>Click</strong> to customize.</li>
+			<li><strong>Save</strong> when you're done.</li>
+		</ol>
+		<p>Let's get started by picking an image!</p>
+		<form method="dialog">
+			<input id="pick" type="file" accept="image/*" />
+			<button id="btnStart" disabled>Ready</button>
+		</form>
+	</dialog>
 	<style>
+		dialog {
+			font-size: x-large;
+			line-height: 1.75em;
+			padding: 2rem;
+			max-width: 60ch;
+		}
+
+		dialog[open]::backdrop {
+			backdrop-filter: blur(1rem) brightness(0.9);
+		}
+
+		dialog > form {
+			display: grid;
+			gap: 1rem;
+			padding-top: 1rem;
+		}
+
+		dialog > ol {
+			display: grid;
+			gap: 1rem;
+			padding-top: 1rem;
+			padding-bottom: 1rem;
+		}
+
+		#btnStart {
+			justify-self: right;
+			padding: 0.5rem 1rem;
+		}
+
 		#preview {
 			padding: 1rem;
+		}
+
+		#edit {
+			display: none;
+			position: absolute;
+			z-index: 99;
+			background-color: var(--color-trans);
+			border-radius: 0.25rem;
+			padding: 1rem;
+			backdrop-filter: blur(1rem);
+		}
+		#edit.show {
+			display: flex;
 		}
 
 		#ppin {
@@ -134,6 +190,7 @@ import Page from "../../../layouts/Page.astro";
 			display: grid;
 			gap: 1rem;
 			margin: 0 auto;
+			padding: 2rem;
 		}
 
 		.ui img {
@@ -149,12 +206,33 @@ import Page from "../../../layouts/Page.astro";
 			margin-top: -1rem;
 			border: 1px solid #ffffff;
 		}
+
+		#pick {
+			cursor: pointer;
+		}
 	</style>
 
 	<script>
 		import Pin, { type PinSide } from "./pin";
+		import PinHist from "./history";
 
 		function init() {
+			const dialog = document.querySelector(
+				"dialog",
+			) as HTMLDialogElement;
+			dialog.addEventListener("close", () => {
+				console.log("dialog closed");
+			});
+			dialog.showModal();
+			// "Close" button closes the dialog
+			const btnStart = document.getElementById(
+				"btnStart",
+			) as HTMLButtonElement;
+			btnStart.addEventListener("click", () => {
+				console.log("start clicked");
+				dialog.close();
+			});
+
 			console.log("init");
 			const pcanvas = document.getElementById(
 				"pcanvas",
@@ -179,10 +257,29 @@ import Page from "../../../layouts/Page.astro";
 				link.href = canvas.toDataURL();
 				link.click();
 			};
+			const zoomIn = document.getElementById(
+				"zoomIn",
+			) as HTMLButtonElement;
+			zoomIn.onclick = () => {
+				state.zoom *= 1.01;
+			};
+			const zoomReset = document.getElementById(
+				"zoomReset",
+			) as HTMLButtonElement;
+			zoomReset.onclick = () => {
+				state.zoom = 1;
+			};
+			const zoomOut = document.getElementById(
+				"zoomOut",
+			) as HTMLButtonElement;
+			zoomOut.onclick = () => {
+				state.zoom *= 0.99;
+			};
 
 			const pick = document.getElementById("pick") as HTMLInputElement;
 			const photo = new Image();
 			let ppin = new Pin(
+				pctx,
 				{ top: 40, left: 40, width: 100, height: 30 },
 				"Pin Text",
 				"#7711BB",
@@ -192,7 +289,7 @@ import Page from "../../../layouts/Page.astro";
 
 			function drawPreview() {
 				pctx.clearRect(0, 0, pctx.canvas.width, pctx.canvas.height);
-				ppin.drawPin(pctx);
+				ppin.drawPin();
 				// Sconsole.log("preview drawn");
 			}
 
@@ -219,16 +316,24 @@ import Page from "../../../layouts/Page.astro";
 			const state = {
 				placed: [] as Pin[],
 				held: null as Pin | null,
+				edit_pin: null as Pin | null,
 				canvasHover: false,
 				pcanvasHover: false,
 				pin_offset_x: 0,
 				pin_offset_y: 0,
 				dirty: false,
+				zoom: 1,
+				history: new PinHist(),
 			};
 
 			canvas.addEventListener("mouseenter", (e) => {
 				// console.log("entered");
 				state.canvasHover = true;
+				if (state.held) {
+					ppin.move(40, 40);
+					state.held = state.held.twin(ctx);
+					drawPreview();
+				}
 			});
 
 			pcanvas.addEventListener("mouseenter", (e) => {
@@ -245,35 +350,28 @@ import Page from "../../../layouts/Page.astro";
 
 			pcanvas.addEventListener("mouseleave", (e) => {
 				state.pcanvasHover = false;
-				if (state.held) {
-					state.held.move(40, 40);
-					// state.held = null;
-					drawPreview();
-				}
 			});
 
-			canvas.addEventListener("mousemove", (e) => {
-				if (!state.held || !state.canvasHover) {
-					// console.log("nah");
+			document.addEventListener("mousemove", (e) => {
+				if (!state.held) {
 					return;
 				}
-				// console.log("moving held pin", state.held.id);
-				const cbr = canvas.getBoundingClientRect();
-				const px = e.clientX - cbr.left;
-				const py = e.clientY - cbr.top;
-				state.held.move(px, py);
-				draw();
-			});
 
-			let isPrev = false;
-			pcanvas.addEventListener("mousemove", (e) => {
-				if (!state.held) return;
-				isPrev = true;
-				const pcbr = pcanvas.getBoundingClientRect();
-				const px = e.clientX - pcbr.left;
-				const py = e.clientY - pcbr.top;
-				state.held.move(px, py);
-				drawPreview();
+				if (state.canvasHover) {
+					const cbr = canvas.getBoundingClientRect();
+					const px = e.clientX - cbr.left;
+					const py = e.clientY - cbr.top;
+					state.held.move(px, py);
+					draw();
+				}
+
+				if (state.pcanvasHover) {
+					const pcbr = pcanvas.getBoundingClientRect();
+					const px = e.clientX - pcbr.left;
+					const py = e.clientY - pcbr.top;
+					state.held.move(px, py);
+					drawPreview();
+				}
 			});
 
 			canvas.addEventListener("mousedown", (e) => {
@@ -281,19 +379,13 @@ import Page from "../../../layouts/Page.astro";
 				const cbr = canvas.getBoundingClientRect();
 				const px = e.clientX - cbr.left;
 				const py = e.clientY - cbr.top;
-
 				for (let i = 0; i < state.placed.length; i++) {
 					const pin = state.placed[i] as Pin;
 					if (pin.isMouseOver(px, py)) {
 						canvas.style.cursor = "grabbing";
-						// console.log("pre Held pin", state.held);
 						state.held = pin;
-						// console.log("Held pin", state.held);
-						// console.log("pre pop placed pins:");
-						// print_placed();
 						state.placed.splice(i, 1);
-						// console.log(i, "post pop placed pins:");
-						// print_placed();
+						hideEdit();
 						return;
 					}
 				}
@@ -307,25 +399,55 @@ import Page from "../../../layouts/Page.astro";
 				if (ppin.isMouseOver(px, py)) {
 					pcanvas.style.cursor = "grabbing";
 					state.held = ppin;
-					// console.log("Holding pin");
+					hideEdit();
 				}
 			});
 
 			function place_pin() {
 				if (!state.held) return;
-				// console.log("placing pin: ", state.held.id);
-				// print_placed();
-				if (isPrev) {
-					// console.log("twin pin");
-					state.placed.push(state.held.twin());
-				} else {
-					// console.log("clone pin");
-					state.placed.push(state.held.clone());
-				}
-				// console.log("placed pin");
-				// print_placed();
+				const cbr = pcanvas.getBoundingClientRect();
+				const cx = state.held.x;
+				const cy = state.held.y + cbr.top;
+				showEdit(cx, cy);
+				const pc = state.held.clone();
+				state.placed.push(pc);
+				setEdit(pc);
 				state.held = null;
 				draw();
+			}
+
+			function setEdit(pin: Pin) {
+				state.edit_pin = pin;
+				sides.value = pin.side;
+
+				console.log(pin.icon.src);
+				const idx = pin.icon.src.indexOf("/assets");
+
+				if (idx < 0) {
+					console.log("no assets");
+					return;
+				}
+
+				const _src = pin.icon.src.slice(idx);
+				icons.value = _src;
+
+				pinColor.value = pin.bg;
+				txtColor.value = pin.color;
+				pinText.value = pin.text;
+			}
+
+			function showEdit(x: number, y: number) {
+				const edit = document.getElementById("edit") as HTMLElement;
+				edit.style.top = y + "px";
+				edit.style.left = x + "px";
+				edit.classList.add("show");
+			}
+
+			function hideEdit() {
+				const edit = document.getElementById("edit") as HTMLElement;
+				if (!edit.classList.contains("show")) return;
+				edit.classList.remove("show");
+				state.edit_pin = null;
 			}
 
 			document.addEventListener("mouseup", (e) => {
@@ -333,60 +455,91 @@ import Page from "../../../layouts/Page.astro";
 				pcanvas.style.cursor = "grab";
 
 				if (!state.held) {
+					// if (state.edit_pin) {
+					// 	hideEdit();
+					// }
 					console.log("no held pin");
 					return;
 				}
 
 				if (state.canvasHover) {
-					// const cbr = canvas.getBoundingClientRect();
-					// const x = e.clientX - cbr.left;
-					// const y = e.clientY - cbr.top;
-					// state.held.move(x, y);
 					place_pin();
 				} else if (state.pcanvasHover) {
 					state.held = null;
+					ppin.move(40, 40); // reset preview pin
+					const pcbr = pcanvas.getBoundingClientRect();
+					const px = ppin.x + pcbr.left;
+					const py = ppin.y + pcbr.top;
+					state.edit_pin = ppin;
+					showEdit(px, py);
+					drawPreview();
 				}
-				ppin.move(40, 40); // reset preview pin
-				drawPreview();
 
-				// ppin.style.position = "static";
-				isPrev = false;
 				state.pin_offset_x = 0;
 				state.pin_offset_y = 0;
 			});
 
 			sides.addEventListener("change", (e) => {
+				if (!state.edit_pin) {
+					console.log("no pin");
+					return;
+				}
 				const sel = e.target as HTMLSelectElement;
-				ppin.side = sel.value as PinSide;
+				state.edit_pin.side = sel.value as PinSide;
 				drawPreview();
+				draw();
+				console.log("side changed");
 			});
 
 			icons.addEventListener("change", (e) => {
+				if (!state.edit_pin) {
+					console.log("no pin");
+					return;
+				}
 				const sel = e.target as HTMLSelectElement;
-				img.src = sel.value;
-				ppin.updateIcon(sel.value);
+				// img.src = sel.value;
+				console.log(sel.value);
+				state.edit_pin.updateIcon(sel.value);
 				drawPreview();
+				draw();
+				console.log("icon changed");
 			});
 
 			pinColor.addEventListener("change", (e) => {
-				// console.log(e.target.value);
+				if (!state.edit_pin) {
+					console.log("no pin");
+					return;
+				}
 				const cInput = e.target as HTMLInputElement;
-				ppin.bg = cInput.value;
+				state.edit_pin.bg = cInput.value;
 				drawPreview();
+				draw();
+				console.log("color changed");
 			});
 
 			txtColor.addEventListener("change", (e) => {
-				// console.log(e.target.value);
+				if (!state.edit_pin) {
+					console.log("no pin");
+					return;
+				}
 				const cInput = e.target as HTMLInputElement;
-				ppin.color = cInput.value;
+				state.edit_pin.color = cInput.value;
+				state.history.update(state.placed);
 				drawPreview();
+				draw();
+				console.log("text color changed");
 			});
 
 			pinText.addEventListener("change", (e) => {
-				// console.log(e.target.value);
+				if (!state.edit_pin) {
+					console.log("no pin");
+					return;
+				}
 				const tInput = e.target as HTMLInputElement;
-				ppin.updateText(tInput.value);
+				state.edit_pin.updateText(tInput.value);
 				drawPreview();
+				draw();
+				console.log("text changed");
 			});
 
 			let name = "";
@@ -419,6 +572,7 @@ import Page from "../../../layouts/Page.astro";
 					canvas.style.height = height + "px";
 					drawPreview();
 					draw();
+					btnStart.disabled = false;
 				};
 			});
 
@@ -426,25 +580,19 @@ import Page from "../../../layouts/Page.astro";
 				// wipe canvas
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				// draw user image
-				// console.log(photo.src);
 				if (photo.src) {
 					ctx.drawImage(photo, 0, 0);
 				}
-				// console.log(state.placed);
 				// draw placed pins
 				for (let i = 0; i < state.placed.length; i++) {
 					const pin = state.placed[i];
-					pin.drawPin(ctx);
+					pin.drawPin();
 				}
 				// draw held pin
 				if (state.held) {
 					// state.held.move();
-					state.held.drawPin(ctx);
-					// console.log("held pin drawn");
+					state.held.drawPin();
 				}
-
-				// ctx.fillStyle = "#22aaaa";
-				// ctx.fillRect(10, 10, 150, 100);
 			}
 
 			window.addEventListener("beforeunload", (e) => {
@@ -455,13 +603,6 @@ import Page from "../../../layouts/Page.astro";
 			});
 		}
 
-		// init();
-		// Runs after astro page load
 		document.addEventListener("astro:page-load", init);
-		// // Runs immediately after the new page replaces the old page
-		// document.addEventListener("astro:after-swap", () => {
-		// 	console.log("astro page swap");
-		// 	init();
-		// });
 	</script>
 </Page>

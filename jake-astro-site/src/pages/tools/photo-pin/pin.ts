@@ -1,7 +1,15 @@
 export type PinSide = "left" | "right" | "top" | "bottom";
 
+export enum PinState {
+    New,
+    Held,
+    Placed,
+    Selected
+}
+
 export default class Pin {
     id: number;
+    ctx: CanvasRenderingContext2D;
     x: number;
     y: number;
     w: number;
@@ -13,9 +21,9 @@ export default class Pin {
     color: string;
     side: PinSide;
 
-
-    constructor(rect: { left: number; top: number; width: number; height: number; }, txt: string, bg: string, color: string, img: string, side?: PinSide, id?: number) {
+    constructor(ctx: CanvasRenderingContext2D, rect: { left: number; top: number; width: number; height: number; }, txt: string, bg: string, color: string, img: string, side?: PinSide, id?: number) {
         this.id = id ?? Math.random() * 1000
+        this.ctx = ctx;
         this.x = rect.left;
         this.y = rect.top;
         this.w = rect.width;
@@ -27,6 +35,7 @@ export default class Pin {
         this.color = color;
         this.side = side ?? "bottom";
         this.font = "16px sans-serif";
+
     }
 
     updateIcon(img: string) {
@@ -35,7 +44,9 @@ export default class Pin {
 
     updateText(text: string) {
         this.text = text;
-        this.w = text.length * 8 + 50;
+        const info = this.ctx.measureText(text);
+        this.w = info.width + 48;
+
     }
 
     move(mx: number, my: number) {
@@ -43,92 +54,85 @@ export default class Pin {
         this.y = my;
     }
 
-    drawTip(_ctx: CanvasRenderingContext2D) {
+    drawTip() {
         const mid = this.x + this.w / 2 - 24;
         switch (this.side) {
             case "left":
-                _ctx.beginPath();
-                _ctx.moveTo(mid - 40, this.y - 10);
-                _ctx.lineTo(mid - 60, this.y);
-                _ctx.lineTo(mid - 40, this.y + 10);
-                _ctx.closePath();
-                _ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.moveTo(mid - 40, this.y - 10);
+                this.ctx.lineTo(mid - 60, this.y);
+                this.ctx.lineTo(mid - 40, this.y + 10);
+                this.ctx.closePath();
+                this.ctx.fill();
                 break;
             case "right":
-                _ctx.beginPath();
-                _ctx.moveTo(mid + 40, this.y - 10);
-                _ctx.lineTo(mid + 60, this.y);
-                _ctx.lineTo(mid + 40, this.y + 10);
-                _ctx.closePath();
-                _ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.moveTo(mid + 40, this.y - 10);
+                this.ctx.lineTo(mid + 60, this.y);
+                this.ctx.lineTo(mid + 40, this.y + 10);
+                this.ctx.closePath();
+                this.ctx.fill();
                 break;
             case "top":
-                _ctx.beginPath();
-                _ctx.moveTo(mid - 10, this.y - 5);
-                _ctx.lineTo(mid, this.y - 25);
-                _ctx.lineTo(mid + 10, this.y - 5);
-                _ctx.closePath();
-                _ctx.fill();
+                this.ctx.beginPath();
+                this.ctx.moveTo(mid - 10, this.y - 5);
+                this.ctx.lineTo(mid, this.y - 25);
+                this.ctx.lineTo(mid + 10, this.y - 5);
+                this.ctx.closePath();
+                this.ctx.fill();
                 break;
 
             default:
-                _ctx.beginPath();
-                _ctx.moveTo(mid - 10, this.y + 5);
-                _ctx.lineTo(mid, this.y + 25);
-                _ctx.lineTo(mid + 10, this.y + 5);
-                _ctx.closePath();
-                _ctx.fill();
+                // console.log(this.ctx);
+                this.ctx.beginPath();
+                this.ctx.moveTo(mid - 10, this.y + 5);
+                this.ctx.lineTo(mid, this.y + 25);
+                this.ctx.lineTo(mid + 10, this.y + 5);
+                this.ctx.closePath();
+                this.ctx.fill();
                 break;
         }
 
     }
 
-    drawBody(_ctx: CanvasRenderingContext2D) {
-        _ctx.beginPath();
-        _ctx.roundRect(this.x - 24, this.y - this.h / 2, this.w, this.h, 5);
-        _ctx.closePath();
-        _ctx.fill();
+    drawBody() {
+        this.ctx.beginPath();
+        this.ctx.roundRect(this.x - 24, this.y - this.h / 2, this.w, this.h, 5);
+        this.ctx.closePath();
+        this.ctx.fill();
     }
 
-    drawIcon(_ctx: CanvasRenderingContext2D) {
+    drawIcon() {
 
         if (this.color) {
-            _ctx.filter = "invert(1)";
+            this.ctx.filter = "invert(1)";
         }
-        _ctx.drawImage(this.icon, this.x - 20, this.y - 12, 24, 24);
-        _ctx.filter = "none";
+        console.log("icon", this.icon);
+        this.ctx.drawImage(this.icon, this.x - 20, this.y - 12, 24, 24);
+        this.ctx.filter = "none";
     }
 
-    drawPin(_ctx: CanvasRenderingContext2D) {
+    drawPin() {
         // console.log("pin img ", this.icon);
-        _ctx.fillStyle = this.bg;
-        this.drawTip(_ctx);
-        this.drawBody(_ctx);
-        _ctx.fillStyle = this.color;
-        this.drawIcon(_ctx);
-        _ctx.font = this.font;
-        _ctx.fillText(this.text, this.x + 8, this.y + 6);
+        this.ctx.fillStyle = this.bg;
+        this.drawTip();
+        this.drawBody();
+        this.ctx.fillStyle = this.color;
+        this.drawIcon();
+        this.ctx.font = this.font;
+        this.ctx.fillText(this.text, this.x + 8, this.y + 6);
         // console.log("drawn");
     }
-
-    // place() {
-    //     state.placed.push(this);
-    //     state.held = null;
-    // }
-
-    // drag() {
-    //     state.held = this;
-    // }
 
     isMouseOver(mx: number, my: number) {
         return mx > this.x - 36 && mx < this.x - 12 + this.w && my > this.y - 20 && my < this.y + this.h;
     }
 
-    twin() {
-        return new Pin({ left: this.x, top: this.y, width: this.w, height: this.h }, this.text, this.bg, this.color, this.icon.src, this.side);
+    twin(_ctx: CanvasRenderingContext2D) {
+        return new Pin(_ctx, { left: this.x, top: this.y, width: this.w, height: this.h }, this.text, this.bg, this.color, this.icon.src, this.side);
     }
 
     clone() {
-        return new Pin({ left: this.x, top: this.y, width: this.w, height: this.h }, this.text, this.bg, this.color, this.icon.src, this.side, this.id);
+        return new Pin(this.ctx, { left: this.x, top: this.y, width: this.w, height: this.h }, this.text, this.bg, this.color, this.icon.src, this.side, this.id);
     }
 }

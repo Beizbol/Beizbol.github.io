@@ -1,0 +1,127 @@
+:root {
+    color-scheme: light;
+    --color-bg: hsl(17, 24%, 80%);
+    --color-bg-alt: hsl(17, 24%, 80%);
+    --color-border: hsl(222, 4%, 8%);
+    --color-border-alt: black;
+    --color-text: black;
+    --color-trans: #FFF6;
+    --color-text-alt: red;
+    --color-accent: darkorange;
+    --color-accent-alt: deepskyblue;
+}
+
+:root[data-color-theme="Default"] {
+    --color-bg: white;
+    --color-bg-alt: hsl(222, 88%, 88%);
+}
+
+:root[data-color-theme="Steel"] {
+    --color-bg: hsl(210, 5%, 92%);
+    --color-bg-alt: hsl(210, 5%, 82%);
+}
+
+:root[data-color-theme="Sky"] {
+    --color-bg: hsl(210, 95%, 92%);
+    --color-bg-alt: hsl(210, 95%, 82%);
+}
+
+:root[data-color-theme="Denim"] {
+    --color-bg: hsl(200, 95%, 92%);
+    --color-bg-alt: hsl(200, 95%, 82%);
+}
+
+:root[data-color-theme="Ocean"] {
+    --color-bg: hsl(180, 95%, 92%);
+    --color-bg-alt: hsl(180, 94%, 82%);
+}
+
+:root[data-color-theme="Mint"] {
+    --color-bg: hsl(160, 95%, 92%);
+    --color-bg-alt: hsl(160, 95%, 82%);
+}
+
+:root[data-color-theme="Jungle"] {
+    --color-bg: hsl(100, 95%, 92%);
+    --color-bg-alt: hsl(100, 95%, 82%);
+}
+
+:root[data-color-theme="Coffee"] {
+    --color-bg: hsl(30, 96%, 92%);
+    --color-bg-alt: hsl(30, 95%, 84%);
+}
+
+:root[data-color-theme="Wine"] {
+    --color-bg: hsl(350, 95%, 92%);
+    --color-bg-alt: hsl(350, 95%, 84%);
+}
+
+:root[data-color-theme="Pretty"] {
+    --color-bg: hsl(290, 100%, 92%);
+    --color-bg-alt: hsl(290, 100%, 84%);
+}
+
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --color-bg: hsl(222, 4%, 8%);
+    --color-bg-alt: black;
+    --color-border: hsl(17, 24%, 90%);
+    --color-border-alt: hsl(17, 24%, 90%);
+    --color-text: hsl(10, 21%, 95%);
+    --color-trans: #0006;
+    --color-text-alt: red;
+    --color-accent: darkorange;
+    --color-accent-alt: deepskyblue;
+}
+
+:root[data-theme="dark"][data-color-theme="Default"] {
+    --color-bg: hsl(222, 4%, 8%);
+    --color-bg-alt: black;
+}
+
+:root[data-theme="dark"][data-color-theme="Steel"] {
+    --color-bg: hsl(210, 5%, 8%);
+    --color-bg-alt: hsl(210, 5%, 12%);
+}
+
+:root[data-theme="dark"][data-color-theme="Sky"] {
+    --color-bg: hsl(230, 100%, 4%);
+    --color-bg-alt: hsl(230, 100%, 8%);
+}
+
+:root[data-theme="dark"][data-color-theme="Denim"] {
+    --color-bg: hsl(210, 95%, 8%);
+    --color-bg-alt: hsl(210, 95%, 12%);
+}
+
+:root[data-theme="dark"][data-color-theme="Ocean"] {
+    --color-bg: hsl(195, 95%, 4%);
+    --color-bg-alt: hsl(195, 95%, 8%);
+}
+
+:root[data-theme="dark"][data-color-theme="Mint"] {
+    --color-bg: hsl(180, 95%, 8%);
+    --color-bg-alt: hsl(180, 95%, 12%);
+}
+
+:root[data-theme="dark"][data-color-theme="Jungle"] {
+    --color-bg: hsl(120, 95%, 4%);
+    --color-bg-alt: hsl(120, 95%, 8%);
+}
+
+:root[data-theme="dark"][data-color-theme="Coffee"] {
+    --color-bg: hsl(30, 95%, 4%);
+    --color-bg-alt: hsl(30, 95%, 8%);
+}
+
+:root[data-theme="dark"][data-color-theme="Wine"] {
+    --color-bg: hsl(330, 95%, 5%);
+    --color-bg-alt: hsl(330, 95%, 9%);
+}
+
+:root[data-theme="dark"][data-color-theme="Pretty"] {
+    --color-bg: hsl(290, 96%, 8%);
+    --color-bg-alt: hsl(290, 95%, 12%);
+}

@@ -65,7 +65,9 @@ import Page from "../../layouts/Page.astro";
       }
       // Flip the coin
       setTimeout(() => {
-        const result = Math.random() < 0.5 ? "heads" : "tails";
+        const n = Math.random();
+        const result = n < 0.5 ? "heads" : "tails";
+        console.log("result", n);
         coin.classList.add("flipping");
         console.log(result);
         coin.addEventListener(

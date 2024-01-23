@@ -5,13 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "crawl": "./src/scripts/crawl.sh",
-    "start": "astro dev",
     "build": "astro build",
     "postbuild": "node ./src/scripts/postbuild.js",
-    "preview": "astro preview",
-    "astro": "astro",
-    "hint": "hint https://www.jakesite.ca/"
+    "preview": "astro preview"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.0.3",
