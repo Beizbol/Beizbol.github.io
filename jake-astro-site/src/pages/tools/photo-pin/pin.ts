@@ -1,3 +1,4 @@
+
 export type PinSide = "left" | "right" | "top" | "bottom";
 
 export enum PinState {
@@ -17,12 +18,13 @@ export default class Pin {
     text: string;
     icon: HTMLImageElement;
     bg: string;
-    font: string;
+    font_size: number;
     color: string;
     side: PinSide;
+    static scale: number = 1.0;
 
     constructor(ctx: CanvasRenderingContext2D, rect: { left: number; top: number; width: number; height: number; }, txt: string, bg: string, color: string, img: string, side?: PinSide, id?: number) {
-        this.id = id ?? Math.random() * 1000
+        this.id = id ?? Math.random() * 1000000
         this.ctx = ctx;
         this.x = rect.left;
         this.y = rect.top;
@@ -31,11 +33,13 @@ export default class Pin {
         this.text = txt;
         this.icon = new Image()
         this.icon.src = img;
+        this.icon.onload = () => {
+            this.drawIcon();
+        }
         this.bg = bg;
         this.color = color;
         this.side = side ?? "bottom";
-        this.font = "16px sans-serif";
-
+        this.font_size = 16;
     }
 
     updateIcon(img: string) {
@@ -46,7 +50,6 @@ export default class Pin {
         this.text = text;
         const info = this.ctx.measureText(text);
         this.w = info.width + 48;
-
     }
 
     move(mx: number, my: number) {
@@ -55,29 +58,30 @@ export default class Pin {
     }
 
     drawTip() {
-        const mid = this.x + this.w / 2 - 24;
+        const k = Pin.scale;
+        const mid = this.x + (k * this.w / 2) - (k * 24);
         switch (this.side) {
             case "left":
                 this.ctx.beginPath();
-                this.ctx.moveTo(mid - 40, this.y - 10);
-                this.ctx.lineTo(mid - 60, this.y);
-                this.ctx.lineTo(mid - 40, this.y + 10);
+                this.ctx.moveTo(mid - k * 40, this.y - k * 10);
+                this.ctx.lineTo(mid - k * 60, this.y);
+                this.ctx.lineTo(mid - k * 40, this.y + k * 10);
                 this.ctx.closePath();
                 this.ctx.fill();
                 break;
             case "right":
                 this.ctx.beginPath();
-                this.ctx.moveTo(mid + 40, this.y - 10);
-                this.ctx.lineTo(mid + 60, this.y);
-                this.ctx.lineTo(mid + 40, this.y + 10);
+                this.ctx.moveTo(mid + k * 40, this.y - k * 10);
+                this.ctx.lineTo(mid + k * 60, this.y);
+                this.ctx.lineTo(mid + k * 40, this.y + k * 10);
                 this.ctx.closePath();
                 this.ctx.fill();
                 break;
             case "top":
                 this.ctx.beginPath();
-                this.ctx.moveTo(mid - 10, this.y - 5);
-                this.ctx.lineTo(mid, this.y - 25);
-                this.ctx.lineTo(mid + 10, this.y - 5);
+                this.ctx.moveTo(mid - k * 10, this.y - k * 5);
+                this.ctx.lineTo(mid, this.y - k * 25);
+                this.ctx.lineTo(mid + k * 10, this.y - k * 5);
                 this.ctx.closePath();
                 this.ctx.fill();
                 break;
@@ -85,9 +89,9 @@ export default class Pin {
             default:
                 // console.log(this.ctx);
                 this.ctx.beginPath();
-                this.ctx.moveTo(mid - 10, this.y + 5);
-                this.ctx.lineTo(mid, this.y + 25);
-                this.ctx.lineTo(mid + 10, this.y + 5);
+                this.ctx.moveTo(mid - k * 10, this.y + k * 5);
+                this.ctx.lineTo(mid, this.y + k * 25);
+                this.ctx.lineTo(mid + k * 10, this.y + k * 5);
                 this.ctx.closePath();
                 this.ctx.fill();
                 break;
@@ -96,19 +100,19 @@ export default class Pin {
     }
 
     drawBody() {
+        const k = Pin.scale;
         this.ctx.beginPath();
-        this.ctx.roundRect(this.x - 24, this.y - this.h / 2, this.w, this.h, 5);
+        this.ctx.roundRect(this.x - k * 24, this.y - (k * this.h / 2), k * this.w, k * this.h, k * 5);
         this.ctx.closePath();
         this.ctx.fill();
     }
 
     drawIcon() {
-
         if (this.color) {
             this.ctx.filter = "invert(1)";
         }
-        console.log("icon", this.icon);
-        this.ctx.drawImage(this.icon, this.x - 20, this.y - 12, 24, 24);
+        const k = Pin.scale;
+        this.ctx.drawImage(this.icon, this.x - k * 20, this.y - k * 12, k * 24, k * 24);
         this.ctx.filter = "none";
     }
 
@@ -119,13 +123,16 @@ export default class Pin {
         this.drawBody();
         this.ctx.fillStyle = this.color;
         this.drawIcon();
-        this.ctx.font = this.font;
-        this.ctx.fillText(this.text, this.x + 8, this.y + 6);
+        const k = Pin.scale;
+        const px = this.font_size * k;
+        this.ctx.font = `${px}px sans-serif`;
+        this.ctx.fillText(this.text, this.x + k * 8, this.y + k * 6);
         // console.log("drawn");
     }
 
     isMouseOver(mx: number, my: number) {
-        return mx > this.x - 36 && mx < this.x - 12 + this.w && my > this.y - 20 && my < this.y + this.h;
+        const k = Pin.scale;
+        return mx > this.x - k * 30 && mx < this.x - k * 16 + k * this.w && my > this.y - k * 20 && my < this.y + k * this.h;
     }
 
     twin(_ctx: CanvasRenderingContext2D) {

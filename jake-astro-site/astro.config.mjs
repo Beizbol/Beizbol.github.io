@@ -2,6 +2,8 @@ import { defineConfig } from "astro/config";
 // import wasmPack from "vite-plugin-wasm-pack";
 // https://astro.build/config
 import sitemap from "@astrojs/sitemap";
+import robotsTxt from 'astro-robots-txt';
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,7 +12,7 @@ export default defineConfig({
     defaultLocale: "en",
     locales: ["en"],
   },
-  integrations: [sitemap()],
+  integrations: [sitemap(), robotsTxt()],
   // vite: {
   //   plugins:[wasmPack('./my-crate')],
   // },

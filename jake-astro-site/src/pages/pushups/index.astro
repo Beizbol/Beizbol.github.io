@@ -1,0 +1,128 @@
+---
+import Page from "../../layouts/Page.astro";
+// import Video from "../components/Video.astro";
+---
+
+<Page title="Pushups Challenge">
+    <div class="wrap big">
+        <div>Team Total: <span id="team">0</span></div>
+        <div><span id="lblName"></span>'s Total: <span id="tally">0</span></div>
+        <div>
+            <label for="set">Pushups</label>
+            <input id="set" type="number" value="11" />
+            <button id="btnAdd">Add</button>
+        </div>
+    </div>
+    <dialog id="signin" class="big">
+        <form>
+            <p>Welcome!</p>
+            <label for="set">Name:</label>
+            <input type="text" placeholder="Name" required />
+            <button id="btnName" type="submit">Go</button>
+        </form>
+    </dialog>
+</Page>
+
+<script>
+    async function init() {
+        const server = "127.0.0.1:8090";
+        const dialog = document.getElementById("signin") as HTMLDialogElement;
+        const set = document.getElementById("set") as HTMLInputElement;
+        const tally = document.getElementById("tally") as HTMLSpanElement;
+        const team = document.getElementById("team") as HTMLSpanElement;
+
+        const btnAdd = document.getElementById("btnAdd") as HTMLButtonElement;
+        btnAdd.onclick = async () => {
+            const name = localStorage.getItem("pushup_name");
+            if (!name) {
+                dialog.showModal();
+                return;
+            }
+            let n = set.value;
+            const response = await fetch(
+                "http://" + server + "/tally/" + name + "/" + n,
+            );
+            if (!response.ok) {
+                console.error("failed to send tally");
+                return;
+            }
+            const data = await response.json();
+            console.log(data);
+            tally.textContent = data.tally;
+            team.textContent = data.total;
+        };
+
+        const btnName = document.getElementById("btnName") as HTMLButtonElement;
+        btnName.addEventListener("click", () => {
+            const input = dialog.querySelector("input") as HTMLInputElement;
+            const name = input.value;
+            localStorage.setItem("pushup_name", name);
+            dialog.close();
+        });
+
+        dialog.addEventListener("close", () => {
+            console.log("closed");
+        });
+
+        const name = localStorage.getItem("pushup_name");
+        if (name) {
+            console.log("logged in as:", name);
+            const lbl = document.getElementById("lblName") as HTMLSpanElement;
+            lbl.textContent = name;
+            const response = await fetch(
+                "http://" + server + "/pushups/" + name,
+            );
+
+            console.log(response);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                tally.textContent = data.tally;
+                team.textContent = data.total;
+            }
+            return;
+        }
+        dialog.showModal();
+    }
+
+    document.addEventListener("astro:page-load", init);
+</script>
+
+<style>
+    #set {
+        max-width: 5ch;
+    }
+
+    /* dialog {
+        display: grid;
+        gap: 1rem;
+        place-items: center;
+    } */
+
+    .big {
+        font-size: xx-large;
+    }
+
+    .wrap {
+        display: grid;
+        gap: 2rem;
+        place-items: center;
+        padding: 2rem;
+    }
+
+    .btn {
+        border: 2px solid;
+        color: black;
+        padding: 0.75rem;
+        margin: 0.5rem;
+        font-size: 1.25rem;
+        border-radius: 0.5rem;
+        background-color: var(--color-accent);
+    }
+
+    .btn:focus,
+    .btn:hover {
+        color: var(--color-text);
+    }
+</style>

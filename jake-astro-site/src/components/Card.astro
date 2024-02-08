@@ -28,7 +28,7 @@ const { href, title, body } = Astro.props;
     list-style: none;
     display: flex;
     border-radius: 0.5rem;
-    border: 0.2rem solid var(--color-text);
+    border: 0.2rem solid transparent;
     background: var(--color-bg-alt);
     transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -59,13 +59,19 @@ const { href, title, body } = Astro.props;
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .link-card:is(:hover, :focus-within) {
-    color: var(--link-gradient) padding-box, var(--link-gradient) border-box;
+  .link-card:hover,
+  .link-card:focus,
+  .link-card:focus-within,
+  .link-card:focus-visible {
+    border-color: var(--color-text);
+  }
+
+  .link-card:active {
     border-color: var(--color-accent);
   }
 
-  .link-card:is(:hover, :focus-within) h2 {
-    color: var(--color-accent);
+  .link-card:active h2 {
+    color: var(--color-text);
   }
 
   /* .link-card:is(:hover, :focus-within) h2 span {

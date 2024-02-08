@@ -4,41 +4,30 @@ import Page from "../../layouts/Page.astro";
 ---
 
 <Page title="Tools">
-	<div class="wrap">
-		<h3>Dev</h3>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="/tools/coin"
-				title="Coin Flip"
-				body="Let chance take the wheel."
-			/>
-			<Card
-				href="/tools/photo-pin"
-				title="Photo Pin"
-				body="Add text pins to a photo."
-			/>
-			<Card
-				href="/tools/qr"
-				title="QR Code"
-				body="Generate a QR code that points to a link."
-			/>
-			<Card
-				href="/tools/svg2png"
-				title="SVG to PNG"
-				body="Convert a vector graphic into to a photo."
-			/>
-		</ul>
+	<div class="cards">
+		<Card
+			href="/tools/pushups"
+			title="Pushups"
+			body="Test your limits with a pushup challenge."
+		/>
+		<Card
+			href="/tools/photo-pin"
+			title="Photo Pin"
+			body="Add text pins to a photo."
+		/>
+		<Card
+			href="/tools/qr"
+			title="QR Code"
+			body="Generate a QR code that points to a link."
+		/>
 	</div>
 
 	<style>
-		.wrap {
-			margin: 0 auto;
-		}
-
-		.link-card-grid {
+		.cards {
 			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(24ch, 20rem));
-			gap: 1rem;
+			grid-template-columns: repeat(auto-fit, minmax(25ch, 1fr));
+			gap: min(2rem, 8vw);
+			padding: min(2rem, 4vw);
 		}
 	</style>
 </Page>

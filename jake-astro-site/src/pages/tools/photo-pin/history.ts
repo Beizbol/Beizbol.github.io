@@ -4,35 +4,43 @@ export type Placed = Pin[];
 
 export default class PinHist {
     undos: Placed[];
+    curr: Placed;
     redos: Placed[];
 
     constructor() {
         this.undos = [];
         this.redos = [];
+        this.curr = [];
     }
 
     update(placed: Placed) {
+        this.undos.push([...this.curr]);
+        this.curr = [...placed];
         this.redos = [];
-        this.undos.push(placed);
+        this.print("Update:");
     }
 
     undo() {
         const tmp = this.undos.pop();
         if (tmp) {
-            this.redos.push(tmp);
-            return tmp;
+            this.redos.push([...this.curr]);
+            this.curr = tmp;
         }
-        console.log("No more undo");
-
+        this.print("Undo:");
+        return this.curr;
     }
 
     redo() {
         const tmp = this.redos.pop();
         if (tmp) {
-            this.undos.push(tmp);
-            return tmp;
+            this.undos.push([...this.curr]);
+            this.curr = tmp;
         }
-        console.log("No more redo");
-        return tmp;
+        this.print("Redo:");
+        return this.curr;
+    }
+
+    print(str: string) {
+        console.log(str);//, "\n curr", this.curr, "\n undos", this.undos, "\n redos", this.redos);
     }
 }
