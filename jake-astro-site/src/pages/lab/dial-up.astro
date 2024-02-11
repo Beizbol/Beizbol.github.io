@@ -1,0 +1,71 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Virtual Dial-up">
+    <div class="wrap">
+        <input id="pick" type="file" accept="image/*" />
+        <img id="photo" />
+    </div>
+</Page>
+
+<script>
+    function init() {
+        const photo = document.getElementById("photo") as HTMLImageElement;
+
+        function loadImg() {
+            console.log("loading image");
+            const h = photo.height;
+            const w = photo.width;
+            photo.style.width = `${w}px`;
+            photo.style.height = `${h}px`;
+            photo.style.paddingBottom = `${h}px`;
+
+            setTimeout(() => {
+                const n = Math.floor(h / 10);
+                const t = Math.floor(n / 3);
+                photo.style.transitionTimingFunction = `steps(${n})`;
+                photo.style.transitionDuration = `${t}s`;
+                photo.style.paddingBottom = "0px";
+            }, 10);
+        }
+
+        function resetImg() {
+            photo.style.width = "auto";
+            photo.style.height = "auto";
+            photo.style.paddingBottom = "auto";
+            photo.style.transitionTimingFunction = "";
+            photo.style.transitionDuration = "";
+        }
+
+        photo.addEventListener("load", loadImg);
+        const pick = document.getElementById("pick") as HTMLInputElement;
+        pick.addEventListener("change", (e) => {
+            const t = e.target as HTMLInputElement;
+            const files = t.files as FileList;
+            const file = files.item(0) as File;
+            if (file === null) return;
+            resetImg();
+            photo.src = URL.createObjectURL(file);
+            // loadImg();
+        });
+        console.log("init loaded");
+    }
+
+    document.addEventListener("astro:page-load", init);
+</script>
+
+<style>
+    #photo {
+        box-sizing: border-box;
+        object-fit: cover;
+        object-position: top;
+    }
+
+    .wrap {
+        display: grid;
+        gap: 1rem;
+        justify-items: center;
+        padding: 2rem;
+    }
+</style>

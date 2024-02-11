@@ -110,9 +110,8 @@ import Page from "../../../layouts/Page.astro";
 	<dialog id="help">
 		<h1>Tips and Tricks</h1>
 		<ol>
-			<p>How to Save As:</p>
 			<li><strong>Right-Click</strong> your image</li>
-			<li><strong>Click</strong> "Save Image As"</li>
+			<li><strong>Choose</strong> "Save Image As"</li>
 		</ol>
 		<form method="dialog">
 			<button id="btnStart">Got it</button>
@@ -248,7 +247,6 @@ import Page from "../../../layouts/Page.astro";
 			dialog_hi.addEventListener("close", () => {
 				console.log("hi dialog closed");
 			});
-			dialog_hi.showModal();
 
 			const dialog_help = document.getElementById(
 				"help",
@@ -282,6 +280,14 @@ import Page from "../../../layouts/Page.astro";
 				"canvas",
 			) as HTMLCanvasElement;
 			const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+			canvas.addEventListener(
+				"click",
+				(e) => {
+					dialog_hi.showModal();
+				},
+				{ once: true },
+			);
 
 			document.onkeyup = (e) => {
 				if (e.ctrlKey && e.key === "s") {
@@ -422,7 +428,10 @@ import Page from "../../../layouts/Page.astro";
 			canvas.addEventListener("mouseleave", (e) => {
 				state.canvasHover = false;
 				if (state.held) {
-					place_pin();
+					//place_pin();
+					console.log("left canvas");
+					state.held = null;
+					draw();
 				}
 			});
 
@@ -712,11 +721,20 @@ import Page from "../../../layouts/Page.astro";
 				}
 			}
 
+			console.log("adding event listener");
 			window.addEventListener("beforeunload", (e) => {
-				if (!state.dirty) return;
 				e.preventDefault();
-				e.returnValue = "";
-				alert("Are you sure you want to leave?");
+
+				e.returnValue = "Are you sure you want to leave?";
+				if (state.dirty) {
+					console.log("dirty");
+				}
+				if (dialog_hi.open) {
+					e.preventDefault();
+					e.returnValue = "";
+					dialog_hi.close();
+					console.log("closed hi");
+				}
 			});
 		}
 

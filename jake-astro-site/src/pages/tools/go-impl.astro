@@ -1,0 +1,78 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Go Impl">
+    <div class="wrap">
+        <h2>
+            Go Impl - A VS Code extension to list interfaces for each struct.
+        </h2>
+
+        <h3>Why?</h3>
+
+        <p>Go interfaces are implemented implicitly.</p>
+
+        <p>
+            This means that a type silently implements the methods of an
+            interface and presto it can be used as that interface type.
+        </p>
+        <p>
+            This is great for flexibility and decoupling, but also
+            <strong>very frustrating</strong>
+            when you just want to know which interfaces a type implements.
+        </p>
+        <p>
+            This is espescially noticable when you come from languages with an
+            implements keyword.
+        </p>
+        <p>
+            In fact, this pain point is so common, they have a <a
+                href="https://go.dev/doc/faq#implements_interface"
+                >section in their FAQ</a
+            > dedicated to it.
+        </p>
+        <p>
+            Words are fine and all but I don't want to play interface dective
+            when I'm writing Go.
+        </p>
+        <p>
+            The complier already knows this information, so why not just show it
+            to me?
+        </p>
+        <p>
+            This extension does exactly that - it simply lists the interfaces
+            that a type implements at its definition.
+        </p>
+        <p>
+            Hopefully, if this extension can gain enough traction, we can get
+            this added to the official Go extension as a option.
+        </p>
+
+        <h3>How?</h3>
+        <p>Go Impl</p>
+        <ul>
+            <li>Client VS Code Extension</li>
+            <li>Go LSP Server</li>
+        </ul>
+        <ol>
+            <li>Parse the go files</li>
+            <li>Find all the interface types</li>
+            <li>Find the structs</li>
+            <li>Check each interface with each struct</li>
+            <li>list of working interfaces at struct definitions</li>
+        </ol>
+    </div>
+</Page>
+
+<style>
+    h3 {
+        margin-top: 2em;
+    }
+    p {
+        margin-bottom: 1em;
+    }
+
+    .wrap {
+        padding: 2rem;
+    }
+</style>
