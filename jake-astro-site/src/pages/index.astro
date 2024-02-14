@@ -4,8 +4,8 @@ import Page from "../layouts/Page.astro";
 ---
 
 <Page title="Home">
-	<h1>Welcome to <span class="text-gradient">Jakesite</span>.</h1>
-	<div>
+	<div class="wrap">
+		<h1>Welcome to <span class="text-gradient">Jakesite</span>.</h1>
 		<h3>Work</h3>
 		<ul role="list" class="link-card-grid">
 			<Card
@@ -19,8 +19,7 @@ import Page from "../layouts/Page.astro";
 				body="Handy things I made to use."
 			/>
 		</ul>
-	</div>
-	<div>
+
 		<h3>Play</h3>
 		<ul role="list" class="link-card-grid">
 			<Card
@@ -40,6 +39,10 @@ import Page from "../layouts/Page.astro";
 <style>
 	:root {
 		--color-gradient: linear-gradient(0deg, red, orange);
+	}
+
+	.wrap {
+		padding: 2rem;
 	}
 
 	.text-gradient {

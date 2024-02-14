@@ -5,61 +5,120 @@ import Page from "../../layouts/Page.astro";
 <Page title="Virtual Dial-up">
     <div class="wrap">
         <input id="pick" type="file" accept="image/*" />
-        <img id="photo" />
+        <div class="flex">
+            <select name="mode" id="mode">
+                <option value="56k">56k</option>
+                <option value="3g">3g</option>
+                <option value="4g">4g</option>
+            </select>
+            <button>Reload</button>
+        </div>
+        <div id="preview">
+            <img src="/imgs/hd.jpg" alt="" />
+        </div>
     </div>
 </Page>
 
 <script>
     function init() {
-        const photo = document.getElementById("photo") as HTMLImageElement;
+        // https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
+        const fileTypes = [
+            "image/apng",
+            "image/bmp",
+            "image/gif",
+            "image/jpeg",
+            "image/pjpeg",
+            "image/png",
+            "image/svg+xml",
+            "image/tiff",
+            "image/webp",
+            "image/x-icon",
+        ];
 
-        function loadImg() {
-            console.log("loading image");
-            const h = photo.height;
-            const w = photo.width;
-            photo.style.width = `${w}px`;
-            photo.style.height = `${h}px`;
-            photo.style.paddingBottom = `${h}px`;
+        const mode = document.getElementById("mode") as HTMLSelectElement;
+        mode.addEventListener("change", (e) => {
+            const t = e.target as HTMLSelectElement;
+            console.log(t.value);
+        });
 
-            setTimeout(() => {
-                const n = Math.floor(h / 10);
-                const t = Math.floor(n / 3);
-                photo.style.transitionTimingFunction = `steps(${n})`;
-                photo.style.transitionDuration = `${t}s`;
-                photo.style.paddingBottom = "0px";
-            }, 10);
-        }
-
-        function resetImg() {
-            photo.style.width = "auto";
-            photo.style.height = "auto";
-            photo.style.paddingBottom = "auto";
-            photo.style.transitionTimingFunction = "";
-            photo.style.transitionDuration = "";
-        }
-
-        photo.addEventListener("load", loadImg);
+        const dialup = document.getElementById("dialup") as HTMLDivElement;
+        const preview = document.getElementById("preview") as HTMLDivElement;
+        preview.classList.add("loading");
         const pick = document.getElementById("pick") as HTMLInputElement;
         pick.addEventListener("change", (e) => {
             const t = e.target as HTMLInputElement;
-            const files = t.files as FileList;
-            const file = files.item(0) as File;
-            if (file === null) return;
-            resetImg();
-            photo.src = URL.createObjectURL(file);
-            // loadImg();
+            const file = t.files?.[0] as File;
+
+            if (file && fileTypes.includes(file.type)) {
+                if (preview.classList.contains("loading")) {
+                    preview.classList.remove("loading");
+                    console.log("removed loading");
+                }
+
+                while (preview.lastChild && preview.lastChild !== dialup) {
+                    preview.removeChild(preview.lastChild);
+                } // clear the photo preview
+
+                const file_size = file.size; // in bytes
+                const image = new Image();
+                image.src = URL.createObjectURL(file);
+                image.onload = () => {
+                    let sec = "";
+                    const lines = (image.height / 4).toFixed();
+
+                    switch (mode.value) {
+                        case "3g":
+                            sec = (file_size / 3000000).toFixed();
+                            break;
+                        case "4g":
+                            sec = (file_size / 40000000).toFixed();
+                            break;
+
+                        default:
+                            sec = (file_size / 7000).toFixed();
+                            break;
+                    }
+
+                    preview.style.setProperty("--time", sec + "s");
+                    preview.style.setProperty("--lines", lines);
+                    preview.appendChild(image);
+                    preview.classList.add("loading");
+                    console.log(lines, sec);
+                };
+            }
         });
-        console.log("init loaded");
     }
 
     document.addEventListener("astro:page-load", init);
 </script>
 
 <style>
-    #photo {
-        box-sizing: border-box;
-        object-fit: cover;
-        object-position: top;
+    #preview {
+        --time: 64s;
+        --lines: 128;
+        position: relative;
+        width: 100%;
+    }
+
+    #preview::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        content: "";
+        background-color: black;
+        transition: none;
+    }
+
+    #preview.loading::after {
+        top: 100%;
+        transition: top var(--time) steps(var(--lines));
+    }
+
+    #preview img {
+        width: 100%;
+        height: auto;
     }
 
     .wrap {
