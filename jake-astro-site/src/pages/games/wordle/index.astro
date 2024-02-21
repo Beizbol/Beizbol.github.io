@@ -85,7 +85,7 @@ import Page from "../../../layouts/Page.astro";
     </div>
   </div>
 
-  <dialog>
+  <dialog id="welcome">
     <form class="welcome grid" method="dialog">
       <h3>Welcome back! &#128075;</h3>
       <div class="pad">
@@ -97,15 +97,16 @@ import Page from "../../../layouts/Page.astro";
         <button class="pad" value="restart">Restart &#x1f608;</button>
       </div>
     </form>
+  </dialog>
+
+  <dialog id="congrats">
     <form class="congrats grid" method="dialog">
       <h3><strong><span id="cword"></span></strong></h3>
       <div class="pad">
         <p>You got it, nicely done!</p>
-        <p>points</p>
+        <p>+ 2500 points</p>
       </div>
       <div class="flex pad">
-        <button class="pad ok">Ok &#x1f607;</button>
-        <button class="pad rst" value="restart">Restart &#x1f608;</button>
         <button class="pad new" value="new">New Word</button>
         <button class="pad slots" value="slots"
           ><a href="/games/slots">Back to Slots</a></button
@@ -130,13 +131,14 @@ import Page from "../../../layouts/Page.astro";
       ) as HTMLElement;
 
       const n = Math.floor(Math.random() * Words.targetWords.length);
-      const state = { targetWord: "smell" }; //Words.targetWords[n]
-      // Player is returning to the page on the same day
-      const dialog = document.querySelector("dialog") as HTMLDialogElement;
 
-      dialog.addEventListener("close", () => {
-        const val = dialog.returnValue;
-        delete dialog.dataset.state;
+      const state = { targetWord: Words.targetWords[n] }; //
+      // Player is returning to the page on the same day
+      const welcome = document.getElementById("welcome") as HTMLDialogElement;
+
+      welcome.addEventListener("close", () => {
+        const val = welcome.returnValue;
+        delete welcome.dataset.state;
         console.log(val);
 
         switch (val) {
@@ -155,8 +157,8 @@ import Page from "../../../layouts/Page.astro";
 
         const target = localStorage.getItem("target");
         if (target) {
-          dialog.dataset.state = "welcome";
-          dialog.showModal();
+          welcome.dataset.state = "welcome";
+          welcome.showModal();
           state.targetWord = target;
           return;
         }
@@ -354,15 +356,16 @@ import Page from "../../../layouts/Page.astro";
 
       const url_params = new URLSearchParams(window.location.search);
 
+      const congrats = document.getElementById("congrats") as HTMLDialogElement;
       function newGame() {
         localStorage.removeItem("tiles");
         localStorage.removeItem("target");
 
         if (url_params.has("refill")) {
-          dialog.classList.add("refill");
+          congrats.classList.add("refill");
         }
-        dialog.dataset.state = "congrats";
-        dialog.showModal();
+        congrats.dataset.state = "congrats";
+        congrats.showModal();
 
         // window.location.reload();
       }
@@ -507,36 +510,6 @@ import Page from "../../../layouts/Page.astro";
       padding: 1.5rem;
       font-size: larger;
       text-align: center;
-    }
-
-    dialog .new,
-    dialog .slots {
-      display: none;
-    }
-    dialog .rst,
-    dialog .ok {
-      display: auto;
-    }
-    dialog.refill .new,
-    dialog.refill .slots {
-      display: auto;
-    }
-    dialog.refill .rst,
-    dialog.refill .ok {
-      display: none;
-    }
-
-    dialog[data-state="welcome"] .welcome {
-      display: auto;
-    }
-    dialog[data-state="welcome"] .congrats {
-      display: none;
-    }
-    dialog[data-state="congrats"] .welcome {
-      display: none;
-    }
-    dialog[data-state="congrats"] .congrats {
-      display: auto;
     }
 
     .flex {

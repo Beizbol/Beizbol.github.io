@@ -4,14 +4,16 @@ import Page from "../../layouts/Page.astro";
 
 <Page title="Virtual Dial-up">
     <div class="wrap">
-        <input id="pick" type="file" accept="image/*" />
         <div class="flex">
+            <input id="pick" type="file" accept="image/*" />
             <select name="mode" id="mode">
-                <option value="56k">56k</option>
-                <option value="3g">3g</option>
-                <option value="4g">4g</option>
+                <option value="56k">Dialup</option>
+                <option value="3g">3g Min</option>
+                <option value="3g+">3g Mid</option>
+                <option value="3g++">3g Max</option>
+                <option value="4g">4g LTE</option>
             </select>
-            <button>Reload</button>
+            <button id="reload">Reload</button>
         </div>
         <div id="preview">
             <img src="/imgs/hd.jpg" alt="" />
@@ -35,10 +37,13 @@ import Page from "../../layouts/Page.astro";
             "image/x-icon",
         ];
 
+        let size_bytes = 894434;
         const mode = document.getElementById("mode") as HTMLSelectElement;
         mode.addEventListener("change", (e) => {
             const t = e.target as HTMLSelectElement;
-            console.log(t.value);
+            const sec = calcSec(size_bytes);
+            console.log(sec);
+            preview.style.setProperty("--time", sec + "s");
         });
 
         const dialup = document.getElementById("dialup") as HTMLDivElement;
@@ -59,32 +64,43 @@ import Page from "../../layouts/Page.astro";
                     preview.removeChild(preview.lastChild);
                 } // clear the photo preview
 
-                const file_size = file.size; // in bytes
+                size_bytes = file.size; // in bytes
                 const image = new Image();
                 image.src = URL.createObjectURL(file);
                 image.onload = () => {
-                    let sec = "";
-                    const lines = (image.height / 4).toFixed();
-
-                    switch (mode.value) {
-                        case "3g":
-                            sec = (file_size / 3000000).toFixed();
-                            break;
-                        case "4g":
-                            sec = (file_size / 40000000).toFixed();
-                            break;
-
-                        default:
-                            sec = (file_size / 7000).toFixed();
-                            break;
-                    }
+                    const sec = calcSec(size_bytes);
+                    const lines = (image.height / 8).toFixed();
 
                     preview.style.setProperty("--time", sec + "s");
                     preview.style.setProperty("--lines", lines);
                     preview.appendChild(image);
                     preview.classList.add("loading");
-                    console.log(lines, sec);
+                    console.log(size_bytes);
                 };
+            }
+        });
+
+        function calcSec(file_size: number) {
+            switch (mode.value) {
+                case "4g":
+                    return (file_size / 5_000_000).toFixed(2);
+                case "3g++":
+                    return (file_size / 900_000).toFixed(1);
+                case "3g+":
+                    return (file_size / 128_000).toFixed(1);
+                case "3g":
+                    return (file_size / 32_000).toFixed(1);
+                default: //56k
+                    return (file_size / 7_000).toFixed(0);
+            }
+        }
+
+        const reload = document.getElementById("reload") as HTMLButtonElement;
+        reload.addEventListener("click", () => {
+            if (preview.classList.contains("loading")) {
+                preview.classList.remove("loading");
+            } else {
+                preview.classList.add("loading");
             }
         });
     }
@@ -94,8 +110,8 @@ import Page from "../../layouts/Page.astro";
 
 <style>
     #preview {
-        --time: 64s;
-        --lines: 128;
+        --time: 128s;
+        --lines: 257;
         position: relative;
         width: 100%;
     }
