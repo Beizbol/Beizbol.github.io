@@ -66,15 +66,6 @@ import Page from "../../../layouts/Page.astro";
 				<label for="pinText">Text</label>
 				<input id="pinText" type="text" value="Pin Text" />
 			</div>
-			<div class="stack">
-				<label for="sizes">Size</label>
-				<select name="sizes" id="sizes">
-					<option value="1" label="S"></option>
-					<option value="1.36" label="M"></option>
-					<option value="1.69" label="L"></option>
-					<option value="2" label="XL"></option>
-				</select>
-			</div>
 		</div>
 		<div class="btns">
 			<div class="flex">
@@ -82,9 +73,13 @@ import Page from "../../../layouts/Page.astro";
 				<button id="redo">Redo</button>
 			</div>
 			<div class="flex">
-				<button id="zoomOut">-</button>
-				<button id="zoomReset">Reset Zoom</button>
-				<button id="zoomIn">+</button>
+				<label for="sizes">Pin Size:</label>
+				<select name="sizes" id="sizes">
+					<option value="1" label="S"></option>
+					<option value="1.36" label="M"></option>
+					<option value="1.69" label="L"></option>
+					<option value="2" label="XL"></option>
+				</select>
 			</div>
 			<div class="flex">
 				<button id="save" disabled>Save</button>
@@ -188,11 +183,13 @@ import Page from "../../../layouts/Page.astro";
 		.flex {
 			display: flex;
 			gap: 1rem;
+			align-items: center;
 		}
 
 		.btns {
+			font-size: large;
 			display: flex;
-			gap: 1.5rem;
+			gap: 1.25rem;
 			justify-content: space-between;
 		}
 
@@ -247,6 +244,7 @@ import Page from "../../../layouts/Page.astro";
 			dialog_hi.addEventListener("close", () => {
 				console.log("hi dialog closed");
 			});
+			dialog_hi.showModal();
 
 			const dialog_help = document.getElementById(
 				"help",
@@ -281,13 +279,13 @@ import Page from "../../../layouts/Page.astro";
 			) as HTMLCanvasElement;
 			const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
-			canvas.addEventListener(
-				"click",
-				(e) => {
-					dialog_hi.showModal();
-				},
-				{ once: true },
-			);
+			// canvas.addEventListener(
+			// 	"click",
+			// 	(e) => {
+			// 		dialog_hi.showModal();
+			// 	},
+			// 	{ once: true },
+			// );
 
 			document.onkeyup = (e) => {
 				if (e.ctrlKey && e.key === "s") {
@@ -337,28 +335,6 @@ import Page from "../../../layouts/Page.astro";
 				draw();
 			}
 			redo.onclick = redoEdit;
-
-			const zoomIn = document.getElementById(
-				"zoomIn",
-			) as HTMLButtonElement;
-			zoomIn.onclick = () => {
-				state.zoom *= 1.01;
-				draw();
-			};
-			const zoomReset = document.getElementById(
-				"zoomReset",
-			) as HTMLButtonElement;
-			zoomReset.onclick = () => {
-				state.zoom = 1;
-				draw();
-			};
-			const zoomOut = document.getElementById(
-				"zoomOut",
-			) as HTMLButtonElement;
-			zoomOut.onclick = () => {
-				state.zoom *= 0.99;
-				draw();
-			};
 
 			const pick = document.getElementById("pick") as HTMLInputElement;
 			const photo = new Image();
@@ -637,13 +613,8 @@ import Page from "../../../layouts/Page.astro";
 
 			const sizes = document.getElementById("sizes") as HTMLSelectElement;
 			sizes.addEventListener("change", (e) => {
-				if (!state.edit_pin) {
-					console.log("no pin");
-					return;
-				}
 				const sel = e.target as HTMLSelectElement;
 				Pin.scale = parseFloat(sel.value);
-
 				state.history.update(state.placed);
 				drawPreview();
 				draw();

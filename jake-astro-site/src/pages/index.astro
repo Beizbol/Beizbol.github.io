@@ -1,5 +1,5 @@
 ---
-import Card from "../components/Card.astro";
+import LinkCard from "../components/LinkCard.astro";
 import Page from "../layouts/Page.astro";
 ---
 
@@ -8,12 +8,12 @@ import Page from "../layouts/Page.astro";
 		<h1>Welcome to <span class="text-gradient">Jakesite</span>.</h1>
 		<h3>Work</h3>
 		<ul role="list" class="link-card-grid">
-			<Card
+			<LinkCard
 				href="/portfolio"
 				title="Portfolio"
 				body="Learn about my education and experience."
 			/>
-			<Card
+			<LinkCard
 				href="/tools"
 				title="Tools"
 				body="Handy things I made to use."
@@ -22,12 +22,12 @@ import Page from "../layouts/Page.astro";
 
 		<h3>Play</h3>
 		<ul role="list" class="link-card-grid">
-			<Card
+			<LinkCard
 				href="/games"
 				title="Games"
 				body="Play a round or two... or ten."
 			/>
-			<Card
+			<LinkCard
 				href="/lab"
 				title="Lab"
 				body="Steel-toes required beyond this point."

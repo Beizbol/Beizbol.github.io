@@ -1,0 +1,100 @@
+---
+import Page from "../../../layouts/Page.astro";
+import Card from "../../../components/Card.astro";
+---
+
+<Page title="Sunny Slots">
+    <div class="wrap">
+        <div class="deck">
+            <select id="backPicker">
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="orange">Orange</option>
+                <option value="green">Green</option>
+                <option value="pink">Pink</option>
+                <option value="purple">Purple</option>
+                <option value="rainbow">Rainbow</option>
+            </select>
+            <select id="facePicker">
+                <option value="std">Classic</option>
+                <option value="big">Bigger</option>
+            </select>
+        </div>
+        <div id="dealer" class="hand">
+            <Card />
+            <Card />
+        </div>
+        <div class="controls">
+            <button id="hit">Hit</button>
+            <button id="stand">Stand</button>
+        </div>
+        <div id="player" class="hand">
+            <Card />
+            <Card />
+        </div>
+    </div>
+</Page>
+
+<style>
+    .wrap {
+        display: grid;
+        place-items: center;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .hand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+</style>
+
+<script>
+    import BlackJack from "./blackjack";
+
+    function init() {
+        const backPicker = document.getElementById(
+            "backPicker",
+        ) as HTMLSelectElement;
+        if (localStorage.backTheme) {
+            backPicker.value = localStorage.backTheme;
+            document.documentElement.dataset.cardBack = localStorage.backTheme;
+        }
+        backPicker.addEventListener("change", () => {
+            const theme = backPicker.value;
+            localStorage.backTheme = theme;
+            console.log("color theme saved.", theme);
+            document.documentElement.dataset.cardBack = theme;
+        });
+
+        const facePicker = document.getElementById(
+            "facePicker",
+        ) as HTMLSelectElement;
+        if (localStorage.faceTheme) {
+            facePicker.value = localStorage.faceTheme;
+            document.documentElement.dataset.cardFace = localStorage.backTheme;
+        }
+        facePicker.addEventListener("change", () => {
+            const theme = facePicker.value;
+            localStorage.faceTheme = theme;
+            console.log("color theme saved.", theme);
+            document.documentElement.dataset.cardFace = theme;
+        });
+
+        let chips = 100;
+        const game = new BlackJack(chips);
+
+        const hit = document.getElementById("hit") as HTMLButtonElement;
+        hit.addEventListener("click", game.hit);
+
+        const stand = document.getElementById("stand") as HTMLButtonElement;
+        stand.addEventListener("click", game.stand);
+
+        const player = document.getElementById("player");
+        const dealer = document.getElementById("dealer");
+    }
+
+    document.addEventListener("astro:page-load", init);
+</script>

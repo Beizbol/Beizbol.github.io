@@ -1,0 +1,35 @@
+﻿<svg xmlns='http://www.w3.org/2000/svg' width='175' height='175' viewBox='0 0 800 1200'>
+    <rect fill='#ffff00' width='800' height='1200' />
+    <defs>
+        <radialGradient id='a' cy='0' cx='800' r='800' gradientUnits='userSpaceOnUse'>
+            <stop offset='0' stop-color='#ff8000' />
+            <stop offset='1' stop-color='#ff8000' stop-opacity='0' />
+        </radialGradient>
+        <radialGradient id='b' cy='1200' cx='800' r='800' gradientUnits='userSpaceOnUse'>
+            <stop offset='0' stop-color='#00ff19' />
+            <stop offset='1' stop-color='#00ff19' stop-opacity='0' />
+        </radialGradient>
+        <radialGradient id='c' cy='600' cx='0' r='600' gradientUnits='userSpaceOnUse'>
+            <stop offset='0' stop-color='#9900ff' />
+            <stop offset='1' stop-color='#9900ff' stop-opacity='0' />
+        </radialGradient>
+        <radialGradient id='d' cy='600' cx='800' r='600' gradientUnits='userSpaceOnUse'>
+            <stop offset='0' stop-color='#ffff00' />
+            <stop offset='1' stop-color='#ffff00' stop-opacity='0' />
+        </radialGradient>
+        <radialGradient id='e' cy='0' cx='0' r='800' gradientUnits='userSpaceOnUse'>
+            <stop offset='0' stop-color='#FF0000' />
+            <stop offset='1' stop-color='#FF0000' stop-opacity='0' />
+        </radialGradient>
+        <radialGradient id='f' cy='1200' cx='0' r='800' gradientUnits='userSpaceOnUse'>
+            <stop offset='0' stop-color='#0CF' />
+            <stop offset='1' stop-color='#0CF' stop-opacity='0' />
+        </radialGradient>
+    </defs>
+    <rect fill='url(#a)' width='800' height='1200' />
+    <rect fill='url(#b)' width='800' height='1200' />
+    <rect fill='url(#c)' width='800' height='1200' />
+    <rect fill='url(#d)' width='800' height='1200' />
+    <rect fill='url(#e)' width='800' height='1200' />
+    <rect fill='url(#f)' width='800' height='1200' />
+</svg>

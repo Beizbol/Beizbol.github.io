@@ -98,12 +98,12 @@ import Page from "../../layouts/Page.astro";
     state.x += state.dx;
     state.y += state.dy;
 
-    if (state.y + state.dy >= canvas.height - r || state.y + state.dy < r) {
+    if (state.y + state.dy >= canvas.height - 7 || state.y + state.dy < 7) {
       state.dy *= -1;
       state.bounces += 1;
     }
 
-    if (state.x + state.dx >= canvas.width - r || state.x + state.dx < r) {
+    if (state.x + state.dx >= canvas.width - 7 || state.x + state.dx < 7) {
       state.dx *= -1;
       state.bounces += 1;
       console.log("bounce");
@@ -130,10 +130,11 @@ import Page from "../../layouts/Page.astro";
 <style>
   #crt {
     margin: 0 auto;
-    padding: 10px;
+    padding: 2px 4px;
     border-radius: 40px;
     box-shadow: 0 0 30px 60px #000;
-    background-color: #000808;
+    overflow: hidden;
+    background-color: #000d;
   }
 
   #wrap {
