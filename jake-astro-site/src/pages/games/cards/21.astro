@@ -4,7 +4,7 @@ import Page from "../../../layouts/Page.astro";
 
 <Page title="Cards - 21">
     <div class="wrap">
-        <div class="pts">Points: <span class="pts" id="score">0000</span></div>
+        <div class="pts">Chips: <span class="pts" id="chips">000</span></div>
 
         <div id="dealer" class="hand">
             <div class="card" data-card="back"></div>
@@ -365,7 +365,22 @@ import Page from "../../../layouts/Page.astro";
     import BlackJack from "./blackjack";
 
     function init() {
-        let chips = 100;
+        function loadPoints() {
+            let pts = parseInt(localStorage.getItem("bj-pts") || "250");
+            const game_wins = parseInt(
+                localStorage.getItem("game-wins") || "0",
+            );
+            const prev_wins = parseInt(
+                localStorage.getItem("prev-wins") || "0",
+            );
+            pts += (game_wins - prev_wins) * 250;
+            localStorage.setItem("bj-pts", pts.toString());
+            localStorage.setItem("prev-wins", game_wins.toString());
+            return pts;
+        }
+        let chips = loadPoints();
+        const pts = document.getElementById("chips") as HTMLSpanElement;
+        pts.textContent = chips.toString();
         const game = new BlackJack(chips);
 
         const bust = document.getElementById("bust") as HTMLDialogElement;
@@ -434,8 +449,16 @@ import Page from "../../../layouts/Page.astro";
         const stand = document.getElementById("stand") as HTMLButtonElement;
         stand.addEventListener("click", () => {
             game.stand();
+
             const dcards = dealer.querySelectorAll(".card");
             dcards[0].dataset.card = game.dealer[0].toString();
+
+            for (let i = game.dealer.length - 1; i > 1; i--) {
+                const card = dealer.querySelector(".card") as HTMLDivElement;
+                const clone = card.cloneNode(true) as HTMLDivElement;
+                clone.dataset.card = game.dealer[i].toString();
+                dealer.appendChild(clone);
+            }
 
             const ds = game.dealerScore;
             const ps = game.playerScore;
