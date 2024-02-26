@@ -11,7 +11,7 @@ import Page from "../../layouts/Page.astro";
       lob.src = "/puzzle/images/lobster.jpg";
       lob.onload = () => {
         const jigsaw = new headbreaker.Canvas("puzzle", {
-          width: 1000,
+          width: 900,
           height: 700,
           pieceSize: 100,
           proximity: 20,
@@ -24,11 +24,20 @@ import Page from "../../layouts/Page.astro";
         });
         jigsaw.adjustImagesToPuzzleHeight();
         jigsaw.autogenerate({
-          horizontalPiecesCount: 7,
-          verticalPiecesCount: 6,
+          horizontalPiecesCount: 4,
+          verticalPiecesCount: 3,
         });
         jigsaw.shuffle(0.7);
         jigsaw.draw();
+        jigsaw.attachSolvedValidator();
+        jigsaw.onValid(() => {
+          setTimeout(() => {
+            alert("Congratulations! You solved the puzzle!");
+            let game_wins = parseInt(localStorage.getItem("game-wins") || "0");
+            game_wins += 1;
+            localStorage.setItem("game-wins", game_wins.toString());
+          }, 100);
+        });
         jigsaw.onConnect((_piece, figure, _target, targetFigure) => {
           // paint borders on click
           // of conecting and conected figures
@@ -46,7 +55,6 @@ import Page from "../../layouts/Page.astro";
         });
       };
     };
-    init();
-    document.addEventListener("astro:after-swap", init);
+    document.addEventListener("astro:page-load", init);
   </script>
 </Page>

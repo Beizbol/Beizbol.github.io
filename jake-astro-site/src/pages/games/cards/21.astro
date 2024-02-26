@@ -4,7 +4,8 @@ import Page from "../../../layouts/Page.astro";
 
 <Page title="Cards - 21">
     <div class="wrap">
-        <div class="deck"></div>
+        <div class="pts">Points: <span class="pts" id="score">0000</span></div>
+
         <div id="dealer" class="hand">
             <div class="card" data-card="back"></div>
             <div class="card" data-card="back"></div>
@@ -98,6 +99,17 @@ import Page from "../../../layouts/Page.astro";
             <button>OK</button>
         </form>
     </dialog>
+
+    <dialog id="poor">
+        <form method="dialog">
+            <h3>Whoops! Not enough points :(</h3>
+            <p>Solve a wordle to earn more.</p>
+            <div class="flex">
+                <button>Ok</button>
+                <button><a href="/games/wordle?refill">Wordle</a></button>
+            </div>
+        </form>
+    </dialog>
 </Page>
 
 <style>
@@ -156,22 +168,27 @@ import Page from "../../../layouts/Page.astro";
 
     :root[data-card-back="red"] .card[data-card="back"] {
         background-image: url("/assets/cards/backs/red.svg");
+        background-size: 250%;
     }
 
     :root[data-card-back="blue"] .card[data-card="back"] {
         background-image: url("/assets/cards/backs/blue.svg");
+        background-size: 250%;
     }
 
     :root[data-card-back="orange"] .card[data-card="back"] {
         background-image: url("/assets/cards/backs/orange.svg");
+        background-size: 50%;
     }
 
     :root[data-card-back="green"] .card[data-card="back"] {
         background-image: url("/assets/cards/backs/green.svg");
+        background-size: 200%;
     }
 
     :root[data-card-back="pink"] .card[data-card="back"] {
         background-image: url("/assets/cards/backs/pink.svg");
+        background-size: 50%;
     }
 
     :root[data-card-back="purple"] .card[data-card="back"] {
@@ -180,6 +197,7 @@ import Page from "../../../layouts/Page.astro";
 
     :root[data-card-back="rainbow"] .card[data-card="back"] {
         background-image: url("/assets/cards/backs/rainbow.svg");
+        background-size: 150%;
     }
 
     .card[data-card="C-A"] {
@@ -397,6 +415,8 @@ import Page from "../../../layouts/Page.astro";
 
         function cleanHands() {
             deal.classList.toggle("hidden", false);
+            hit.classList.toggle("hidden", true);
+            stand.classList.toggle("hidden", true);
             const ph = player.querySelectorAll(".card");
             for (let i = ph.length - 1; i > 1; i--) {
                 ph[i].remove();
@@ -414,29 +434,36 @@ import Page from "../../../layouts/Page.astro";
         const stand = document.getElementById("stand") as HTMLButtonElement;
         stand.addEventListener("click", () => {
             game.stand();
+            const dcards = dealer.querySelectorAll(".card");
+            dcards[0].dataset.card = game.dealer[0].toString();
+
             const ds = game.dealerScore;
             const ps = game.playerScore;
             if (ds > 21) {
                 console.log("dealer bust");
                 win.showModal();
+                return;
             }
 
             if (ds === ps) {
                 console.log("draw");
                 draw.showModal();
+                return;
             }
 
             if (ds > ps) {
                 console.log("dealer win");
                 lose.showModal();
+                return;
             }
 
             if (ds < ps) {
                 console.log("player bust");
                 win.showModal();
+                return;
             }
 
-            cleanHands();
+            // cleanHands();
         });
 
         const dealer = document.getElementById("dealer") as HTMLDivElement;

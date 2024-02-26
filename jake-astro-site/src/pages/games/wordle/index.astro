@@ -501,9 +501,7 @@ import Page from "../../../layouts/Page.astro";
       startInteraction();
     };
 
-    init_wordle();
-    // Runs after astro page load
-    document.addEventListener("astro:after-swap", init_wordle);
+    document.addEventListener("astro:page-load", init_wordle);
   </script>
   <style>
     dialog {
