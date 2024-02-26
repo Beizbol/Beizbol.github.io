@@ -1,11 +1,53 @@
 ---
 import Page from "../../../layouts/Page.astro";
-import Card from "../../../components/Card.astro";
 ---
 
-<Page title="Sunny Slots">
+<Page title="Cards - 21">
     <div class="wrap">
-        <div class="deck">
+        <div class="deck"></div>
+        <div id="dealer" class="hand">
+            <div class="card" data-card="back"></div>
+            <div class="card" data-card="back"></div>
+        </div>
+        <div id="ctrls" class="controls">
+            <button id="deal">Deal</button>
+            <button id="hit" class="hidden">Hit +</button>
+            <button id="stand" class="hidden">Stand</button>
+            <button id="themes">
+                <svg viewBox="0 0 409.952 409.952" xml:space="preserve">
+                    <path
+                        d="M298.809,287.873c-21.789,31.978-47.21,63.656-70.192,87.398c-8.04,8.306-15.595,15.467-22.582,21.418
+         c68.588-1.306,133.022-38.713,97.567-101.286C302.02,292.817,300.42,290.313,298.809,287.873z"
+                    ></path>
+                    <path
+                        d="M145.994,320.097c0-15.807,12.813-28.629,28.627-28.629c2.075,0,4.097,0.227,6.047,0.646
+         c11.107-20.724,23.954-42.066,37.637-62.407c10.651-15.833,20.518-29.121,29.712-39.999c-1.568-16.001-0.427-35.044,4.534-58.906
+         C277.598,10.335,72.483-74.035,12.371,120.624C-24.844,240.855,23.82,331.027,132.598,382.553c3.719,1.727,7.566,3.29,11.516,4.693
+         c1.009-11.445,5.235-26.422,12.644-44.788C150.198,337.214,145.994,329.15,145.994,320.097z M48.927,180.699
+         c0-15.814,12.816-28.631,28.628-28.631c15.807,0,28.627,12.816,28.627,28.631c0,15.806-12.82,28.628-28.627,28.628
+         C61.744,209.327,48.927,196.504,48.927,180.699z M101.888,291.468c-15.813,0-28.629-12.813-28.629-28.621
+         c0-15.815,12.815-28.631,28.629-28.631c15.808,0,28.629,12.816,28.629,28.631C130.517,278.656,117.696,291.468,101.888,291.468z
+          M125.526,81.94c0-20.144,16.335-36.477,36.477-36.477s36.47,16.333,36.47,36.477c0,20.142-16.328,36.472-36.47,36.472
+         S125.526,102.081,125.526,81.94z"
+                    ></path>
+                    <path
+                        d="M302.786,188.889c-0.002-0.001-0.004-0.003-0.01-0.004c-7.165-4.599-13.028-10.495-17.39-17.188
+         c-14.295,9.836-32.436,29.769-56.31,65.258c-48.85,72.619-84.946,155.684-68.009,166.78c1.276,0.837,2.821,1.241,4.601,1.241
+         c21.834,0,79.571-60.683,124.735-127.83c24.781-36.836,36.322-61.56,39.475-78.436c-4.906-0.693-9.994-1.996-15.294-3.951
+         C310.437,193.225,306.465,191.251,302.786,188.889z"
+                    ></path>
+                    <path
+                        d="M409.74,71.642c-0.945-4.321-4.855-7.356-9.268-7.18c-35.358,1.318-63.614,8.195-83.984,20.439
+         c-23.171,13.928-30.309,31.113-32.218,43.076c-1.46,9.152-0.262,18.284,3.097,26.596c5.57,13.788,17.089,25.318,32.309,30.936
+         c7.983,2.947,15.178,4.38,21.995,4.38c0,0,0,0,0,0c1.034,0,2.062-0.037,3.083-0.105c7.742-0.513,15.119-2.963,21.971-7.309
+         c20.418-12.952,18.702-34.235,17.188-53.012c-1.884-23.374-1.906-38.169,20.402-47.428C408.401,80.34,410.685,75.963,409.74,71.642
+         z"
+                    ></path>
+                </svg>
+            </button>
+        </div>
+        <div id="ui" class="flex hidden">
+            <label for="backPicker">Card Theme</label>
             <select id="backPicker">
                 <option value="red">Red</option>
                 <option value="blue">Blue</option>
@@ -15,27 +57,74 @@ import Card from "../../../components/Card.astro";
                 <option value="purple">Purple</option>
                 <option value="rainbow">Rainbow</option>
             </select>
-            <select id="facePicker">
-                <option value="std">Classic</option>
-                <option value="big">Bigger</option>
-            </select>
-        </div>
-        <div id="dealer" class="hand">
-            <Card />
-            <Card />
-        </div>
-        <div class="controls">
-            <button id="hit">Hit</button>
-            <button id="stand">Stand</button>
         </div>
         <div id="player" class="hand">
-            <Card />
-            <Card />
+            <div class="card" data-card="back"></div>
+            <div class="card" data-card="back"></div>
         </div>
     </div>
+
+    <dialog id="win">
+        <form method="dialog">
+            <p>Winner!</p>
+            <button>OK</button>
+        </form>
+    </dialog>
+
+    <dialog id="bj">
+        <form method="dialog">
+            <p>21!</p>
+            <button>OK</button>
+        </form>
+    </dialog>
+
+    <dialog id="bust">
+        <form method="dialog">
+            <p>Bust!</p>
+            <button>OK</button>
+        </form>
+    </dialog>
+
+    <dialog id="lose">
+        <form method="dialog">
+            <p>Too Bad.</p>
+            <button>OK</button>
+        </form>
+    </dialog>
+
+    <dialog id="draw">
+        <form method="dialog">
+            <p>Draw</p>
+            <button>OK</button>
+        </form>
+    </dialog>
 </Page>
 
 <style>
+    .controls {
+        display: flex;
+        gap: 1rem;
+    }
+
+    button {
+        padding: 0.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    #themes svg {
+        margin-bottom: -5px;
+        width: 1.25rem;
+        height: 1.25rem;
+        fill: var(--color-text);
+    }
+
+    .flex {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
     .wrap {
         display: grid;
         place-items: center;
@@ -49,12 +138,229 @@ import Card from "../../../components/Card.astro";
         gap: 0.5rem;
         padding: 1rem;
     }
+
+    .hidden {
+        display: none;
+    }
+
+    .card {
+        display: flex;
+        min-height: 175px;
+        aspect-ratio: 5 / 7;
+        border-radius: 0.75rem;
+        list-style: none;
+        border: var(--color-text) solid 0.4rem;
+        background-size: cover;
+        background-position: center;
+    }
+
+    :root[data-card-back="red"] .card[data-card="back"] {
+        background-image: url("/assets/cards/backs/red.svg");
+    }
+
+    :root[data-card-back="blue"] .card[data-card="back"] {
+        background-image: url("/assets/cards/backs/blue.svg");
+    }
+
+    :root[data-card-back="orange"] .card[data-card="back"] {
+        background-image: url("/assets/cards/backs/orange.svg");
+    }
+
+    :root[data-card-back="green"] .card[data-card="back"] {
+        background-image: url("/assets/cards/backs/green.svg");
+    }
+
+    :root[data-card-back="pink"] .card[data-card="back"] {
+        background-image: url("/assets/cards/backs/pink.svg");
+    }
+
+    :root[data-card-back="purple"] .card[data-card="back"] {
+        background-image: url("/assets/cards/backs/purple.svg");
+    }
+
+    :root[data-card-back="rainbow"] .card[data-card="back"] {
+        background-image: url("/assets/cards/backs/rainbow.svg");
+    }
+
+    .card[data-card="C-A"] {
+        background-image: url("/assets/cards/faces/C-A.svg");
+    }
+    .card[data-card="C-2"] {
+        background-image: url("/assets/cards/faces/C-2.svg");
+    }
+    .card[data-card="C-3"] {
+        background-image: url("/assets/cards/faces/C-3.svg");
+    }
+    .card[data-card="C-4"] {
+        background-image: url("/assets/cards/faces/C-4.svg");
+    }
+    .card[data-card="C-5"] {
+        background-image: url("/assets/cards/faces/C-5.svg");
+    }
+    .card[data-card="C-6"] {
+        background-image: url("/assets/cards/faces/C-6.svg");
+    }
+    .card[data-card="C-7"] {
+        background-image: url("/assets/cards/faces/C-7.svg");
+    }
+    .card[data-card="C-8"] {
+        background-image: url("/assets/cards/faces/C-8.svg");
+    }
+    .card[data-card="C-9"] {
+        background-image: url("/assets/cards/faces/C-9.svg");
+    }
+    .card[data-card="C-10"] {
+        background-image: url("/assets/cards/faces/C-10.svg");
+    }
+    .card[data-card="C-J"] {
+        background-image: url("/assets/cards/faces/C-J.svg");
+    }
+    .card[data-card="C-Q"] {
+        background-image: url("/assets/cards/faces/C-Q.svg");
+    }
+    .card[data-card="C-K"] {
+        background-image: url("/assets/cards/faces/C-K.svg");
+    }
+
+    .card[data-card="D-A"] {
+        background-image: url("/assets/cards/faces/D-A.svg");
+    }
+    .card[data-card="D-2"] {
+        background-image: url("/assets/cards/faces/D-2.svg");
+    }
+    .card[data-card="D-3"] {
+        background-image: url("/assets/cards/faces/D-3.svg");
+    }
+    .card[data-card="D-4"] {
+        background-image: url("/assets/cards/faces/D-4.svg");
+    }
+    .card[data-card="D-5"] {
+        background-image: url("/assets/cards/faces/D-5.svg");
+    }
+    .card[data-card="D-6"] {
+        background-image: url("/assets/cards/faces/D-6.svg");
+    }
+    .card[data-card="D-7"] {
+        background-image: url("/assets/cards/faces/D-7.svg");
+    }
+    .card[data-card="D-8"] {
+        background-image: url("/assets/cards/faces/D-8.svg");
+    }
+    .card[data-card="D-9"] {
+        background-image: url("/assets/cards/faces/D-9.svg");
+    }
+    .card[data-card="D-10"] {
+        background-image: url("/assets/cards/faces/D-10.svg");
+    }
+    .card[data-card="D-J"] {
+        background-image: url("/assets/cards/faces/D-J.svg");
+    }
+    .card[data-card="D-Q"] {
+        background-image: url("/assets/cards/faces/D-Q.svg");
+    }
+    .card[data-card="D-K"] {
+        background-image: url("/assets/cards/faces/D-K.svg");
+    }
+
+    .card[data-card="H-A"] {
+        background-image: url("/assets/cards/faces/H-A.svg");
+    }
+    .card[data-card="H-2"] {
+        background-image: url("/assets/cards/faces/H-2.svg");
+    }
+    .card[data-card="H-3"] {
+        background-image: url("/assets/cards/faces/H-3.svg");
+    }
+    .card[data-card="H-4"] {
+        background-image: url("/assets/cards/faces/H-4.svg");
+    }
+    .card[data-card="H-5"] {
+        background-image: url("/assets/cards/faces/H-5.svg");
+    }
+    .card[data-card="H-6"] {
+        background-image: url("/assets/cards/faces/H-6.svg");
+    }
+    .card[data-card="H-7"] {
+        background-image: url("/assets/cards/faces/H-7.svg");
+    }
+    .card[data-card="H-8"] {
+        background-image: url("/assets/cards/faces/H-8.svg");
+    }
+    .card[data-card="H-9"] {
+        background-image: url("/assets/cards/faces/H-9.svg");
+    }
+    .card[data-card="H-10"] {
+        background-image: url("/assets/cards/faces/H-10.svg");
+    }
+    .card[data-card="H-J"] {
+        background-image: url("/assets/cards/faces/H-J.svg");
+    }
+    .card[data-card="H-Q"] {
+        background-image: url("/assets/cards/faces/H-Q.svg");
+    }
+    .card[data-card="H-K"] {
+        background-image: url("/assets/cards/faces/H-K.svg");
+    }
+
+    .card[data-card="S-A"] {
+        background-image: url("/assets/cards/faces/S-A.svg");
+    }
+    .card[data-card="S-2"] {
+        background-image: url("/assets/cards/faces/S-2.svg");
+    }
+    .card[data-card="S-3"] {
+        background-image: url("/assets/cards/faces/S-3.svg");
+    }
+    .card[data-card="S-4"] {
+        background-image: url("/assets/cards/faces/S-4.svg");
+    }
+    .card[data-card="S-5"] {
+        background-image: url("/assets/cards/faces/S-5.svg");
+    }
+    .card[data-card="S-6"] {
+        background-image: url("/assets/cards/faces/S-6.svg");
+    }
+    .card[data-card="S-7"] {
+        background-image: url("/assets/cards/faces/S-7.svg");
+    }
+    .card[data-card="S-8"] {
+        background-image: url("/assets/cards/faces/S-8.svg");
+    }
+    .card[data-card="S-9"] {
+        background-image: url("/assets/cards/faces/S-9.svg");
+    }
+    .card[data-card="S-10"] {
+        background-image: url("/assets/cards/faces/S-10.svg");
+    }
+    .card[data-card="S-J"] {
+        background-image: url("/assets/cards/faces/S-J.svg");
+    }
+    .card[data-card="S-Q"] {
+        background-image: url("/assets/cards/faces/S-Q.svg");
+    }
+    .card[data-card="S-K"] {
+        background-image: url("/assets/cards/faces/S-K.svg");
+    }
 </style>
 
 <script>
     import BlackJack from "./blackjack";
 
     function init() {
+        let chips = 100;
+        const game = new BlackJack(chips);
+
+        const bust = document.getElementById("bust") as HTMLDialogElement;
+        bust.onclose = cleanHands;
+        const win = document.getElementById("win") as HTMLDialogElement;
+        win.onclose = cleanHands;
+        const bj = document.getElementById("bj") as HTMLDialogElement;
+        bj.onclose = cleanHands;
+        const lose = document.getElementById("lose") as HTMLDialogElement;
+        lose.onclose = cleanHands;
+        const draw = document.getElementById("draw") as HTMLDialogElement;
+        draw.onclose = cleanHands;
+
         const backPicker = document.getElementById(
             "backPicker",
         ) as HTMLSelectElement;
@@ -69,31 +375,93 @@ import Card from "../../../components/Card.astro";
             document.documentElement.dataset.cardBack = theme;
         });
 
-        const facePicker = document.getElementById(
-            "facePicker",
-        ) as HTMLSelectElement;
-        if (localStorage.faceTheme) {
-            facePicker.value = localStorage.faceTheme;
-            document.documentElement.dataset.cardFace = localStorage.backTheme;
-        }
-        facePicker.addEventListener("change", () => {
-            const theme = facePicker.value;
-            localStorage.faceTheme = theme;
-            console.log("color theme saved.", theme);
-            document.documentElement.dataset.cardFace = theme;
+        const hit = document.getElementById("hit") as HTMLButtonElement;
+        hit.addEventListener("click", () => {
+            game.hit();
+            const card = player.querySelector(".card") as HTMLDivElement;
+            const clone = card.cloneNode(true) as HTMLDivElement;
+            clone.dataset.card = game.player[game.player.length - 1].toString();
+            player.appendChild(clone);
+            console.log(game.playerScore);
+            if (game.playerScore > 21) {
+                hit.classList.toggle("hidden", true);
+                stand.classList.toggle("hidden", true);
+                bust.showModal();
+            }
+            if (game.playerScore === 21) {
+                hit.classList.toggle("hidden", true);
+                stand.classList.toggle("hidden", true);
+                bj.showModal();
+            }
         });
 
-        let chips = 100;
-        const game = new BlackJack(chips);
-
-        const hit = document.getElementById("hit") as HTMLButtonElement;
-        hit.addEventListener("click", game.hit);
+        function cleanHands() {
+            deal.classList.toggle("hidden", false);
+            const ph = player.querySelectorAll(".card");
+            for (let i = ph.length - 1; i > 1; i--) {
+                ph[i].remove();
+            }
+            ph[0].dataset.card = "back";
+            ph[1].dataset.card = "back";
+            const dh = dealer.querySelectorAll(".card");
+            for (let i = dh.length - 1; i > 1; i--) {
+                dh[i].remove();
+            }
+            dh[0].dataset.card = "back";
+            dh[1].dataset.card = "back";
+        }
 
         const stand = document.getElementById("stand") as HTMLButtonElement;
-        stand.addEventListener("click", game.stand);
+        stand.addEventListener("click", () => {
+            game.stand();
+            const ds = game.dealerScore;
+            const ps = game.playerScore;
+            if (ds > 21) {
+                console.log("dealer bust");
+                win.showModal();
+            }
 
-        const player = document.getElementById("player");
-        const dealer = document.getElementById("dealer");
+            if (ds === ps) {
+                console.log("draw");
+                draw.showModal();
+            }
+
+            if (ds > ps) {
+                console.log("dealer win");
+                lose.showModal();
+            }
+
+            if (ds < ps) {
+                console.log("player bust");
+                win.showModal();
+            }
+
+            cleanHands();
+        });
+
+        const dealer = document.getElementById("dealer") as HTMLDivElement;
+        const player = document.getElementById("player") as HTMLDivElement;
+
+        const deal = document.getElementById("deal") as HTMLButtonElement;
+        deal.addEventListener("click", () => {
+            deal.classList.toggle("hidden", true);
+            hit.classList.toggle("hidden", false);
+            stand.classList.toggle("hidden", false);
+            game.deal();
+
+            const dcards = dealer.querySelectorAll(".card");
+            dcards[1].dataset.card = game.dealer[1].toString();
+
+            const pcards = player.querySelectorAll(".card");
+            pcards[0].dataset.card = game.player[0].toString();
+            pcards[1].dataset.card = game.player[1].toString();
+        });
+
+        const themes = document.getElementById("themes") as HTMLButtonElement;
+        themes.addEventListener("click", () => {
+            const ui = document.getElementById("ui") as HTMLDivElement;
+            ui.classList.toggle("hidden");
+        });
     }
 
     document.addEventListener("astro:page-load", init);

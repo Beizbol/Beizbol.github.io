@@ -10,12 +10,15 @@ export default class BlackJack {
     player: Hand = [];
     dealer: Hand = [];
 
+    get playerScore() { return BlackJack.count(this.player); }
+    get dealerScore() { return BlackJack.count(this.dealer); }
+
     constructor(chips: number) {
         this.chips = chips;
         this.deck = new Deck();
     }
 
-    play_hand() {
+    deal() {
         if (this.chips < 1) {
             alert("You're out of chips!");
             return;

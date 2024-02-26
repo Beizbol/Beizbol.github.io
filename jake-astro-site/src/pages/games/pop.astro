@@ -3,12 +3,75 @@ import Page from "../../layouts/Page.astro";
 ---
 
 <Page title="Balloon Pop">
-    <div class="wrap">
+    <div id="wrap">
+        <div class="balloon">
+            <img src="/assets/balloons/blue.svg" alt="balloon" />
+        </div>
         <div id="pencil"><img src="/" alt="pencil" /></div>
     </div>
-    <template id="bt">
-        <div id="balloon">
-            <img src="/" alt="balloon" />
+    <template id="tmpl">
+        <div class="balloon">
+            <img src="/assets/balloons/blue.svg" alt="balloon" />
         </div>
     </template>
 </Page>
+
+<style>
+    #wrap {
+        position: relative;
+        height: 100%;
+        padding: 1rem;
+    }
+
+    .balloon {
+        position: absolute;
+        top: 90%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: top 5s linear;
+        width: 4rem;
+        height: 6rem;
+    }
+</style>
+
+<script>
+    function init() {
+        console.log("Hello Pop Game!");
+
+        const wrap = document.getElementById("wrap") as HTMLDivElement;
+        const tmpl = document.getElementById("tmpl") as HTMLTemplateElement;
+
+        let spawn_time = 3000;
+        const dt = 50;
+        const tmin = 150;
+
+        document.addEventListener("click", (e) => {
+            const t = e.target as HTMLDivElement;
+            if (t.classList.contains("balloon")) {
+                t.remove();
+            }
+        });
+
+        function spawn() {
+            wrap.querySelectorAll(".balloon").forEach((b) => {
+                const ball = b as HTMLDivElement;
+                if (!ball.classList.contains("floating")) {
+                    ball.classList.add("floating");
+                }
+                ball.style.top = "0";
+            });
+
+            const t = Math.max(spawn_time - dt, tmin);
+            spawn_time = t;
+            console.log("Spawn Time:", t);
+            const clone = tmpl.content.cloneNode(true) as HTMLDivElement;
+            if (clone) {
+                wrap.appendChild(clone);
+            }
+            setTimeout(spawn, t);
+        }
+        spawn();
+    }
+
+    document.addEventListener("astro:page-load", init);
+</script>

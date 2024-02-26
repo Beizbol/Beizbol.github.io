@@ -1,7 +1,11 @@
 
-const suits = ["♣", "♦", "♥", "♠️"];
-
+const suits = ["C", "D", "H", "S"];
 const ranks = ["", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+const values = {
+    A: 11, 2: 2, 3: 3, 4: 4, 5: 5,
+    6: 6, 7: 7, 8: 8, 9: 9, 10: 10,
+    J: 10, Q: 10, K: 10,
+}
 
 export default class Card {
 
@@ -9,7 +13,7 @@ export default class Card {
     suit: string;
     rank: string;
 
-    get score() { return ranks.indexOf(this.rank); }
+    get score() { return values[this.rank]; }
 
     constructor(suit: number, rank: number) {
         this.suit = suits[suit]
@@ -17,7 +21,7 @@ export default class Card {
     }
 
     toString() {
-        return this.rank + this.suit
+        return `${this.suit}-${this.rank}`;
     }
 
     flip() {

@@ -1,0 +1,56 @@
+﻿<svg xmlns='http://www.w3.org/2000/svg' width='50' height='500' viewBox='0 0 100 1000'>
+    <rect fill='#550034' width='100' height='1000' />
+    <g fill-opacity='1'>
+        <circle fill='#550034' cx='50' cy='0' r='50' />
+        <g fill='#5d003b'>
+            <circle cx='0' cy='50' r='50' />
+            <circle cx='100' cy='50' r='50' />
+        </g>
+        <circle fill='#650042' cx='50' cy='100' r='50' />
+        <g fill='#6e0049'>
+            <circle cx='0' cy='150' r='50' />
+            <circle cx='100' cy='150' r='50' />
+        </g>
+        <circle fill='#760051' cx='50' cy='200' r='50' />
+        <g fill='#7e0059'>
+            <circle cx='0' cy='250' r='50' />
+            <circle cx='100' cy='250' r='50' />
+        </g>
+        <circle fill='#860062' cx='50' cy='300' r='50' />
+        <g fill='#8e006b'>
+            <circle cx='0' cy='350' r='50' />
+            <circle cx='100' cy='350' r='50' />
+        </g>
+        <circle fill='#950074' cx='50' cy='400' r='50' />
+        <g fill='#9d007e'>
+            <circle cx='0' cy='450' r='50' />
+            <circle cx='100' cy='450' r='50' />
+        </g>
+        <circle fill='#a40088' cx='50' cy='500' r='50' />
+        <g fill='#ab0092'>
+            <circle cx='0' cy='550' r='50' />
+            <circle cx='100' cy='550' r='50' />
+        </g>
+        <circle fill='#b2009d' cx='50' cy='600' r='50' />
+        <g fill='#b900a8'>
+            <circle cx='0' cy='650' r='50' />
+            <circle cx='100' cy='650' r='50' />
+        </g>
+        <circle fill='#bf00b3' cx='50' cy='700' r='50' />
+        <g fill='#c500bf'>
+            <circle cx='0' cy='750' r='50' />
+            <circle cx='100' cy='750' r='50' />
+        </g>
+        <circle fill='#cb00cb' cx='50' cy='800' r='50' />
+        <g fill='#d000d8'>
+            <circle cx='0' cy='850' r='50' />
+            <circle cx='100' cy='850' r='50' />
+        </g>
+        <circle fill='#d500e4' cx='50' cy='900' r='50' />
+        <g fill='#d900f2'>
+            <circle cx='0' cy='950' r='50' />
+            <circle cx='100' cy='950' r='50' />
+        </g>
+        <circle fill='#D0F' cx='50' cy='1000' r='50' />
+    </g>
+</svg>
