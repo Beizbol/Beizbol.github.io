@@ -37,6 +37,12 @@ export default class BlackJack {
     }
 
     stand() {
+
+        while (BlackJack.count(this.dealer) < 17) {
+            const card = this.deck.draw(1)[0];
+            this.dealer.push(card);
+            console.log("hit dealer:", this.dealer);
+        }
         const score_dealer = BlackJack.count(this.dealer);
         console.log("dealer:", this.dealer, score_dealer);
 
