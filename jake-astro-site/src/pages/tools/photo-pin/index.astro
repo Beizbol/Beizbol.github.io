@@ -4,112 +4,116 @@ import Page from "../../../layouts/Page.astro";
 
 <Page title="Photo Pin Tool">
 	<div class="ui">
-		<div id="edit" class="flex">
-			<div class="stack">
-				<label for="pinColor">Body</label>
-				<input id="pinColor" type="color" value="#7711BB" />
-			</div>
-
-			<div class="stack">
-				<label for="sides">Side</label>
-				<select name="sides" id="sides">
-					<option value="bottom">Bottom</option>
-					<option value="left">Left</option>
-					<option value="top">Top</option>
-					<option value="right">Right</option>
-				</select>
-			</div>
-
-			<div class="stack">
-				<label for="icons">Icon</label>
-				<select name="icons" id="icons">
-					<optgroup label="Outline">
-						<option
-							value="/assets/pins/outlined/dot.svg"
-							label="Dot"></option>
-						<option
-							value="/assets/pins/outlined/heart.svg"
-							label="Heart"></option>
-						<option
-							value="/assets/pins/outlined/home.svg"
-							label="Home"></option>
-						<option
-							value="/assets/pins/outlined/road.svg"
-							label="Road"></option>
-						<option
-							value="/assets/pins/outlined/star.svg"
-							label="Star"></option>
-					</optgroup>
-					<optgroup label="Filled">
-						<option value="/assets/pins/filled/dot.svg" label="Dot"
-						></option>
-						<option
-							value="/assets/pins/filled/heart.svg"
-							label="Heart"></option>
-						<option
-							value="/assets/pins/filled/home.svg"
-							label="Home"></option>
-						<option
-							value="/assets/pins/filled/road.svg"
-							label="Road"></option>
-						<option
-							value="/assets/pins/filled/star.svg"
-							label="Star"></option>
-					</optgroup>
-				</select>
-			</div>
-			<div class="stack">
-				<label for="txtColor">Color</label>
-				<input id="txtColor" type="color" value="#FFFFFF" />
-			</div>
-			<div class="stack">
-				<label for="pinText">Text</label>
-				<input id="pinText" type="text" value="Pin Text" />
-			</div>
-		</div>
 		<div class="btns">
 			<div class="flex">
-				<button id="undo">Undo</button>
-				<button id="redo">Redo</button>
-			</div>
-			<div class="flex">
-				<label for="sizes">Pin Size:</label>
+				<button id="open">Open</button>
+				<button id="save" disabled>Save</button>
+				<label for="sizes">Pin Size</label>
 				<select name="sizes" id="sizes">
 					<option value="1" label="S"></option>
 					<option value="1.36" label="M"></option>
 					<option value="1.69" label="L"></option>
 					<option value="2" label="XL"></option>
 				</select>
-			</div>
-			<div class="flex">
-				<button id="save" disabled>Save</button>
-				<button id="saveQ">?</button>
+				<button id="help">?</button>
 			</div>
 		</div>
 		<canvas id="pcanvas" width="600" height="100"></canvas>
 		<canvas id="canvas" width="600" height="300"></canvas>
 	</div>
-	<dialog id="hi">
+
+	<div id="edit" class="flex">
+		<div class="stack">
+			<label for="pinColor">Body</label>
+			<input id="pinColor" type="color" value="#7711BB" />
+		</div>
+
+		<div class="stack">
+			<label for="sides">Side</label>
+			<select name="sides" id="sides">
+				<option value="bottom">Bottom</option>
+				<option value="left">Left</option>
+				<option value="top">Top</option>
+				<option value="right">Right</option>
+			</select>
+		</div>
+
+		<div class="stack">
+			<label for="icons">Icon</label>
+			<select name="icons" id="icons">
+				<optgroup label="Outline">
+					<option value="/assets/pins/outlined/dot.svg" label="Dot"
+					></option>
+					<option
+						value="/assets/pins/outlined/heart.svg"
+						label="Heart"></option>
+					<option value="/assets/pins/outlined/home.svg" label="Home"
+					></option>
+					<option value="/assets/pins/outlined/road.svg" label="Road"
+					></option>
+					<option value="/assets/pins/outlined/star.svg" label="Star"
+					></option>
+				</optgroup>
+				<optgroup label="Filled">
+					<option value="/assets/pins/filled/dot.svg" label="Dot"
+					></option>
+					<option value="/assets/pins/filled/heart.svg" label="Heart"
+					></option>
+					<option value="/assets/pins/filled/home.svg" label="Home"
+					></option>
+					<option value="/assets/pins/filled/road.svg" label="Road"
+					></option>
+					<option value="/assets/pins/filled/star.svg" label="Star"
+					></option>
+				</optgroup>
+			</select>
+		</div>
+		<div class="stack">
+			<label for="txtColor">Color</label>
+			<input id="txtColor" type="color" value="#FFFFFF" />
+		</div>
+		<div class="stack">
+			<label for="pinText">Text</label>
+			<input id="pinText" type="text" value="Pin Text" />
+		</div>
+	</div>
+
+	<dialog id="hi-menu">
 		<h1>Welcome 👋</h1>
 		<ol>
-			<li><strong>Drag</strong> to place pins.</li>
-			<li><strong>Click</strong> to customize.</li>
-			<li><strong>Save</strong> when you're done.</li>
+			<li><strong> Open</strong> your photo.</li>
+			<li><strong> Drag</strong> your pins.</li>
+			<li><strong> Click</strong> to customize.</li>
+			<li><strong> Save</strong> your creation!</li>
 		</ol>
-		<p>Let's get started by picking an image!</p>
+		<form method="dialog">
+			<div class="fit">
+				<input id="again" type="checkbox" />
+				<label for="again">Don't show this again.</label>
+			</div>
+			<button type="submit">Ready</button>
+		</form>
+	</dialog>
+	<dialog id="open-menu">
+		<h1>Open Photo 📷</h1>
+		<p>Let's pick an image!</p>
 		<form method="dialog">
 			<input id="pick" type="file" accept="image/*" />
 			<button id="btnStart" disabled>Ready</button>
 		</form>
 	</dialog>
-	<dialog id="help">
+	<dialog id="help-menu">
 		<h1>Tips and Tricks</h1>
 		<ol>
 			<li><strong>Right-Click</strong> your image</li>
 			<li><strong>Choose</strong> "Save Image As"</li>
 		</ol>
+		<ol>
+			<li><strong>Hold ctrl</strong>and</li>
+			<li><strong>Scroll</strong> to zoom</li>
+		</ol>
 		<form method="dialog">
-			<button id="btnStart">Got it</button>
+			<button type="submit">Got it</button>
 		</form>
 	</dialog>
 	<style>
@@ -117,6 +121,7 @@ import Page from "../../../layouts/Page.astro";
 			font-size: x-large;
 			line-height: 1.75em;
 			padding: 2rem;
+			padding-top: 1rem;
 			max-width: 60ch;
 		}
 
@@ -130,14 +135,25 @@ import Page from "../../../layouts/Page.astro";
 			padding-top: 1rem;
 		}
 
+		#hi-menu > form {
+			display: flex;
+			padding-top: 0rem;
+			justify-content: space-between;
+			align-items: flex-end;
+		}
+
+		#again + label {
+			opacity: 0.8;
+			font-size: medium;
+		}
+
 		dialog > ol {
 			display: grid;
 			gap: 1rem;
-			padding-top: 1rem;
-			padding-bottom: 1rem;
+			padding-bottom: 0.5rem;
 		}
 
-		#btnStart {
+		dialog button {
 			justify-self: right;
 			padding: 0.5rem 1rem;
 		}
@@ -172,6 +188,11 @@ import Page from "../../../layouts/Page.astro";
 			max-width: 1.5rem;
 			max-height: 1.5rem;
 			z-index: 99;
+		}
+
+		.fit {
+			margin: 0;
+			padding: 0;
 		}
 
 		.stack {
@@ -234,20 +255,26 @@ import Page from "../../../layouts/Page.astro";
 	</style>
 
 	<script>
-		import PinHist from "./history";
 		import Pin, { type PinSide } from "./pin";
 
 		function init() {
 			const dialog_hi = document.getElementById(
-				"hi",
+				"hi-menu",
 			) as HTMLDialogElement;
 			dialog_hi.addEventListener("close", () => {
 				console.log("hi dialog closed");
 			});
 			dialog_hi.showModal();
 
+			const dialog_open = document.getElementById(
+				"open-menu",
+			) as HTMLDialogElement;
+			dialog_open.addEventListener("close", () => {
+				console.log("help dialog closed");
+			});
+
 			const dialog_help = document.getElementById(
-				"help",
+				"help-menu",
 			) as HTMLDialogElement;
 			dialog_help.addEventListener("close", () => {
 				console.log("help dialog closed");
@@ -260,47 +287,31 @@ import Page from "../../../layouts/Page.astro";
 			) as HTMLButtonElement;
 			btnStart.addEventListener("click", () => {
 				console.log("start clicked");
-				dialog_hi.close();
+				state.placed = [] as Pin[];
+				state.held = null;
+				hideEdit();
+				draw();
 			});
 
-			console.log("init");
 			const pcanvas = document.getElementById(
 				"pcanvas",
 			) as HTMLCanvasElement;
-
-			if (!pcanvas) {
-				console.log("no canvas");
-				return;
-			}
-
 			const pctx = pcanvas.getContext("2d") as CanvasRenderingContext2D;
 			const canvas = document.getElementById(
 				"canvas",
 			) as HTMLCanvasElement;
 			const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
-			// canvas.addEventListener(
-			// 	"click",
-			// 	(e) => {
-			// 		dialog_hi.showModal();
-			// 	},
-			// 	{ once: true },
-			// );
-
 			document.onkeyup = (e) => {
 				if (e.ctrlKey && e.key === "s") {
 					quicksave();
 				}
-
-				if (e.ctrlKey && e.key === "z") {
-					undoEdit();
-				}
-
-				if (e.ctrlKey && e.key === "y") {
-					redoEdit();
-				}
 			};
 
+			const open = document.getElementById("open") as HTMLButtonElement;
+			open.onclick = () => {
+				dialog_open.showModal();
+			};
 			const save = document.getElementById("save") as HTMLButtonElement;
 			function quicksave() {
 				const link = document.createElement("a");
@@ -309,32 +320,12 @@ import Page from "../../../layouts/Page.astro";
 				link.click();
 			}
 			save.onclick = quicksave;
-			const saveQ = document.getElementById("saveQ") as HTMLButtonElement;
-			saveQ.onclick = () => {
-				console.log("saveQ");
+			const help = document.getElementById("help") as HTMLButtonElement;
+			help.onclick = () => {
+				console.log("help");
 				dialog_help.showModal();
 				console.log("help dialog opened");
 			};
-
-			const undo = document.getElementById("undo") as HTMLButtonElement;
-			function undoEdit() {
-				const pins = state.history.undo();
-				console.log("undo", pins);
-				if (!pins) return;
-				state.placed = pins;
-				draw();
-			}
-			undo.onclick = undoEdit;
-
-			const redo = document.getElementById("redo") as HTMLButtonElement;
-			function redoEdit() {
-				const pins = state.history.redo();
-				console.log("redo", pins);
-				if (!pins) return;
-				state.placed = pins;
-				draw();
-			}
-			redo.onclick = redoEdit;
 
 			const pick = document.getElementById("pick") as HTMLInputElement;
 			const photo = new Image();
@@ -377,18 +368,18 @@ import Page from "../../../layouts/Page.astro";
 				placed: [] as Pin[],
 				held: null as Pin | null,
 				edit_pin: null as Pin | null,
-				canvasHover: false,
-				pcanvasHover: false,
+				canvas_hover: false,
+				pcanvas_hover: false,
+				edit_hover: false,
 				pin_offset_x: 0,
 				pin_offset_y: 0,
 				dirty: false,
-				zoom: 1,
-				history: new PinHist(),
+				scaleImg: false,
 			};
 
 			canvas.addEventListener("mouseenter", (e) => {
 				// console.log("entered");
-				state.canvasHover = true;
+				state.canvas_hover = true;
 				if (state.held) {
 					ppin.move(60, 40);
 					state.held = state.held.twin(ctx);
@@ -398,11 +389,11 @@ import Page from "../../../layouts/Page.astro";
 
 			pcanvas.addEventListener("mouseenter", (e) => {
 				// console.log("entered");
-				state.pcanvasHover = true;
+				state.pcanvas_hover = true;
 			});
 
 			canvas.addEventListener("mouseleave", (e) => {
-				state.canvasHover = false;
+				state.canvas_hover = false;
 				if (state.held) {
 					//place_pin();
 					console.log("left canvas");
@@ -412,7 +403,7 @@ import Page from "../../../layouts/Page.astro";
 			});
 
 			pcanvas.addEventListener("mouseleave", (e) => {
-				state.pcanvasHover = false;
+				state.pcanvas_hover = false;
 			});
 
 			document.addEventListener("mousemove", (e) => {
@@ -420,7 +411,7 @@ import Page from "../../../layouts/Page.astro";
 					return;
 				}
 
-				if (state.canvasHover) {
+				if (state.canvas_hover) {
 					const cbr = canvas.getBoundingClientRect();
 					const px = e.clientX - cbr.left;
 					const py = e.clientY - cbr.top;
@@ -428,7 +419,7 @@ import Page from "../../../layouts/Page.astro";
 					draw();
 				}
 
-				if (state.pcanvasHover) {
+				if (state.pcanvas_hover) {
 					const pcbr = pcanvas.getBoundingClientRect();
 					const px = e.clientX - pcbr.left;
 					const py = e.clientY - pcbr.top;
@@ -438,7 +429,7 @@ import Page from "../../../layouts/Page.astro";
 			});
 
 			canvas.addEventListener("mousedown", (e) => {
-				if (!state.canvasHover) return;
+				if (!state.canvas_hover) return;
 				const cbr = canvas.getBoundingClientRect();
 				const px = e.clientX - cbr.left;
 				const py = e.clientY - cbr.top;
@@ -475,7 +466,6 @@ import Page from "../../../layouts/Page.astro";
 				showEdit(cx, cy);
 				const pc = state.held.clone();
 				state.placed.push(pc);
-				state.history.update(state.placed);
 				setEdit(pc);
 				state.held = null;
 				draw();
@@ -502,15 +492,21 @@ import Page from "../../../layouts/Page.astro";
 				pinText.value = pin.text;
 			}
 
+			const edit = document.getElementById("edit") as HTMLElement;
+			edit.addEventListener("mouseenter", (e) => {
+				state.edit_hover = true;
+			});
+			edit.addEventListener("mouseleave", (e) => {
+				state.edit_hover = false;
+			});
+
 			function showEdit(x: number, y: number) {
-				const edit = document.getElementById("edit") as HTMLElement;
 				edit.style.top = y + "px";
 				edit.style.left = x + "px";
 				edit.classList.add("show");
 			}
 
 			function hideEdit() {
-				const edit = document.getElementById("edit") as HTMLElement;
 				if (!edit.classList.contains("show")) return;
 				edit.classList.remove("show");
 				state.edit_pin = null;
@@ -521,16 +517,15 @@ import Page from "../../../layouts/Page.astro";
 				pcanvas.style.cursor = "grab";
 
 				if (!state.held) {
-					// if (state.edit_pin) {
-					// 	hideEdit();
-					// }
-					//
+					if (!state.edit_hover) {
+						hideEdit();
+					}
 					return;
 				}
 
-				if (state.canvasHover) {
+				if (state.canvas_hover) {
 					place_pin();
-				} else if (state.pcanvasHover) {
+				} else if (state.pcanvas_hover) {
 					state.held = null;
 					ppin.move(60, 40); // reset preview pin
 					const pcbr = pcanvas.getBoundingClientRect();
@@ -552,7 +547,6 @@ import Page from "../../../layouts/Page.astro";
 				}
 				const sel = e.target as HTMLSelectElement;
 				state.edit_pin.side = sel.value as PinSide;
-				state.history.update(state.placed);
 				drawPreview();
 				draw();
 				console.log("side changed");
@@ -567,7 +561,6 @@ import Page from "../../../layouts/Page.astro";
 				// img.src = sel.value;
 				console.log(sel.value);
 				state.edit_pin.updateIcon(sel.value);
-				state.history.update(state.placed);
 				drawPreview();
 				draw();
 				console.log("icon changed");
@@ -580,7 +573,6 @@ import Page from "../../../layouts/Page.astro";
 				}
 				const cInput = e.target as HTMLInputElement;
 				state.edit_pin.bg = cInput.value;
-				state.history.update(state.placed);
 				drawPreview();
 				draw();
 				console.log("color changed");
@@ -593,7 +585,6 @@ import Page from "../../../layouts/Page.astro";
 				}
 				const cInput = e.target as HTMLInputElement;
 				state.edit_pin.color = cInput.value;
-				state.history.update(state.placed);
 				drawPreview();
 				draw();
 				console.log("text color changed");
@@ -615,7 +606,6 @@ import Page from "../../../layouts/Page.astro";
 			sizes.addEventListener("change", (e) => {
 				const sel = e.target as HTMLSelectElement;
 				Pin.scale = parseFloat(sel.value);
-				state.history.update(state.placed);
 				drawPreview();
 				draw();
 				console.log("size changed");

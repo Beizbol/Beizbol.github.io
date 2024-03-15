@@ -11,8 +11,17 @@ import Page from "../../../layouts/Page.astro";
             <div class="card" data-card="back"></div>
         </div>
         <div id="ctrls" class="controls">
+            <label for="bet">Bet</label>
+            <input
+                id="bet"
+                type="number"
+                step="5"
+                min="5"
+                max="999"
+                value="5"
+            />
             <button id="deal">Deal</button>
-            <button id="hit" class="hidden">Hit +</button>
+            <button id="hit" class="hidden">Hit</button>
             <button id="stand" class="hidden">Stand</button>
             <button id="themes">
                 <svg viewBox="0 0 409.952 409.952" xml:space="preserve">
@@ -113,6 +122,15 @@ import Page from "../../../layouts/Page.astro";
 </Page>
 
 <style>
+    label {
+        align-self: center;
+        font-size: 1.25rem;
+    }
+
+    #bet {
+        width: 6ch;
+    }
+
     .controls {
         display: flex;
         gap: 1rem;
@@ -381,6 +399,9 @@ import Page from "../../../layouts/Page.astro";
         let chips = loadPoints();
         const pts = document.getElementById("chips") as HTMLSpanElement;
         pts.textContent = chips.toString();
+        const bet = document.getElementById("bet") as HTMLInputElement;
+        bet.max = chips.toString();
+
         const game = new BlackJack(chips);
 
         const bust = document.getElementById("bust") as HTMLDialogElement;
@@ -485,8 +506,6 @@ import Page from "../../../layouts/Page.astro";
                 win.showModal();
                 return;
             }
-
-            // cleanHands();
         });
 
         const dealer = document.getElementById("dealer") as HTMLDivElement;
@@ -505,6 +524,12 @@ import Page from "../../../layouts/Page.astro";
             const pcards = player.querySelectorAll(".card");
             pcards[0].dataset.card = game.player[0].toString();
             pcards[1].dataset.card = game.player[1].toString();
+
+            if (game.playerScore === 21) {
+                console.log("21 dealt");
+                bj.showModal();
+                return;
+            }
         });
 
         const themes = document.getElementById("themes") as HTMLButtonElement;

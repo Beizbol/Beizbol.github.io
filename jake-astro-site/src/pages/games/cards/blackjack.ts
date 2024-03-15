@@ -18,12 +18,13 @@ export default class BlackJack {
         this.deck = new Deck();
     }
 
-    deal() {
-        if (this.chips < 1) {
+    deal(bet: number) {
+
+        if (this.chips < 5) {
             alert("You're out of chips!");
             return;
         }
-
+        this.chips -= bet;
         this.deck.shuffle();
         this.player = this.deck.draw(2);
         this.dealer = this.deck.draw(2);
