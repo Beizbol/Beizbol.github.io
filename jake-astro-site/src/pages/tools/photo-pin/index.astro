@@ -8,6 +8,7 @@ import Page from "../../../layouts/Page.astro";
 			<div class="flex">
 				<button id="open">Open</button>
 				<button id="save" disabled>Save</button>
+				<button id="help">&#x1f4a1;</button>
 				<label for="sizes">Pin Size</label>
 				<select name="sizes" id="sizes">
 					<option value="1" label="S"></option>
@@ -15,7 +16,6 @@ import Page from "../../../layouts/Page.astro";
 					<option value="1.69" label="L"></option>
 					<option value="2" label="XL"></option>
 				</select>
-				<button id="help">?</button>
 			</div>
 		</div>
 		<canvas id="pcanvas" width="600" height="100"></canvas>
@@ -42,29 +42,18 @@ import Page from "../../../layouts/Page.astro";
 			<label for="icons">Icon</label>
 			<select name="icons" id="icons">
 				<optgroup label="Outline">
-					<option value="/assets/pins/outlined/dot.svg" label="Dot"
-					></option>
-					<option
-						value="/assets/pins/outlined/heart.svg"
-						label="Heart"></option>
-					<option value="/assets/pins/outlined/home.svg" label="Home"
-					></option>
-					<option value="/assets/pins/outlined/road.svg" label="Road"
-					></option>
-					<option value="/assets/pins/outlined/star.svg" label="Star"
-					></option>
+					<option value="/assets/pins/outlined/dot.svg" label="Dot"></option>
+					<option value="/assets/pins/outlined/heart.svg" label="Heart"></option>
+					<option value="/assets/pins/outlined/home.svg" label="Home"></option>
+					<option value="/assets/pins/outlined/road.svg" label="Road"></option>
+					<option value="/assets/pins/outlined/star.svg" label="Star"></option>
 				</optgroup>
 				<optgroup label="Filled">
-					<option value="/assets/pins/filled/dot.svg" label="Dot"
-					></option>
-					<option value="/assets/pins/filled/heart.svg" label="Heart"
-					></option>
-					<option value="/assets/pins/filled/home.svg" label="Home"
-					></option>
-					<option value="/assets/pins/filled/road.svg" label="Road"
-					></option>
-					<option value="/assets/pins/filled/star.svg" label="Star"
-					></option>
+					<option value="/assets/pins/filled/dot.svg" label="Dot"></option>
+					<option value="/assets/pins/filled/heart.svg" label="Heart"></option>
+					<option value="/assets/pins/filled/home.svg" label="Home"></option>
+					<option value="/assets/pins/filled/road.svg" label="Road"></option>
+					<option value="/assets/pins/filled/star.svg" label="Star"></option>
 				</optgroup>
 			</select>
 		</div>
@@ -103,19 +92,26 @@ import Page from "../../../layouts/Page.astro";
 		</form>
 	</dialog>
 	<dialog id="help-menu">
-		<h1>Tips and Tricks</h1>
-		<ol>
-			<li><strong>Right-Click</strong> your image</li>
-			<li><strong>Choose</strong> "Save Image As"</li>
-		</ol>
-		<ol>
-			<li><strong>Hold ctrl</strong>and</li>
-			<li><strong>Scroll</strong> to zoom</li>
-		</ol>
+		<h1>Hints &#x1f4a1;</h1>
+		<div class="tip">
+			<strong>Save As:</strong>
+			<ol>
+				<li><strong>Right-Click</strong> your image</li>
+				<li><strong>Choose</strong> "Save Image As"</li>
+			</ol>
+		</div>
+		<div class="tip">
+			<strong>Zoom:</strong>
+			<ol>
+				<li><strong>Hold</strong> down <strong><i> ctrl </i></strong> key</li>
+				<li><strong>Scroll</strong> to <strong>zoom</strong></li>
+			</ol>
+		</div>
 		<form method="dialog">
 			<button type="submit">Got it</button>
 		</form>
 	</dialog>
+
 	<style>
 		dialog {
 			font-size: x-large;
@@ -156,6 +152,16 @@ import Page from "../../../layouts/Page.astro";
 		dialog button {
 			justify-self: right;
 			padding: 0.5rem 1rem;
+		}
+
+		.tip {
+			padding: 1rem;
+			border: 1px solid #8882;
+			border-radius: 0.25rem;
+		}
+
+		.tip ol {
+			margin: 0.5rem;
 		}
 
 		#preview {
@@ -258,33 +264,25 @@ import Page from "../../../layouts/Page.astro";
 		import Pin, { type PinSide } from "./pin";
 
 		function init() {
-			const dialog_hi = document.getElementById(
-				"hi-menu",
-			) as HTMLDialogElement;
+			const dialog_hi = document.getElementById("hi-menu") as HTMLDialogElement;
 			dialog_hi.addEventListener("close", () => {
 				console.log("hi dialog closed");
 			});
 			dialog_hi.showModal();
 
-			const dialog_open = document.getElementById(
-				"open-menu",
-			) as HTMLDialogElement;
+			const dialog_open = document.getElementById("open-menu") as HTMLDialogElement;
 			dialog_open.addEventListener("close", () => {
 				console.log("help dialog closed");
 			});
 
-			const dialog_help = document.getElementById(
-				"help-menu",
-			) as HTMLDialogElement;
+			const dialog_help = document.getElementById("help-menu") as HTMLDialogElement;
 			dialog_help.addEventListener("close", () => {
 				console.log("help dialog closed");
 			});
 			// dialog_help.showModal();
 
 			// "Close" button closes the dialog
-			const btnStart = document.getElementById(
-				"btnStart",
-			) as HTMLButtonElement;
+			const btnStart = document.getElementById("btnStart") as HTMLButtonElement;
 			btnStart.addEventListener("click", () => {
 				console.log("start clicked");
 				state.placed = [] as Pin[];
@@ -293,13 +291,9 @@ import Page from "../../../layouts/Page.astro";
 				draw();
 			});
 
-			const pcanvas = document.getElementById(
-				"pcanvas",
-			) as HTMLCanvasElement;
+			const pcanvas = document.getElementById("pcanvas") as HTMLCanvasElement;
 			const pctx = pcanvas.getContext("2d") as CanvasRenderingContext2D;
-			const canvas = document.getElementById(
-				"canvas",
-			) as HTMLCanvasElement;
+			const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 			const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
 			document.onkeyup = (e) => {
@@ -329,14 +323,7 @@ import Page from "../../../layouts/Page.astro";
 
 			const pick = document.getElementById("pick") as HTMLInputElement;
 			const photo = new Image();
-			let ppin = new Pin(
-				pctx,
-				{ top: 40, left: 60, width: 100, height: 30 },
-				"Pin Text",
-				"#7711BB",
-				"white",
-				"/assets/pins/outlined/dot.svg",
-			);
+			let ppin = new Pin(pctx, { top: 40, left: 60, width: 100, height: 30 }, "Pin Text", "#7711BB", "white", "/assets/pins/outlined/dot.svg");
 
 			function drawPreview() {
 				pctx.clearRect(0, 0, pctx.canvas.width, pctx.canvas.height);
@@ -354,15 +341,9 @@ import Page from "../../../layouts/Page.astro";
 			const sides = document.getElementById("sides") as HTMLSelectElement;
 
 			const icons = document.getElementById("icons") as HTMLSelectElement;
-			const pinColor = document.getElementById(
-				"pinColor",
-			) as HTMLInputElement;
-			const txtColor = document.getElementById(
-				"txtColor",
-			) as HTMLInputElement;
-			const pinText = document.getElementById(
-				"pinText",
-			) as HTMLInputElement;
+			const pinColor = document.getElementById("pinColor") as HTMLInputElement;
+			const txtColor = document.getElementById("txtColor") as HTMLInputElement;
+			const pinText = document.getElementById("pinText") as HTMLInputElement;
 
 			const state = {
 				placed: [] as Pin[],
@@ -659,13 +640,7 @@ import Page from "../../../layouts/Page.astro";
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				// draw user image
 				if (photo.src) {
-					ctx.drawImage(
-						photo,
-						0,
-						0,
-						ctx.canvas.width,
-						ctx.canvas.height,
-					);
+					ctx.drawImage(photo, 0, 0, ctx.canvas.width, ctx.canvas.height);
 				}
 
 				// console.log(state.placed);
