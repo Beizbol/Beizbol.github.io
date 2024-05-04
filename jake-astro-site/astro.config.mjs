@@ -16,6 +16,14 @@ export default defineConfig({
   // vite: {
   //   plugins:[wasmPack('./my-crate')],
   // },
+  redirects: {
+    //'/old-page': '/new-page'
+    '/photo-pin-tool': '/tools/photo-pin',
+    '/photo-pin': '/tools/photo-pin',
+    '/pin-tool/': '/tools/photo-pin',
+    '/pin': '/tools/photo-pin',
+    '/jab': '/apps/jab'
+  },
   build: {
     assets: "astrosets",
   },

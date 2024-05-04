@@ -21,7 +21,7 @@ export default class Pin {
     font_size: number;
     color: string;
     side: PinSide;
-    static scale: number = 1.0;
+    static scale: number = 1.69;
 
     constructor(ctx: CanvasRenderingContext2D, rect: { left: number; top: number; width: number; height: number; }, txt: string, bg: string, color: string, img: string, side?: PinSide, id?: number) {
         this.id = id ?? Math.random() * 1000000

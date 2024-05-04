@@ -1,0 +1,71 @@
+{
+    "name": "Just Audio Books",
+    "short_name": "JAB",
+    "description": "An app to listen to audio books locally",
+    "lang": "en-US",
+    "start_url": "/apps/jab",
+    "scope": "/apps/jab",
+    "display": "standalone",
+    "theme_color": "#fff",
+    "background_color": "#000",
+    "oritentation": "any",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg"
+        },
+        {
+            "src": "/favicon.png",
+            "sizes": "600x600",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/images/screenshot-jab-wide.png",
+            "sizes": "1200x637",
+            "form_factor": "wide",
+            "label": "The JAB player on the current chapter."
+        },
+        {
+            "src": "/images/screenshot-jab.png",
+            "sizes": "351x325",
+            "label": "The JAB player on the current chapter."
+        }
+    ],
+    "file_handlers": [
+        {
+            "action": "./",
+            "accept": {
+                "audio/wav": [
+                    ".wav"
+                ],
+                "audio/x-wav": [
+                    ".wav"
+                ],
+                "audio/mpeg": [
+                    ".mp3"
+                ],
+                "audio/mp4": [
+                    ".mp4"
+                ],
+                "audio/aac": [
+                    ".adts"
+                ],
+                "audio/ogg": [
+                    ".ogg"
+                ],
+                "application/ogg": [
+                    ".ogg"
+                ],
+                "audio/webm": [
+                    ".webm"
+                ],
+                "audio/flac": [
+                    ".flac"
+                ]
+            }
+        }
+    ]
+}

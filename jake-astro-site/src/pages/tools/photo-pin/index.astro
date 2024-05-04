@@ -13,7 +13,7 @@ import Page from "../../../layouts/Page.astro";
 				<select name="sizes" id="sizes">
 					<option value="1" label="S"></option>
 					<option value="1.36" label="M"></option>
-					<option value="1.69" label="L"></option>
+					<option value="1.69" label="L" selected></option>
 					<option value="2" label="XL"></option>
 				</select>
 			</div>
@@ -111,8 +111,35 @@ import Page from "../../../layouts/Page.astro";
 			<button type="submit">Got it</button>
 		</form>
 	</dialog>
+	<dialog id="save-menu">
+		<div class="flex apart">
+			<h1>Preview 🔍</h1>
+			<button id="btnEsc">🗙</button>
+		</div>
+		<form method="dialog">
+			<img loading="lazy" id="review" />
+			<div class="flex apart">
+				<button type="submit" value="back">Back</button>
+				<button type="submit" value="save">Save ✅</button>
+			</div>
+		</form>
+	</dialog>
 
 	<style>
+		#btnEsc {
+			font-size: x-large;
+			padding: 0.5rem;
+			border: none;
+			background-color: transparent;
+			opacity: 0.5;
+			cursor: pointer;
+			align-self: start;
+		}
+
+		#btnEsc:hover {
+			opacity: 0.8;
+		}
+
 		dialog {
 			font-size: x-large;
 			line-height: 1.75em;
@@ -213,8 +240,12 @@ import Page from "../../../layouts/Page.astro";
 			align-items: center;
 		}
 
+		.apart {
+			justify-content: space-between;
+		}
+
 		.btns {
-			font-size: large;
+			font-size: x-large;
 			display: flex;
 			gap: 1.25rem;
 			justify-content: space-between;
@@ -258,6 +289,14 @@ import Page from "../../../layouts/Page.astro";
 		#pick {
 			cursor: pointer;
 		}
+
+		#review {
+			/* aspect-ratio: 1; */
+			max-width: 100%;
+			border: solid #8882;
+			border-radius: 0.25rem;
+			background-image: linear-gradient(45deg, #8882, #8882 25%, transparent 25%, transparent 50%, #8882 50%, #8882 75%, transparent 75%, transparent);
+		}
 	</style>
 
 	<script>
@@ -268,7 +307,23 @@ import Page from "../../../layouts/Page.astro";
 			dialog_hi.addEventListener("close", () => {
 				console.log("hi dialog closed");
 			});
-			dialog_hi.showModal();
+			greet();
+
+			function greet() {
+				const showHi = localStorage.getItem("show-hi");
+				if (showHi && showHi === "never") {
+					console.log("show-hi:", showHi);
+				} else {
+					dialog_hi.showModal();
+				}
+			}
+
+			const chkAgain = document.getElementById("again") as HTMLInputElement;
+			chkAgain.addEventListener("change", (e) => {
+				const show = chkAgain.checked ? "never" : "yes";
+				console.log("checked:", chkAgain.checked, show);
+				localStorage.setItem("show-hi", show);
+			});
 
 			const dialog_open = document.getElementById("open-menu") as HTMLDialogElement;
 			dialog_open.addEventListener("close", () => {
@@ -279,7 +334,20 @@ import Page from "../../../layouts/Page.astro";
 			dialog_help.addEventListener("close", () => {
 				console.log("help dialog closed");
 			});
+
+			const dialog_save = document.getElementById("save-menu") as HTMLDialogElement;
+			dialog_save.addEventListener("close", () => {
+				console.log("save dialog closed:", dialog_save.returnValue);
+				if (dialog_save.returnValue === "save") {
+					quicksave();
+				}
+			});
 			// dialog_help.showModal();
+
+			const btnEsc = document.getElementById("btnEsc") as HTMLButtonElement;
+			btnEsc.addEventListener("click", () => {
+				dialog_save.close();
+			});
 
 			// "Close" button closes the dialog
 			const btnStart = document.getElementById("btnStart") as HTMLButtonElement;
@@ -306,14 +374,25 @@ import Page from "../../../layouts/Page.astro";
 			open.onclick = () => {
 				dialog_open.showModal();
 			};
-			const save = document.getElementById("save") as HTMLButtonElement;
+
 			function quicksave() {
 				const link = document.createElement("a");
 				link.download = filename;
 				link.href = canvas.toDataURL();
 				link.click();
 			}
-			save.onclick = quicksave;
+
+			const review = document.getElementById("review") as HTMLImageElement;
+			const save = document.getElementById("save") as HTMLButtonElement;
+			save.onclick = () => {
+				review.style.width = canvas.width + "px";
+				review.style.aspectRatio = canvas.width / canvas.height + "";
+				dialog_save.showModal();
+				setTimeout(() => {
+					review.style.backgroundImage = "none";
+					review.src = canvas.toDataURL();
+				}, 1);
+			};
 			const help = document.getElementById("help") as HTMLButtonElement;
 			help.onclick = () => {
 				console.log("help");
@@ -323,7 +402,7 @@ import Page from "../../../layouts/Page.astro";
 
 			const pick = document.getElementById("pick") as HTMLInputElement;
 			const photo = new Image();
-			let ppin = new Pin(pctx, { top: 40, left: 60, width: 100, height: 30 }, "Pin Text", "#7711BB", "white", "/assets/pins/outlined/dot.svg");
+			let ppin = new Pin(pctx, { top: 40, left: 60, width: 100, height: 30 }, "Pin Text", "#7711BB", "#FFFFFF", "/assets/pins/outlined/dot.svg");
 
 			function drawPreview() {
 				pctx.clearRect(0, 0, pctx.canvas.width, pctx.canvas.height);
@@ -439,7 +518,7 @@ import Page from "../../../layouts/Page.astro";
 			});
 
 			function place_pin() {
-				console.log("placing pin");
+				// console.log("placing pin");
 				if (!state.held) return;
 				const cbr = pcanvas.getBoundingClientRect();
 				const cx = state.held.x;
@@ -450,24 +529,19 @@ import Page from "../../../layouts/Page.astro";
 				setEdit(pc);
 				state.held = null;
 				draw();
-				console.log("pin placed");
+				// console.log("pin placed");
 			}
 
 			function setEdit(pin: Pin) {
 				state.edit_pin = pin;
 				sides.value = pin.side;
-
-				// console.log(pin.icon.src);
 				const idx = pin.icon.src.indexOf("/assets");
-
 				if (idx < 0) {
 					console.log("no assets");
 					return;
 				}
-
 				const _src = pin.icon.src.slice(idx);
 				icons.value = _src;
-
 				pinColor.value = pin.bg;
 				txtColor.value = pin.color;
 				pinText.value = pin.text;
@@ -661,13 +735,11 @@ import Page from "../../../layouts/Page.astro";
 			window.addEventListener("beforeunload", (e) => {
 				e.preventDefault();
 
-				e.returnValue = "Are you sure you want to leave?";
 				if (state.dirty) {
 					console.log("dirty");
 				}
 				if (dialog_hi.open) {
 					e.preventDefault();
-					e.returnValue = "";
 					dialog_hi.close();
 					console.log("closed hi");
 				}

@@ -4,146 +4,68 @@ import Page from "../../layouts/Page.astro";
 ---
 
 <Page title="Games">
-	<h1>Welcome to my <span class="text-gradient">Arcade</span></h1>
-	<p class="instructions">
-		Check out the newest additions and latest upgrades to the arcade.<br />
-		<strong>New:</strong>
-		<code>sunny slots</code> |
-		<strong>Improved:</strong>
-		<code>wordle</code>
-	</p>
-	<section>
-		<h3>Hand-Made</h3>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="/games/cards"
-				title="Cards"
-				body="Play a game of cards with the computer."
-			/>
-			<Card
-				href="/games/slots"
-				title="Sunny Slots"
-				body="Live on the sunny side and spin to win it big!"
-			/>
-			<Card
-				href="/games/wordle"
-				title="Wordle"
-				body="Guess all the letters in six tries or less."
-			/>
-		</ul>
+	<div class="wrap">
+		<h1>Welcome to my <span class="text-gradient">Arcade</span></h1>
+		<p class="instructions">
+			Check out the newest additions and latest upgrades to the arcade.<br />
+			<strong>New:</strong>
+			<code>sunny slots</code> |
+			<strong>Improved:</strong>
+			<code>wordle</code>
+		</p>
+		<section>
+			<h3>Hand-Made</h3>
+			<ul role="list" class="link-card-grid">
+				<Card href="/games/cards" title="Cards" body="Play a game of cards with the computer." />
+				<Card href="/games/slots" title="Sunny Slots" body="Live on the sunny side and spin to win it big!" />
+				<Card href="/games/wordle" title="Wordle" body="Guess all the letters in six tries or less." />
+			</ul>
 
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="/games/jigsaw"
-				title="Jigsaw"
-				body="Put together the puzzle to reveal the image."
-			/>
-			<Card
-				href="/games/connect4"
-				title="Connect-4"
-				body="Drop chips to make a line of 4 before your opponent."
-			/><Card
-				href="/games/tictactoe"
-				title="TicTacToe"
-				body="The classic 'X's and 'O's"
-			/>
-		</ul>
+			<ul role="list" class="link-card-grid">
+				<Card href="/games/jigsaw" title="Jigsaw" body="Put together the puzzle to reveal the image." />
+				<Card href="/games/connect4" title="Connect-4" body="Drop chips to make a line of 4 before your opponent." /><Card href="/games/tictactoe" title="TicTacToe" body="The classic 'X's and 'O's" />
+			</ul>
 
-		<!-- <Card href="/games/minecraft" title="Games" body="Explore a voxel world in minecraft js edition." />
+			<!-- <Card href="/games/minecraft" title="Games" body="Explore a voxel world in minecraft js edition." />
         <Card href="/games/2048" title="Contact" body="Stack and combine matching tiles to reach 2048." />
         <Card href="./blog" title="Blog" body="An attempt to make permanent learning progress." /> -->
-	</section>
-	<section>
-		<h3>Hand-Picked</h3>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="/html5/breakout/index.html"
-				title="Brick Breaker"
-				body="The classic brick breaker game."
-			/>
-			<Card
-				href="/html5/chromedino/index.html"
-				title="Dino Jump"
-				body="Jump the cacti and duck the birds."
-			/>
-		</ul>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="/games/minecraft"
-				title="Minecraft JS"
-				body="Explore a voxel world in the Minecraft JS Edition."
-			/>
-			<Card
-				href="/games/flash/tanks"
-				title="Tanks"
-				body="Shoot a variety of projectiles to clear the battlefield of enemy tanks."
-			/>
-			<Card
-				href="/games/flash/worlds-hardest-game"
-				title="World's Hardest Game"
-				body="Put your skills to the test with each harder level."
-			/>
-		</ul>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="/games/flash/age-of-war"
-				title="Age of War"
-				body="Race through the ages to survive and defeat your opponent."
-			/>
-			<Card
-				href="/games/flash/motherload"
-				title="Motherload"
-				body="Mine and explore an alien planet, just don't run out of fuel!"
-			/>
-			<Card
-				href="/html5/cookieclicker/index.html"
-				title="Cookie Clicker"
-				body="The original exponential idle game."
-			/>
-		</ul>
-	</section>
-	<section>
-		<h3>More</h3>
-		<ul role="list" class="link-card-grid">
-			<!-- <Card href="/games/2048" title="2048" body="Stack and combine matching tiles to reach 2048." /> -->
+		</section>
+		<section>
+			<h3>Hand-Picked</h3>
+			<ul role="list" class="link-card-grid">
+				<Card href="/html5/breakout/index.html" title="Brick Breaker" body="The classic brick breaker game." />
+				<Card href="/html5/chromedino/index.html" title="Dino Jump" body="Jump the cacti and duck the birds." />
+			</ul>
+			<ul role="list" class="link-card-grid">
+				<Card href="/games/minecraft" title="Minecraft JS" body="Explore a voxel world in the Minecraft JS Edition." />
+				<Card href="/games/flash/tanks" title="Tanks" body="Shoot a variety of projectiles to clear the battlefield of enemy tanks." />
+				<Card href="/games/flash/worlds-hardest-game" title="World's Hardest Game" body="Put your skills to the test with each harder level." />
+			</ul>
+			<ul role="list" class="link-card-grid">
+				<Card href="/games/flash/age-of-war" title="Age of War" body="Race through the ages to survive and defeat your opponent." />
+				<Card href="/games/flash/motherload" title="Motherload" body="Mine and explore an alien planet, just don't run out of fuel!" />
+				<Card href="/html5/cookieclicker/index.html" title="Cookie Clicker" body="The original exponential idle game." />
+			</ul>
+		</section>
+		<section>
+			<h3>More</h3>
+			<ul role="list" class="link-card-grid">
+				<!-- <Card href="/games/2048" title="2048" body="Stack and combine matching tiles to reach 2048." /> -->
 
-			<Card
-				href="/html5/asteroids/index.html"
-				title="Asteroids"
-				body="Dodge & defend your ship from the splitting space rocks."
-			/>
+				<Card href="/html5/asteroids/index.html" title="Asteroids" body="Dodge & defend your ship from the splitting space rocks." />
 
-			<!-- <Card href="/html5/chess/index.html" title="Chess" body="The age old battle of the mind." /> -->
+				<!-- <Card href="/html5/chess/index.html" title="Chess" body="The age old battle of the mind." /> -->
 
-			<Card
-				href="/html5/flappybird/index.html"
-				title="Flappy Bird"
-				body="The age old battle of the mind."
-			/>
+				<Card href="/html5/flappybird/index.html" title="Flappy Bird" body="The age old battle of the mind." />
 
-			<Card
-				href="/html5/pacman/index.html"
-				title="Pacman"
-				body="The age old battle of the mind."
-			/>
+				<Card href="/html5/pacman/index.html" title="Pacman" body="The age old battle of the mind." />
 
-			<Card
-				href="/html5/tetris/index.html"
-				title="Tetris"
-				body="The age old battle of the mind."
-			/>
-			<Card
-				href="/games/whack"
-				title="Whack-a-Mole"
-				body="How many can you hit before time runs out?"
-			/>
-			<Card
-				href="/games/jump"
-				title="Jump"
-				body="Jump in time to set a record"
-			/>
-		</ul>
-	</section>
+				<Card href="/html5/tetris/index.html" title="Tetris" body="The age old battle of the mind." />
+				<Card href="/games/whack" title="Whack-a-Mole" body="How many can you hit before time runs out?" />
+				<Card href="/games/jump" title="Jump" body="Jump in time to set a record" />
+			</ul>
+		</section>
+	</div>
 </Page>
 
 <style>
@@ -153,6 +75,10 @@ import Page from "../../layouts/Page.astro";
 
 	h1 {
 		margin: 2rem 0;
+	}
+
+	.wrap {
+		padding: 2rem;
 	}
 
 	section {

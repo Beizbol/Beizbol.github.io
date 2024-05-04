@@ -1,0 +1,418 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="WebGPU3 Tokyo Snake">
+    <div class="wrap">
+        <canvas width="512" height="512" id="canvas"></canvas>
+    </div>
+</Page>
+
+<style>
+    .wrap {
+        display: grid;
+        place-items: center;
+    }
+
+    #canvas {
+        background-color: aqua;
+    }
+</style>
+
+<script>
+    async function init() {
+        const GRID_SIZE = 32;
+        const UPDATE_INTERVAL = 200;
+
+        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        if (!canvas) {
+            throw new Error("Canvas not found.");
+        }
+
+        // WebGPU device initialization
+        if (!navigator.gpu) {
+            throw new Error("WebGPU not supported on this browser.");
+        }
+
+        const adapter = await navigator.gpu.requestAdapter();
+        if (!adapter) {
+            throw new Error("No appropriate GPUAdapter found.");
+        }
+
+        const device = await adapter.requestDevice();
+
+        // Canvas configuration
+        const context = canvas.getContext("webgpu");
+        const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
+        context.configure({
+            device: device,
+            format: canvasFormat,
+        });
+
+        // Create a buffer with the vertices for a single cell.
+        const vertices = new Float32Array([
+            -0.8, -0.8, 0.8, -0.8, 0.8, 0.8,
+
+            -0.8, -0.8, 0.8, 0.8, -0.8, 0.8,
+
+            -1, -1, 1, -1, 1, 1,
+
+            -1, -1, 1, 1, -1, 1,
+        ]);
+        const vertexBuffer = device.createBuffer({
+            label: "Cell vertices",
+            size: vertices.byteLength,
+            usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+        });
+        device.queue.writeBuffer(vertexBuffer, 0, vertices);
+
+        const vertexBufferLayout = {
+            arrayStride: 8,
+            attributes: [
+                {
+                    format: "float32x2",
+                    offset: 0,
+                    shaderLocation: 0, // Position. Matches @location(0) in the @vertex shader.
+                },
+            ],
+        };
+
+        // Create the bind group layout and pipeline layout.
+        const bindGroupLayout = device.createBindGroupLayout({
+            label: "Cell Bind Group Layout",
+            entries: [
+                {
+                    binding: 0,
+                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.COMPUTE,
+                    buffer: {}, // Grid uniform buffer
+                },
+                {
+                    binding: 1,
+                    visibility: GPUShaderStage.VERTEX | GPUShaderStage.COMPUTE,
+                    buffer: { type: "read-only-storage" }, // Cell state input buffer
+                },
+            ],
+        });
+
+        const bgLayout = device.createPipelineLayout({
+            label: "Bg Pipeline Layout",
+            bindGroupLayouts: [],
+        });
+
+        const pipelineLayout = device.createPipelineLayout({
+            label: "Cell Pipeline Layout",
+            bindGroupLayouts: [bindGroupLayout],
+        });
+
+        // Create the shader that will render the cells.
+        const cellShaderModule = device.createShaderModule({
+            label: "Cell shader",
+            code: `
+        struct VertexOutput {
+            @builtin(position) position: vec4f,
+            @location(0) color: vec4f,
+          };
+
+          @group(0) @binding(0) var<uniform> grid: vec2f;
+          @group(0) @binding(1) var<storage> cellState: array<u32>;
+
+          @vertex
+          fn vertexMain(@location(0) position: vec2f,
+                        @builtin(instance_index) instance: u32) -> VertexOutput {
+            var output: VertexOutput;
+
+            let i = f32(instance);
+            let cell = vec2f(i % grid.x, floor(i / grid.x));
+
+            let scale = f32(cellState[instance]);
+            let cellOffset = cell / grid * 2;
+            let gridPos = (position+1) / grid - 1 + cellOffset;
+
+            output.position = vec4f(gridPos, 0, 1);
+            
+            switch (cellState[instance]) {
+              case 4: {
+                output.color = vec4f(0.8, 0, 0, 1);
+              }
+              case 3: {
+                output.color = vec4f(0, 0.7, 0, 1);
+              }
+              case 2: {
+                output.color = vec4f(0, 1, 0, 1);
+              }
+              case 1: {
+                let c = cell / grid;
+                output.color = vec4f(c, 1.0 - c.x, 1);
+              }
+              default: {
+                output.color = vec4f(0,0,0,0);
+              }
+            }
+
+            return output;
+          }
+
+          @fragment
+          fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
+            return input.color;
+          }
+
+          @vertex
+          fn bgVert(@location(0) pos: vec2f) -> VertexOutput{
+              var output: VertexOutput;
+              output.position = vec4f(pos, 0, 1);
+              output.color = vec4f(pos.x * 0.3,pos.y * 0.3, 0.3-pos.x*0.3, 1);
+              return output;
+          }
+
+          @fragment
+            fn bgFrag(input: VertexOutput) -> @location(0) vec4f {
+                return input.color;
+          }
+        `,
+        });
+
+        // Create a pipeline that renders the cell.
+        const bgPipeline = device.createRenderPipeline({
+            label: "Bg pipeline",
+            layout: bgLayout,
+            vertex: {
+                module: cellShaderModule,
+                entryPoint: "bgVert",
+                buffers: [vertexBufferLayout],
+            },
+            fragment: {
+                module: cellShaderModule,
+                entryPoint: "bgFrag",
+                targets: [
+                    {
+                        format: canvasFormat,
+                    },
+                ],
+            },
+        });
+
+        // Create a pipeline that renders the cell.
+        const cellPipeline = device.createRenderPipeline({
+            label: "Cell pipeline",
+            layout: pipelineLayout,
+            vertex: {
+                module: cellShaderModule,
+                entryPoint: "vertexMain",
+                buffers: [vertexBufferLayout],
+            },
+            fragment: {
+                module: cellShaderModule,
+                entryPoint: "fragmentMain",
+                targets: [
+                    {
+                        format: canvasFormat,
+                    },
+                ],
+            },
+        });
+
+        // Create a uniform buffer that describes the grid.
+        const uniformArray = new Float32Array([GRID_SIZE, GRID_SIZE]);
+        const uniformBuffer = device.createBuffer({
+            label: "Grid Uniforms",
+            size: uniformArray.byteLength,
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+        });
+        device.queue.writeBuffer(uniformBuffer, 0, uniformArray);
+
+        // Create an array representing the active state of each cell.
+        const gridStateArray = new Uint32Array(GRID_SIZE * GRID_SIZE);
+
+        // Create two storage buffers to hold the cell state.
+        const gridStateBuffer = device.createBuffer({
+            label: "Grid State",
+            size: gridStateArray.byteLength,
+            usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+        });
+        device.queue.writeBuffer(gridStateBuffer, 0, gridStateArray);
+
+        // Create a bind group to pass the grid uniforms into the pipeline
+        const bindGroup = device.createBindGroup({
+            label: "Cell renderer bind group A",
+            layout: bindGroupLayout,
+            entries: [
+                {
+                    binding: 0,
+                    resource: { buffer: uniformBuffer },
+                },
+                {
+                    binding: 1,
+                    resource: { buffer: gridStateBuffer },
+                },
+            ],
+        });
+        type Facing = "up" | "down" | "left" | "right";
+
+        const state = {
+            facing: "right" as Facing,
+            step: 0,
+            toggle: true,
+            spawn: false,
+            head_idx: GRID_SIZE + 2,
+            food_idx: GRID_SIZE,
+            snek: [] as number[],
+        };
+
+        function reset() {
+            for (let i = 0; i < gridStateArray.length; ++i) {
+                gridStateArray[i] = 0;
+            }
+            spawnFood();
+            // reset snake
+            gridStateArray[state.head_idx - 1] = 3;
+            state.snek.push(state.head_idx);
+            state.snek.push(state.head_idx - 1);
+            gridStateArray[state.head_idx] = 3;
+            // write to gpu
+            device.queue.writeBuffer(gridStateBuffer, 0, gridStateArray);
+        }
+
+        function spawnFood() {
+            let n = 0;
+            do {
+                n = Math.floor(Math.random() * GRID_SIZE * GRID_SIZE);
+            } while (gridStateArray[n] !== 0);
+            gridStateArray[n] = 4;
+            state.food_idx = n;
+            state.spawn = false;
+        }
+
+        function updateDraw() {
+            // Spawn food
+            if (state.spawn) {
+                spawnFood();
+            }
+
+            // Move snake
+            switch (state.facing) {
+                case "up": {
+                    state.head_idx = (state.head_idx + GRID_SIZE) % (GRID_SIZE * GRID_SIZE);
+                    break;
+                }
+                case "down": {
+                    if (state.head_idx < GRID_SIZE) {
+                        state.head_idx += GRID_SIZE * GRID_SIZE;
+                    }
+                    state.head_idx = (state.head_idx - GRID_SIZE) % (GRID_SIZE * GRID_SIZE);
+                    break;
+                }
+                case "right": {
+                    state.head_idx = (state.head_idx + 1) % (GRID_SIZE * GRID_SIZE);
+                    break;
+                }
+                case "left": {
+                    state.head_idx = (state.head_idx - 1) % (GRID_SIZE * GRID_SIZE);
+                    break;
+                }
+            }
+            for (let i = 0; i < state.snek.length; i++) {
+                gridStateArray[state.snek[i]] = 3;
+            }
+            gridStateArray[state.head_idx] = 2;
+            state.snek.unshift(state.head_idx);
+            if (state.head_idx !== state.food_idx) {
+                const tail = state.snek.pop();
+                gridStateArray[tail!] = 0;
+            } else {
+                state.spawn = true;
+            }
+
+            // Write State to GPU
+            device.queue.writeBuffer(gridStateBuffer, 0, gridStateArray);
+
+            state.step++; // Increment the step count
+
+            // Start a render pass
+            const encoder = device.createCommandEncoder();
+
+            const bg_pass = encoder.beginRenderPass({
+                colorAttachments: [
+                    {
+                        view: context.getCurrentTexture().createView(),
+                        loadOp: "clear",
+                        clearValue: { r: 0, g: 0.8, b: 0.8, a: 1.0 },
+                        storeOp: "store",
+                    },
+                ],
+            });
+            bg_pass.setPipeline(bgPipeline);
+            bg_pass.setVertexBuffer(0, vertexBuffer);
+            bg_pass.draw(6, 1, 6);
+            bg_pass.end();
+
+            const pass = encoder.beginRenderPass({
+                colorAttachments: [
+                    {
+                        view: context.getCurrentTexture().createView(),
+                        loadOp: "load",
+                        clearValue: { r: 0, g: 0, b: 0, a: 0 },
+                        storeOp: "store",
+                    },
+                ],
+            });
+            pass.setPipeline(cellPipeline);
+            pass.setBindGroup(0, bindGroup); // Updated!
+            pass.setVertexBuffer(0, vertexBuffer);
+            // Draw the cells
+            pass.draw(6, GRID_SIZE * GRID_SIZE);
+            pass.end();
+
+            device.queue.submit([encoder.finish()]);
+        }
+
+        document.addEventListener("keydown", (event) => {
+            switch (event.key) {
+                case "ArrowUp":
+                case "w": {
+                    event.preventDefault();
+                    state.facing = "up";
+                    break;
+                }
+                case "ArrowDown":
+                case "s": {
+                    event.preventDefault();
+                    state.facing = "down";
+                    break;
+                }
+                case "ArrowLeft":
+                case "a": {
+                    event.preventDefault();
+                    state.facing = "left";
+                    break;
+                }
+                case "ArrowRight":
+                case "d": {
+                    event.preventDefault();
+                    state.facing = "right";
+                    break;
+                }
+                case " ": {
+                    event.preventDefault();
+                    if (pause) {
+                        console.log("Pausing game");
+                        clearInterval(pause);
+                        pause = null;
+                    } else {
+                        console.log("Starting game");
+                        pause = setInterval(updateDraw, UPDATE_INTERVAL);
+                    }
+                    break;
+                }
+            }
+        });
+
+        reset();
+
+        updateDraw();
+        // updateDraw();
+        let pause = setInterval(updateDraw, UPDATE_INTERVAL);
+    }
+
+    document.addEventListener("astro:page-load", init);
+</script>

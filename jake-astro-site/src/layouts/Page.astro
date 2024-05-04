@@ -7,18 +7,18 @@ import "../styles/theme.css";
 
 export interface Props {
 	title: string;
-	filename?: string;
+	name?: string;
 }
 
-const { title, filename } = Astro.props;
+const { title, name } = Astro.props;
 
 const year = new Date().getFullYear();
 
-const isApp = filename !== undefined;
+const isApp = name !== undefined;
 // console.log(isApp);
 // console.log(filename);
-const pwa = `/apps/${filename}/manifest.json`;
-const app = `/apps/${filename}/app.js`;
+const pwa = `/apps/${name}/manifest.json`;
+// const app = `/apps/${filename}/app.js`;
 ---
 
 <html lang="en">
@@ -27,14 +27,15 @@ const app = `/apps/${filename}/app.js`;
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="msapplication-TileColor" content="#FFFFFF" />
 		<meta name="theme-color" content="#ffffff" />
+
 		<meta name="description" content={title} />
 		<title>{title}</title>
 		<ViewTransitions />
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 		<link rel="apple-touch-icon" href="/pwa-192x192.png" />
 		<link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
-		<!-- {isApp && <link rel="manifest" href={pwa} />}
-		{isApp && <script is:inline src={app} />} -->
+		{isApp && <link rel="manifest" href={pwa} />}
+		<!-- {isApp && <script is:inline src={app} />} -->
 	</head>
 	<body>
 		<header>

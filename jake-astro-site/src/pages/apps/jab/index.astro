@@ -1,0 +1,172 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="JAB" name="jab">
+    <div class="wrap">
+        <input id="book" type="file" />
+        <div class="player">
+            <button id="play">Play</button>
+            <div class="title">Book Title</div>
+            <div class="chapter">Chapter 0</div>
+            <div class="time"></div>
+        </div>
+    </div>
+</Page>
+
+<script>
+    const pick = document.getElementById("book") as HTMLInputElement;
+    const play = document.getElementById("play") as HTMLButtonElement;
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContext();
+    let audio: HTMLAudioElement;
+    let playing = false;
+
+    pick.addEventListener("change", async () => {
+        if (!pick.files) return;
+        const file = pick.files[0];
+
+        const start = await file.slice(0, 127).arrayBuffer();
+        for (let i = 0; i < start.byteLength; i++) {
+            console.log(start[i]);
+        }
+        // const end = await file.slice(-127).arrayBuffer();
+        console.log(start);
+        // console.log(end);
+        audio = new Audio(URL.createObjectURL(file));
+        console.log("Picked");
+    });
+
+    play.addEventListener("click", () => {
+        if (playing) {
+            audio.pause();
+            return;
+        }
+        audio.play();
+        console.log("Playing");
+    });
+</script>
+
+<!-- <script>
+    console.clear();
+
+    // instigate our audio context
+
+    // for cross browser
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContext();
+
+    // load some sound
+    const audioElement = document.querySelector("audio");
+    const track = audioCtx.createMediaElementSource(audioElement);
+
+    const playButton = document.querySelector(".tape-controls-play");
+
+    // play pause audio
+    playButton.addEventListener(
+        "click",
+        function () {
+            // check if context is in suspended state (autoplay policy)
+            if (audioCtx.state === "suspended") {
+                audioCtx.resume();
+            }
+
+            if (this.dataset.playing === "false") {
+                audioElement.play();
+                this.dataset.playing = "true";
+                // if is playing pause it
+            } else if (this.dataset.playing === "true") {
+                audioElement.pause();
+                this.dataset.playing = "false";
+            }
+
+            let state = this.getAttribute("aria-checked") === "true" ? true : false;
+            this.setAttribute("aria-checked", state ? "false" : "true");
+        },
+        false,
+    );
+
+    // if ends
+    audioElement.addEventListener(
+        "ended",
+        () => {
+            playButton.dataset.playing = "false";
+            playButton.setAttribute("aria-checked", "false");
+        },
+        false,
+    );
+
+    // volume
+    const gainNode = audioCtx.createGain();
+
+    const volumeControl = document.querySelector('[data-action="volume"]');
+    volumeControl.addEventListener(
+        "input",
+        function () {
+            gainNode.gain.value = this.value;
+        },
+        false,
+    );
+
+    // panning
+    const pannerOptions = { pan: 0 };
+    const panner = new StereoPannerNode(audioCtx, pannerOptions);
+
+    const pannerControl = document.querySelector('[data-action="panner"]');
+    pannerControl.addEventListener(
+        "input",
+        function () {
+            panner.pan.value = this.value;
+        },
+        false,
+    );
+
+    // connect our graph
+    track.connect(gainNode).connect(panner).connect(audioCtx.destination);
+
+    const powerButton = document.querySelector(".control-power");
+
+    powerButton.addEventListener(
+        "click",
+        function () {
+            if (this.dataset.power === "on") {
+                audioCtx.suspend();
+                this.dataset.power = "off";
+            } else if (this.dataset.power === "off") {
+                audioCtx.resume();
+                this.dataset.power = "on";
+            }
+            this.setAttribute("aria-checked", state ? "false" : "true");
+            console.log(audioCtx.state);
+        },
+        false,
+    );
+
+    // credit: Outfoxing the Fox by Kevin MacLeod under Creative Commons
+</script> -->
+
+<style>
+    .wrap {
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    #book {
+        padding: 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 0.5rem;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .player {
+        padding: 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 0.5rem;
+        display: flex;
+        gap: 1rem;
+    }
+</style>
