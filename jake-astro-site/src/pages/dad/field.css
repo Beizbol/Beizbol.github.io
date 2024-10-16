@@ -1,0 +1,21 @@
+.field {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>10</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>20</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>30</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(90deg);'><text x='0' y='30' fill='rgb(255,255,255)'' font-size='40'>40</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>50</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>40</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>30</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>20</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>10</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(-90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>10</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(-90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>20</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(-90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>30</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(-90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>40</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(-90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>50</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(-90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>40</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(-90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>30</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(-90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>20</text></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='40px' width='40px' style='transform:rotateZ(-90deg);'><text x='0' y='30' fill='rgb(255,255,255)' font-size='40'>10</text></svg>"),
+        url("https://paulvelocity.com/img/svg/seahawks.svg");
+}

@@ -1,0 +1,85 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Squares">
+  <div class="wrap">
+    <canvas id="canvas" width="600" height="600"> </canvas>
+  </div>
+</Page>
+<script>
+  function init() {
+    type Vec2 = {
+      x: number;
+      y: number;
+    };
+
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d", { alpha: false }) as CanvasRenderingContext2D;
+    if (!ctx) {
+      console.error("Canavas not supported :(");
+      return;
+    }
+
+    let state = {
+      running: true,
+      screen_size: { x: 600, y: 600 } as Vec2,
+      position: { x: 0, y: 0 } as Vec2,
+      velocity: { x: 0.73, y: 1.17 } as Vec2,
+      flip: { x: 1, y: 1 } as Vec2,
+      last: { x: -999, y: -999 } as Vec2,
+      size: 500,
+      hue: 0,
+      t: 0,
+    };
+
+    ctx.fillStyle = `#aaa`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    function draw() {
+      const dt = state.t - performance.now();
+      state.t += dt;
+      state.hue += 1;
+
+      if (state.position.x + state.size > state.screen_size.x + 10) {
+        state.flip.x = -1;
+      } else if (state.position.x < -10) {
+        state.flip.x = 1;
+      }
+      if (state.position.y + state.size > state.screen_size.y + 10) {
+        state.flip.y = -1;
+      } else if (state.position.y < -10) {
+        state.flip.y = 1;
+      }
+
+      state.position.x += state.flip.x * state.velocity.x;
+      state.position.y += state.flip.y * state.velocity.y;
+
+      if (Math.abs(state.last.x - state.position.x) + Math.abs(state.last.y - state.position.y) > 10) {
+        ctx.strokeRect(state.position.x, state.position.y, state.size, state.size);
+        ctx.fillStyle = `hsl(${state.hue % 361} 100% 69%)`;
+        ctx.fillRect(state.position.x, state.position.y, state.size, state.size);
+        state.last.x = state.position.x;
+        state.last.y = state.position.y;
+        if (state.size < 580) {
+          state.size += 0.1;
+        }
+      }
+
+      window.requestAnimationFrame(draw);
+    }
+    state.t = performance.now();
+    ctx.strokeStyle = `#666`;
+    ctx.lineWidth = 2;
+
+    window.requestAnimationFrame(draw);
+  }
+
+  document.addEventListener("astro:page-load", init);
+</script>
+<style>
+  .wrap {
+    display: grid;
+    place-items: center;
+  }
+</style>

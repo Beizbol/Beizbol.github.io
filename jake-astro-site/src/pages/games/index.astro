@@ -6,32 +6,30 @@ import Page from "../../layouts/Page.astro";
 <Page title="Games">
 	<div class="wrap">
 		<h1>Welcome to my <span class="text-gradient">Arcade</span></h1>
-		<p class="instructions">
-			Check out the newest additions and latest upgrades to the arcade.<br />
-			<strong>New:</strong>
-			<code>sunny slots</code> |
-			<strong>Improved:</strong>
-			<code>wordle</code>
-		</p>
 		<section>
-			<h3>Hand-Made</h3>
+			<h2>Hand-Made Games</h2>
+
+			<h3>Puzzle Games 🧠</h3>
+			<ul role="list" class="link-card-grid">
+				<Card href="/games/trivia" title="Trivia" body="Put your knowledge to the test!" />
+				<Card href="/games/wordle" title="Wordle" body="Guess all the letters in six tries or less." />
+				<Card href="/games/jigsaw" title="Jigsaw" body="Finish the puzzle to reveal the image." />
+			</ul>
+			<h3>Casino Games 🎰</h3>
 			<ul role="list" class="link-card-grid">
 				<Card href="/games/cards" title="Cards" body="Play a game of cards with the computer." />
+				<Card href="/games/roulette" title="Roulette" body="Place your bets and let the ball roll." />
 				<Card href="/games/slots" title="Sunny Slots" body="Live on the sunny side and spin to win it big!" />
-				<Card href="/games/wordle" title="Wordle" body="Guess all the letters in six tries or less." />
 			</ul>
-
+			<h3>Simple Games 🎲</h3>
 			<ul role="list" class="link-card-grid">
-				<Card href="/games/jigsaw" title="Jigsaw" body="Put together the puzzle to reveal the image." />
-				<Card href="/games/connect4" title="Connect-4" body="Drop chips to make a line of 4 before your opponent." /><Card href="/games/tictactoe" title="TicTacToe" body="The classic 'X's and 'O's" />
+				<Card href="/games/connect4" title="Connect-4" body="Drop chips to make a line of 4 before your opponent." />
+				<Card href="/games/tictactoe" title="TicTacToe" body="The classic 'X's and 'O's" />
 			</ul>
-
-			<!-- <Card href="/games/minecraft" title="Games" body="Explore a voxel world in minecraft js edition." />
-        <Card href="/games/2048" title="Contact" body="Stack and combine matching tiles to reach 2048." />
-        <Card href="./blog" title="Blog" body="An attempt to make permanent learning progress." /> -->
 		</section>
-		<section>
-			<h3>Hand-Picked</h3>
+		<details class="more">
+			<summary> More ... </summary>
+			<h3>Hand-Picked From Across The Web</h3>
 			<ul role="list" class="link-card-grid">
 				<Card href="/html5/breakout/index.html" title="Brick Breaker" body="The classic brick breaker game." />
 				<Card href="/html5/chromedino/index.html" title="Dino Jump" body="Jump the cacti and duck the birds." />
@@ -46,29 +44,40 @@ import Page from "../../layouts/Page.astro";
 				<Card href="/games/flash/motherload" title="Motherload" body="Mine and explore an alien planet, just don't run out of fuel!" />
 				<Card href="/html5/cookieclicker/index.html" title="Cookie Clicker" body="The original exponential idle game." />
 			</ul>
-		</section>
-		<section>
-			<h3>More</h3>
 			<ul role="list" class="link-card-grid">
-				<!-- <Card href="/games/2048" title="2048" body="Stack and combine matching tiles to reach 2048." /> -->
-
 				<Card href="/html5/asteroids/index.html" title="Asteroids" body="Dodge & defend your ship from the splitting space rocks." />
-
-				<!-- <Card href="/html5/chess/index.html" title="Chess" body="The age old battle of the mind." /> -->
-
 				<Card href="/html5/flappybird/index.html" title="Flappy Bird" body="The age old battle of the mind." />
-
 				<Card href="/html5/pacman/index.html" title="Pacman" body="The age old battle of the mind." />
-
 				<Card href="/html5/tetris/index.html" title="Tetris" body="The age old battle of the mind." />
 				<Card href="/games/whack" title="Whack-a-Mole" body="How many can you hit before time runs out?" />
 				<Card href="/games/jump" title="Jump" body="Jump in time to set a record" />
 			</ul>
-		</section>
+		</details>
 	</div>
 </Page>
 
 <style>
+	details {
+		/* border: 1px solid #aaa; */
+		border-radius: 4px;
+		padding: 0.5em 0.5em 0;
+	}
+
+	summary {
+		font-weight: bold;
+		margin: -0.5em -0.5em 0;
+		padding: 0.5em;
+	}
+
+	details[open] {
+		padding: 0.5em;
+	}
+
+	details[open] summary {
+		border-bottom: 1px solid #aaa;
+		margin-bottom: 0.5em;
+	}
+
 	:root {
 		--color-gradient: linear-gradient(0deg, red, orange);
 	}
@@ -79,6 +88,7 @@ import Page from "../../layouts/Page.astro";
 
 	.wrap {
 		padding: 2rem;
+		display: grid;
 	}
 
 	section {
@@ -128,5 +138,9 @@ import Page from "../../layouts/Page.astro";
 		grid-template-columns: repeat(auto-fit, minmax(28ch, 1fr));
 		gap: 1rem;
 		padding: 0;
+	}
+
+	.hide {
+		display: none;
 	}
 </style>

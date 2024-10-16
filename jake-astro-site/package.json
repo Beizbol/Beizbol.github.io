@@ -7,17 +7,20 @@
     "dev": "astro dev",
     "build": "astro build",
     "postbuild": "node ./src/scripts/postbuild.js",
+    "casa": "./src/scripts/casa.sh",
+    "tar": "tar czf jakesite.tar.gz dist/",
     "preview": "astro preview"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.0.3",
     "@cheprasov/qrcode": "^0.1.0",
-    "astro": "^4.0.3",
+    "astro": "^4.12.2",
     "canvas-confetti": "^1.9.0",
     "fs-extra": "^11.1.1"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.6.2",
+    "@webgpu/types": "^0.1.40",
     "astro-robots-txt": "^1.0.0"
   }
 }

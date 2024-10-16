@@ -1,0 +1,11 @@
+{
+    "name": "jprof",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        ".": "node main.mjs"
+    },
+    "dependencies": {
+        "express": "^4.19.2"
+    }
+}

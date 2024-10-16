@@ -1,0 +1,64 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="Forest FSM Edit Tool">
+	<div class="wrap">
+		<button id="go">Go</button>
+		<div class="editor">
+			<h2>Editor</h2>
+			<textarea name="edit" id="edit"> </textarea>
+		</div>
+		<div class="chart">
+			<h2>Chart</h2>
+		</div>
+	</div>
+
+	<style>
+		.wrap {
+			display: flex;
+			/* flex-direction: column; */
+			flex-wrap: wrap;
+			gap: 1rem;
+		}
+
+		.editor {
+			flex: 1;
+		}
+
+		.chart {
+			flex: 1;
+		}
+	</style>
+	<!-- 
+	<script>
+		import smcat from "state-machine-cat";
+
+		function init() {
+			// 			function render() {
+			// 				try {
+			// 					const lSVGInAString = smcat.render(
+			// 						`initial => backlog;
+			// backlog => doing;
+			// doing => test;`,
+			// 						{
+			// 							outputType: "svg",
+			// 						},
+			// 					);
+			// 					console.log(lSVGInAString);
+			// 				} catch (pError) {
+			// 					console.error(pError);
+			// 				}
+			// 			}
+
+			const editor = document.getElementById("edit") as HTMLTextAreaElement;
+			editor.textContent = `# this is a note
+on => off;`;
+			console.log(editor.textContent);
+			// render();
+			console.log("done");
+		}
+
+		document.addEventListener("astro:page-load", init);
+	</script> -->
+</Page>

@@ -4,19 +4,36 @@ import Page from "../../../layouts/Page.astro";
 
 <Page title="Zig WASM">
     <div class="wrap">
-        <canvas> Your browser does not support the HTML5 canvas element. </canvas>
+        <h3>Doing some math with zig and wasm</h3>
+        <input id="a" type="number" />
+        <input id="b" type="number" />
+        <button id="btn">Calculate</button>
+        <p>Result: <span id="ans"></span></p>
     </div>
 </Page>
 
+<style>
+    .wrap {
+        display: grid;
+        place-items: center;
+        gap: 1rem;
+    }
+</style>
+
 <script>
-    WebAssembly.instantiateStreaming(fetch("/wasm/plus.wasm"), {
-        env: {
-            print(arg) {
-                console.log("Zig add(1,2):", arg);
-            },
-        },
-    }).then((mod) => {
-        const add = mod.instance.exports.add as CallableFunction;
-        add(1, 2);
+    // Loads and initializes the requested WASM file
+    const wasm = await WebAssembly.instantiateStreaming(fetch("/wasm/plus.wasm"));
+    const { add } = wasm.instance.exports;
+
+    const btn = document.getElementById("btn") as HTMLButtonElement;
+    const ans = document.getElementById("ans") as HTMLSpanElement;
+    const in_a = document.getElementById("a") as HTMLInputElement;
+    const in_b = document.getElementById("b") as HTMLInputElement;
+
+    btn.addEventListener("click", () => {
+        add as CallableFunction;
+        ans.textContent = add(+a.value, +b.value).toString();
     });
+
+    console.log(add(6, 9));
 </script>

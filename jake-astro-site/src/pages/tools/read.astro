@@ -1,0 +1,39 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="eRead">
+    <div class="wrap">
+        <select class="shelf">
+            <option value="Alice">Alice</option>
+            <option value="Dracula">Dracula</option>
+            <option value="Frankenstein">Frankenstein</option>
+        </select>
+        <div class="page"></div>
+    </div>
+</Page>
+
+<style>
+    .wrap {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .shelf {
+        padding: 2rem;
+    }
+
+    .page {
+        display: grid;
+    }
+</style>
+<script>
+    const shelf = document.querySelector(".shelf") as HTMLSelectElement;
+    const page = document.querySelector(".page") as HTMLDivElement;
+
+    shelf.addEventListener("change", async () => {
+        const book = await fetch(`/books/${shelf.value}.br`);
+        const text = await book.text();
+        page.innerHTML = text;
+    });
+</script>

@@ -1,0 +1,138 @@
+---
+import Page from "../../layouts/Page.astro";
+// import Video from "../components/Video.astro";
+---
+
+<Page title="NFC Tools">
+  <div class="wrap">
+    <h1>Write NFC Tag</h1>
+    <h3 id="no-support" class="hidden">This feature is not (yet) supported on your device.</h3>
+    <label id="lbl" for="txt">Url:</label>
+    <input id="txt" type="text" placeholder="https://www.jakesite.ca/" />
+    <div class="flex">
+      <button id="write">Write</button>
+      <button id="scan">Scan</button>
+      <button id="stop">Stop</button>
+    </div>
+  </div>
+
+  <dialog id="nfc-dialog">
+    <h3>NFC tag data</h3>
+    <p id="data"></p>
+    <form method="dialog">
+      <button>Close</button>
+    </form>
+  </dialog>
+</Page>
+
+<style>
+  .wrap {
+    display: grid;
+    place-items: center;
+    gap: 1rem;
+  }
+
+  .flex {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  async function init() {
+    const scanButton = document.getElementById("scan") as HTMLButtonElement;
+    const stopScanButton = document.getElementById("stop") as HTMLButtonElement;
+    const writeButton = document.getElementById("write") as HTMLButtonElement;
+    const notSupported = document.getElementById("no-support") as HTMLParagraphElement;
+    const txt = document.getElementById("txt") as HTMLInputElement;
+    const lbl = document.getElementById("lbl") as HTMLLabelElement;
+    const nfcDialog = document.getElementById("nfc-dialog") as HTMLDialogElement;
+
+    if (!("NDEFReader" in window)) {
+      console.log("NFC not supported on this device.");
+      scanButton.disabled = true;
+      stopScanButton.disabled = true;
+      writeButton.disabled = true;
+      txt.disabled = true;
+      lbl.classList.add("hidden");
+      notSupported.classList.remove("hidden");
+      return;
+    }
+
+    const nfcPerms = await navigator.permissions.query({ name: "nfc" });
+    if (nfcPerms.state === "denied") {
+      console.log("NFC permission denied");
+      return;
+    }
+
+    const abortController = new AbortController();
+    const nfcReader = new NDEFReader();
+    nfcReader.onreadingerror = (error) => {
+      console.log("Cannot read data from the NFC tag. Try another one?");
+      console.log(`Error: ${error}`);
+    };
+    nfcReader.onwriteerror = (error) => {
+      console.log("Cannot write data to the NFC tag. Try another one?");
+      console.log(`Error: ${error}`);
+    };
+    nfcReader.onreading = (event) => {
+      const message = event.message;
+      console.log("NFC tag detected!", message);
+      for (const record of message.records) {
+        console.log("Record type:  " + record.recordType);
+        console.log("MIME type:    " + record.mediaType);
+        console.log("Record id:    " + record.id);
+        switch (record.recordType) {
+          case "text":
+            // TODO: Read text record with record data, lang, and encoding.
+            break;
+          case "url":
+            // TODO: Read URL record with record data.
+            break;
+          default:
+          // TODO: Handle other records with record data.
+        }
+      }
+    };
+
+    async function scanTag() {
+      scanButton.disabled = true;
+      stopScanButton.disabled = false;
+      await nfcReader.scan({ signal: abortController.signal }).catch((error) => {
+        console.log(`Error! Scan failed to start: ${error}.`);
+      });
+    }
+
+    function stopScan() {
+      abortController.abort();
+      scanButton.disabled = false;
+      stopScanButton.disabled = true;
+    }
+
+    async function writeTag() {
+      writeButton.disabled = true;
+      if (scanButton.disabled) {
+        stopScan();
+      }
+      const url = {
+        recordType: "url",
+        data: "https://www.jakesite.ca/",
+      };
+      await nfcReader.write({ records: [url] }).catch((error) => {
+        console.log(`Error! Write failed: ${error}.`);
+      });
+      console.log("NFC tag written successfully!");
+      writeButton.disabled = false;
+    }
+
+    scanButton.addEventListener("click", scanTag);
+    writeButton.addEventListener("click", writeTag);
+    stopScanButton.addEventListener("click", stopScan);
+  }
+
+  document.addEventListener("astro:page-load", init);
+</script>

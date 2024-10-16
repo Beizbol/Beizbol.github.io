@@ -2,6 +2,9 @@
     "extends": "astro/tsconfigs/strict",
     "compilerOptions": {
         "baseUrl": ".",
-        "allowJs": true
+        "allowJs": true,
+        "types": [
+            "@webgpu/types"
+        ]
     }
 }

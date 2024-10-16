@@ -1,0 +1,143 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Money Printer">
+    <div class="wrap">
+        <div class="shop">
+            <h3>Upgrade</h3><h3>Shop</h3>
+            <button id="one" class="upgrade"><span class="count">1</span><span class="price">$1</span></button>
+            <button id="five" class="upgrade"><span class="count">5</span><span class="price">$5</span></button>
+            <button id="ten" class="upgrade"><span class="count">10</span><span class="price">$10</span></button>
+            <button id="twenty" class="upgrade"><span class="count">20</span><span class="price">$20</span></button>
+            <button id="fifty" class="upgrade"><span class="count">50</span><span class="price">$50</span></button>
+            <button id="hundred" class="upgrade"><span class="count">100</span><span class="price">$100</span></button>
+        </div>
+        <div class="game">
+            <h1>$ <span id="score">0.00</span></h1>
+            <button class="btn"><span id="pts">0.01</span></button>
+        </div>
+    </div>
+</Page>
+
+<style>
+    .wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+    }
+
+    .game {
+        display: grid;
+        height: 100%;
+        padding: 0.5rem;
+        place-items: center;
+    }
+
+    .shop {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        height: 100%;
+        padding: 1rem;
+        gap: 0.5rem;
+    }
+
+    .btn {
+        background-color: var(--color-accent);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        min-height: 60vh;
+        border: 3px solid var(--color-text);
+        transition: 0.1s ease-in-out;
+        filter: drop-shadow(0.2rem 0.2rem 0.4rem #8888);
+    }
+
+    .btn:hover {
+        filter: drop-shadow(0.3rem 0.3rem 0.6rem #8888);
+        transform: scale(1.02);
+    }
+
+    .btn:active {
+        filter: drop-shadow(0.1rem 0.1rem 0.2rem #8888);
+        transform: scale(0.96);
+    }
+
+    .upgrade {
+        display: grid;
+        place-items: center;
+        gap: 0.5rem;
+    }
+
+    .count {
+        font-size: 1.5rem;
+    }
+
+    .price {
+        font-size: 1rem;
+    }
+</style>
+
+<script>
+    function init() {
+        console.log("Hello Clicker Game!");
+
+        type Coin = "one" | "five" | "ten" | "twenty" | "fifty" | "hundred";
+
+        type Info = {
+            pts: number;
+            scale: number;
+            value: number;
+        };
+
+        const coins = new Map<Coin, Info>([
+            ["one", { pts: 1, scale: 1, value: 1 }],
+            ["five", { pts: 5, scale: 1, value: 5 }],
+            ["ten", { pts: 10, scale: 1, value: 10 }],
+            ["twenty", { pts: 20, scale: 1, value: 20 }],
+            ["fifty", { pts: 50, scale: 1, value: 50 }],
+            ["hundred", { pts: 100, scale: 1, value: 100 }],
+        ]);
+
+        const state = {
+            score: 0.0,
+            pts: 0.01,
+            upgrades: {
+                one: 0,
+                five: 0,
+                ten: 0,
+                twenty: 0,
+                fifty: 0,
+                hundred: 0,
+            },
+        };
+
+        const score = document.getElementById("score") as HTMLSpanElement;
+        const pts = document.getElementById("pts") as HTMLSpanElement;
+        const btn = document.querySelector(".btn") as HTMLButtonElement;
+        btn.addEventListener("click", () => {
+            state.score += state.pts;
+            console.log(`Clicked! ${state.pts} added to score ${state.score}`);
+            score.innerText = state.score.toFixed(2);
+        });
+
+        function upgrade(coin: Coin) {
+            const count = state.upgrades[coin] + 1;
+            const info = coins.get(coin) as Info;
+            const price = count * info.scale * info.value;
+            console.log(`Upgrading ${coin} for ${price}`);
+            if (state.score < price) {
+                alert("Not enough money!");
+                console.log("Not enough money!");
+                return;
+            }
+            state.upgrades[coin]++;
+            state.score -= price;
+            score.innerText = state.score.toFixed(2);
+            state.pts += info.pts;
+            pts.innerText = state.pts.toFixed(2);
+            console.log(`Upgraded ${coin} to ${state.upgrades[coin]}`);
+        }
+    }
+
+    document.addEventListener("astro:page-load", init);
+</script>

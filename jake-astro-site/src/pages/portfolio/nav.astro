@@ -1,0 +1,81 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="NAV CAN">
+    <div class="wrap">
+        <h1>NAV CANADA Cover Letter</h1>
+        <h3>Re: Web Application Developer</h3>
+        <p>Dear Hiring Manager,</p>
+        <p>I am writing to apply for a Web Application Developer Role at NAV CANADA. I am a recent graduate of Computer Engineering from Carleton University with over 2 years of full-time experience via the co-op program.</p>
+        <p>I am very excited to apply my skills at non-profit such as NAV CANADA. Likewise I found my most fulfilling co-op experience to be my time at Statistics Canada, at the end of the day I slept easier knowing my work was towards a better Canada and not just a better bottom line.</p>
+        <p>I am confident that my experience and skills make me a strong candidate for this position.</p>
+        <p>Thank you for considering my application. Please enjoy the web demo I made below.</p>
+        <canvas id="canvas" width="600px" height="300px"></canvas>
+    </div>
+
+    <div style="display: none;">
+        <img id="plane" src="/assets/nav.svg" alt="NAV CANADA Logo" width="50" height="50" />
+    </div>
+
+    <style>
+        .wrap {
+            margin: 0 auto;
+            display: grid;
+            max-width: 600px;
+            text-wrap: pretty;
+        }
+
+        canvas {
+            width: 600px;
+            height: 300px;
+        }
+    </style>
+</Page>
+
+<script>
+    function init() {
+        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+        const plane = document.getElementById("plane") as HTMLImageElement;
+        const nc = "NAVCANADA".split("");
+        let n = 0;
+
+        const bg = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        bg.addColorStop(0, "deepskyblue");
+        bg.addColorStop(1, "lightskyblue");
+
+        const freqs = [1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5];
+        const scales = [0, -1, 1, -2, 2, -3, 3, -4, 4, -5, 5];
+
+        function calcY(freq: number, scale: number) {
+            return 125 + 25 * Math.sin(n * (1 / freq)) * scale;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            n += 0.01;
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < nc.length; i++) {
+                ctx.fillStyle = "black";
+                ctx.font = "30px Arial";
+                const x = 24 + i * 64;
+                const y = calcY(freqs[i], scales[i]);
+                ctx.fillText(nc[i], x, y);
+                ctx.translate(38, 38);
+                ctx.rotate(Math.PI);
+                ctx.translate(-38, -38);
+                ctx.drawImage(plane, 27 - x, -y);
+                ctx.resetTransform();
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    }
+
+    document.addEventListener("astro:page-load", init);
+</script>

@@ -1,0 +1,582 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="FatherCell">
+    <div class="wrap">
+        <div class="controls">
+            <button id="play" disabled> Play </button>
+            <button id="reset">Reset</button>
+        </div>
+        <div id="top" class="hand">
+            <div id="cells" class="cells" class="hand">
+                <div class="cell" data-card="space"></div>
+                <div class="cell" data-card="space"></div>
+                <div class="cell" data-card="space"></div>
+                <div class="cell" data-card="space"></div>
+            </div>
+            <div id="piles" class="cells" class="hand">
+                <div class="cell" data-card="hearts"></div>
+                <div class="cell" data-card="clubs"></div>
+                <div class="cell" data-card="diamonds"></div>
+                <div class="cell" data-card="spades"></div>
+            </div>
+        </div>
+        <div id="board" class="hand">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column"></div>
+        </div>
+    </div>
+
+    <style is:inline>
+        label {
+            align-self: center;
+            font-size: 1.25rem;
+        }
+
+        #bet {
+            width: 6ch;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1.25rem;
+            padding-top: 1rem;
+            /* place-items: center; */
+        }
+
+        button {
+            padding: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        #themes svg {
+            margin-bottom: -5px;
+            width: 1.25rem;
+            height: 1.25rem;
+            fill: var(--color-text);
+        }
+
+        .flex {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .wrap {
+            display: grid;
+            place-items: center;
+            /* gap: 1rem; */
+            padding: 1rem;
+        }
+
+        .hand,
+        .cells {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .card,
+        .cell {
+            display: flex;
+            min-height: 175px;
+            aspect-ratio: 5 / 7;
+            border-radius: 0.75rem;
+            list-style: none;
+            border: white solid 0.4rem;
+            padding: 0.2rem;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0.1rem 0.1rem 0.5rem #4444;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            align-self: start;
+            padding: 0.5rem;
+            background-color: #3333;
+            min-height: 175px;
+            min-width: 125px;
+            border-radius: 0.75rem;
+            position: relative;
+        }
+
+        .column > .card {
+            margin-top: -8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .column > .card:nth-child(1) {
+            margin-top: 0rem;
+        }
+
+        .cell {
+            /* display: relative; */
+            border: solid 0.4rem #8888;
+            background-size: 120%;
+        }
+
+        .cell:has(.card) {
+            border: none;
+        }
+
+        /* .cell .card {
+            display: absolute;
+            top: 0;
+            left: 0;
+        } */
+
+        .card[data-card="back"] {
+            background-image: url("/assets/cards/backs/orange.svg");
+            background-size: 50%;
+        }
+
+        :root[data-card-back="red"] .card[data-card="back"] {
+            background-image: url("/assets/cards/backs/red.svg");
+            background-size: 250%;
+        }
+
+        :root[data-card-back="blue"] .card[data-card="back"] {
+            background-image: url("/assets/cards/backs/blue.svg");
+            background-size: 250%;
+        }
+
+        :root[data-card-back="green"] .card[data-card="back"] {
+            background-image: url("/assets/cards/backs/green.svg");
+            background-size: 200%;
+        }
+
+        :root[data-card-back="pink"] .card[data-card="back"] {
+            background-image: url("/assets/cards/backs/pink.svg");
+            background-size: 50%;
+        }
+
+        :root[data-card-back="purple"] .card[data-card="back"] {
+            background-image: url("/assets/cards/backs/purple.svg");
+        }
+
+        :root[data-card-back="rainbow"] .card[data-card="back"] {
+            background-image: url("/assets/cards/backs/rainbow.svg");
+            background-size: 150%;
+        }
+
+        .card[data-card="C-A"] {
+            background-image: url("/assets/cards/faces/C-A.svg");
+        }
+        .card[data-card="C-2"] {
+            background-image: url("/assets/cards/faces/C-2.svg");
+        }
+        .card[data-card="C-3"] {
+            background-image: url("/assets/cards/faces/C-3.svg");
+        }
+        .card[data-card="C-4"] {
+            background-image: url("/assets/cards/faces/C-4.svg");
+        }
+        .card[data-card="C-5"] {
+            background-image: url("/assets/cards/faces/C-5.svg");
+        }
+        .card[data-card="C-6"] {
+            background-image: url("/assets/cards/faces/C-6.svg");
+        }
+        .card[data-card="C-7"] {
+            background-image: url("/assets/cards/faces/C-7.svg");
+        }
+        .card[data-card="C-8"] {
+            background-image: url("/assets/cards/faces/C-8.svg");
+        }
+        .card[data-card="C-9"] {
+            background-image: url("/assets/cards/faces/C-9.svg");
+        }
+        .card[data-card="C-10"] {
+            background-image: url("/assets/cards/faces/C-10.svg");
+        }
+        .card[data-card="C-J"] {
+            background-image: url("/assets/cards/faces/C-J.svg");
+        }
+        .card[data-card="C-Q"] {
+            background-image: url("/assets/cards/faces/C-Q.svg");
+        }
+        .card[data-card="C-K"] {
+            background-image: url("/assets/cards/faces/C-K.svg");
+        }
+
+        .card[data-card="D-A"] {
+            background-image: url("/assets/cards/faces/D-A.svg");
+        }
+        .card[data-card="D-2"] {
+            background-image: url("/assets/cards/faces/D-2.svg");
+        }
+        .card[data-card="D-3"] {
+            background-image: url("/assets/cards/faces/D-3.svg");
+        }
+        .card[data-card="D-4"] {
+            background-image: url("/assets/cards/faces/D-4.svg");
+        }
+        .card[data-card="D-5"] {
+            background-image: url("/assets/cards/faces/D-5.svg");
+        }
+        .card[data-card="D-6"] {
+            background-image: url("/assets/cards/faces/D-6.svg");
+        }
+        .card[data-card="D-7"] {
+            background-image: url("/assets/cards/faces/D-7.svg");
+        }
+        .card[data-card="D-8"] {
+            background-image: url("/assets/cards/faces/D-8.svg");
+        }
+        .card[data-card="D-9"] {
+            background-image: url("/assets/cards/faces/D-9.svg");
+        }
+        .card[data-card="D-10"] {
+            background-image: url("/assets/cards/faces/D-10.svg");
+        }
+        .card[data-card="D-J"] {
+            background-image: url("/assets/cards/faces/D-J.svg");
+        }
+        .card[data-card="D-Q"] {
+            background-image: url("/assets/cards/faces/D-Q.svg");
+        }
+        .card[data-card="D-K"] {
+            background-image: url("/assets/cards/faces/D-K.svg");
+        }
+
+        .card[data-card="H-A"] {
+            background-image: url("/assets/cards/faces/H-A.svg");
+        }
+        .card[data-card="H-2"] {
+            background-image: url("/assets/cards/faces/H-2.svg");
+        }
+        .card[data-card="H-3"] {
+            background-image: url("/assets/cards/faces/H-3.svg");
+        }
+        .card[data-card="H-4"] {
+            background-image: url("/assets/cards/faces/H-4.svg");
+        }
+        .card[data-card="H-5"] {
+            background-image: url("/assets/cards/faces/H-5.svg");
+        }
+        .card[data-card="H-6"] {
+            background-image: url("/assets/cards/faces/H-6.svg");
+        }
+        .card[data-card="H-7"] {
+            background-image: url("/assets/cards/faces/H-7.svg");
+        }
+        .card[data-card="H-8"] {
+            background-image: url("/assets/cards/faces/H-8.svg");
+        }
+        .card[data-card="H-9"] {
+            background-image: url("/assets/cards/faces/H-9.svg");
+        }
+        .card[data-card="H-10"] {
+            background-image: url("/assets/cards/faces/H-10.svg");
+        }
+        .card[data-card="H-J"] {
+            background-image: url("/assets/cards/faces/H-J.svg");
+        }
+        .card[data-card="H-Q"] {
+            background-image: url("/assets/cards/faces/H-Q.svg");
+        }
+        .card[data-card="H-K"] {
+            background-image: url("/assets/cards/faces/H-K.svg");
+        }
+
+        .card[data-card="S-A"] {
+            background-image: url("/assets/cards/faces/S-A.svg");
+        }
+        .card[data-card="S-2"] {
+            background-image: url("/assets/cards/faces/S-2.svg");
+        }
+        .card[data-card="S-3"] {
+            background-image: url("/assets/cards/faces/S-3.svg");
+        }
+        .card[data-card="S-4"] {
+            background-image: url("/assets/cards/faces/S-4.svg");
+        }
+        .card[data-card="S-5"] {
+            background-image: url("/assets/cards/faces/S-5.svg");
+        }
+        .card[data-card="S-6"] {
+            background-image: url("/assets/cards/faces/S-6.svg");
+        }
+        .card[data-card="S-7"] {
+            background-image: url("/assets/cards/faces/S-7.svg");
+        }
+        .card[data-card="S-8"] {
+            background-image: url("/assets/cards/faces/S-8.svg");
+        }
+        .card[data-card="S-9"] {
+            background-image: url("/assets/cards/faces/S-9.svg");
+        }
+        .card[data-card="S-10"] {
+            background-image: url("/assets/cards/faces/S-10.svg");
+        }
+        .card[data-card="S-J"] {
+            background-image: url("/assets/cards/faces/S-J.svg");
+        }
+        .card[data-card="S-Q"] {
+            background-image: url("/assets/cards/faces/S-Q.svg");
+        }
+        .card[data-card="S-K"] {
+            background-image: url("/assets/cards/faces/S-K.svg");
+        }
+        .card[data-card="space"] {
+            background-image: url("/assets/cards/spaces/checker.svg");
+        }
+
+        .cell[data-card="hearts"] {
+            background-image: url("/assets/cards/spaces/heart.svg");
+        }
+        .cell[data-card="clubs"] {
+            background-image: url("/assets/cards/spaces/club.svg");
+        }
+        .cell[data-card="diamonds"] {
+            background-image: url("/assets/cards/spaces/diamond.svg");
+        }
+        .cell[data-card="spades"] {
+            background-image: url("/assets/cards/spaces/spade.svg");
+        }
+        .card.letter {
+            display: grid;
+            place-items: center;
+            background-image: linear-gradient(45deg, #008, #030);
+            font-size: 6.9rem;
+            font-weight: bold;
+            color: white;
+        }
+    </style>
+
+    <script>
+        import confetti from "canvas-confetti";
+
+        class PlayingCard extends HTMLElement {
+            constructor(str: string) {
+                super();
+                this.dataset.card = str;
+                this.classList.add("card");
+            }
+        }
+
+        // Tell the browser to use our AstroHeart class for <astro-heart> elements.
+        customElements.define("playing-card", PlayingCard);
+
+        async function sleep(ms: number) {
+            return await new Promise((resolve) => setTimeout(resolve, ms));
+        }
+
+        function init() {
+            const board = document.getElementById("board") as HTMLElement;
+            const columns = board.querySelectorAll(".column");
+            const freecells = document.getElementById("cells") as HTMLElement;
+            const piles = document.getElementById("piles") as HTMLElement;
+            const reset = document.getElementById("reset") as HTMLButtonElement;
+
+            const state = {
+                held: null,
+                cells: [] as HTMLElement[],
+                piles: [[], [], [], []] as HTMLElement[][],
+                board: [[], [], [], [], [], [], [], []] as HTMLElement[][],
+            };
+
+            function resetBoard() {
+                play.disabled = false;
+                state.piles = [[], [], [], []] as HTMLElement[][];
+                state.cells = [] as HTMLElement[];
+                piles.querySelectorAll(".cell").forEach((cell) => {
+                    cell.innerHTML = "";
+                });
+                freecells.querySelectorAll(".cell").forEach((cell) => {
+                    cell.innerHTML = "";
+                });
+
+                const deck = ["H-2", "C-2", "S-2", "D-2", "D-4", "C-4", "H-4", "S-4", "S-A", "D-A", "C-A", "H-A", "S-3", "D-3", "C-3", "H-3", "C-6", "H-6", "S-6", "D-6", "H-7", "H-8", "D-7", "S-7", "S-5", "D-5", "C-5", "H-5", "C-7", "C-8", "C-9", "C-10", "D-8", "D-9", "D-10", "D-J", "D-Q", "D-K", "H-9", "H-10", "S-8", "S-9", "H-J", "H-Q", "H-K", "S-10", "C-J", "C-Q", "C-K", "S-J", "S-Q", "S-K"];
+                deck.reverse();
+                // deck.sort(() => Math.random() - 0.5); // shuffling deck
+                state.board = [[], [], [], [], [], [], [], []] as HTMLElement[][];
+                for (let i = 0; i < deck.length; i++) {
+                    const card = deck[i];
+                    const elem = document.createElement("div");
+                    elem.classList.add("card");
+                    elem.dataset.card = card;
+                    state.board[i % 8].push(elem);
+                }
+            }
+
+            async function pileCells(shifts: number[] = [0, 0, 0, 0]) {
+                const free_cells = freecells.querySelectorAll(".cell");
+                const pile_cells = piles.querySelectorAll(".cell");
+
+                for (let i = 0; i < free_cells.length; i++) {
+                    const shift = shifts[i];
+                    const card = free_cells[i].lastElementChild as HTMLElement;
+                    console.log("idx", i, "shift", shift, "PC", pile_cells);
+                    const kid = pile_cells[i + shift].lastElementChild;
+                    if (kid) {
+                        pile_cells[i + shift].replaceChild(card, kid);
+                    }
+                    await sleep(100);
+                }
+            }
+
+            async function moveCard(letter: string, col: number, target: HTMLElement, to = -1) {
+                const cards = columns[col].querySelectorAll(".card");
+                const card = cards[cards.length - 1] as HTMLElement;
+                card.dataset.letter = letter;
+                const cells = target.querySelectorAll(".cell");
+                const taken = columns[col].removeChild(card);
+
+                const parent = to >= 0 ? cells[to] : cells[col % 4];
+                if (parent.lastElementChild) {
+                    parent.replaceChild(taken, parent.lastElementChild);
+                } else {
+                    parent.appendChild(taken);
+                }
+                await sleep(200);
+            }
+
+            async function flipCards(reset = false) {
+                const cards_fc = freecells.querySelectorAll(".card");
+                for (let i = 0; i < cards_fc.length; i++) {
+                    const card = cards_fc[i] as HTMLElement;
+                    if (reset) {
+                        card.classList.remove("letter");
+                        card.innerText = "";
+                    } else {
+                        card.classList.add("letter");
+                        card.innerText = card.dataset.letter || "";
+                    }
+                    await sleep(100);
+                }
+                const cards_p = piles.querySelectorAll(".card");
+                for (let i = 0; i < cards_p.length; i++) {
+                    const card = cards_p[i] as HTMLElement;
+                    if (reset) {
+                        card.classList.remove("letter");
+                        card.innerText = "";
+                    } else {
+                        card.classList.add("letter");
+                        card.innerText = card.dataset.letter || "";
+                    }
+                    await sleep(100);
+                }
+            }
+
+            async function animate() {
+                play.disabled = true;
+                reset.disabled = true;
+                // Happy
+                await moveCard("H", 0, freecells);
+                await moveCard("A", 1, freecells);
+                await moveCard("P", 2, freecells);
+                await moveCard("P", 3, freecells);
+                await moveCard("Y", 0, piles);
+                await moveCard("", 1, piles);
+                await moveCard("", 2, piles);
+                await moveCard("", 3, piles);
+                await flipCards();
+                await sleep(1000);
+                await flipCards(true);
+                await pileCells([2, 2, -1, -3]);
+                // Father's
+                await moveCard("F", 4, freecells);
+                await moveCard("A", 5, freecells);
+                await moveCard("T", 6, freecells);
+                await moveCard("H", 7, freecells);
+                await moveCard("E", 4, piles);
+                await moveCard("R", 5, piles);
+                await moveCard("'", 6, piles);
+                await moveCard("S", 7, piles);
+                await flipCards();
+                await sleep(1000);
+                await flipCards(true);
+                await pileCells([3, -1, -1, -1]);
+                // // Day!
+                await moveCard("D", 0, freecells);
+                await moveCard("A", 1, freecells);
+                await moveCard("Y", 2, freecells);
+                await moveCard("!", 3, freecells);
+                await moveCard("", 0, piles);
+                await moveCard("", 1, piles);
+                await moveCard("", 2, piles);
+                await moveCard("", 3, piles);
+                await flipCards();
+                await sleep(1000);
+                await flipCards(true);
+                await pileCells([2, 2, -2, -2]);
+
+                await moveCard("", 4, piles, 3);
+                await moveCard("", 5, piles, 2);
+                await moveCard("", 7, piles, 0);
+                await moveCard("", 6, piles, 0);
+
+                await moveCard("", 7, piles, 1);
+                await moveCard("", 6, piles, 1);
+                await moveCard("", 5, piles, 1);
+                await moveCard("", 4, piles, 1);
+
+                await moveCard("", 3, piles, 2);
+                await moveCard("", 2, piles, 2);
+                await moveCard("", 1, piles, 2);
+                await moveCard("", 0, piles, 2);
+
+                await moveCard("", 7, piles, 2);
+                await moveCard("", 6, piles, 2);
+                await moveCard("", 5, piles, 0);
+                await moveCard("", 4, piles, 0);
+                await moveCard("", 3, piles, 3);
+                await moveCard("", 2, piles, 3);
+                await moveCard("", 1, piles, 0);
+                await moveCard("", 0, piles, 0);
+
+                await moveCard("", 7, piles, 0);
+                await moveCard("", 6, piles, 3);
+                await moveCard("", 5, piles, 1);
+                await moveCard("", 4, piles, 1);
+                await moveCard("", 3, piles, 1);
+                await moveCard("", 2, piles, 3);
+                await moveCard("", 1, piles, 3);
+                await moveCard("", 0, piles, 3);
+
+                reset.disabled = false;
+                confetti();
+            }
+
+            function deal() {
+                const columns = board.querySelectorAll(".column");
+                for (let i = 0; i < columns.length; i++) {
+                    const column = columns[i] as HTMLElement;
+                    column.innerHTML = "";
+                    const col = state.board[i];
+                    for (let j = 0; j < col.length; j++) {
+                        column.appendChild(col[j]);
+                    }
+                }
+            }
+
+            reset.addEventListener("click", () => {
+                resetBoard();
+                console.log("state", state);
+                deal();
+            });
+
+            const play = document.getElementById("play") as HTMLButtonElement;
+            play.addEventListener("click", animate);
+        }
+
+        document.addEventListener("astro:page-load", init);
+    </script>
+</Page>

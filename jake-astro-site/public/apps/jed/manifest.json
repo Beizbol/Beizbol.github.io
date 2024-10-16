@@ -1,0 +1,73 @@
+{
+    "name": "Just Edit",
+    "short_name": "Jed",
+    "description": "An app to just edit some text.",
+    "lang": "en-US",
+    "start_url": "/apps/jed",
+    "scope": "/apps/jed",
+    "display": "standalone",
+    "theme_color": "#fff",
+    "background_color": "#000",
+    "oritentation": "any",
+    "icons": [
+        {
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg"
+        },
+        {
+            "src": "/favicon.png",
+            "sizes": "600x600",
+            "type": "image/png"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/images/screenshot-jab-wide.png",
+            "sizes": "1200x637",
+            "form_factor": "wide",
+            "label": "The JAB player on the current chapter."
+        },
+        {
+            "src": "/images/screenshot-jab.png",
+            "sizes": "351x325",
+            "label": "The JAB player on the current chapter."
+        }
+    ],
+    "file_handlers": [
+        {
+            "action": "./",
+            "accept": {
+                "text/plain": [
+                    ".txt"
+                ],
+                "text/html": [
+                    ".htm",
+                    ".html"
+                ],
+                "text/css": [
+                    ".css"
+                ],
+                "text/javascript": [
+                    ".js",
+                    ".mjs"
+                ],
+                "text/json": [
+                    ".json"
+                ],
+                "text/xml": [
+                    ".xml"
+                ],
+                "text/csv": [
+                    ".csv"
+                ],
+                "text/calendar": [
+                    ".ics"
+                ],
+                "text/markdown": [
+                    ".md"
+                ]
+            }
+        }
+    ]
+}

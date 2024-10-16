@@ -1,0 +1,265 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="Jed" name="jab">
+    <div class="wrap">
+        <div class="menubar">
+            <div id="menuFile" role="menu">
+                <button id="btnFile" role="menuitem">
+                    <span class="kbdShortcut">F</span>ile
+                </button>
+                <button id="btnNew" class="hidden" role="menuitem">
+                    <u>N</u>ew
+                </button>
+                <button id="btnOpen" class="hidden" role="menuitem">
+                    <u>O</u>pen
+                </button>
+                <button id="btnRecent" class="hidden" role="menuitem">
+                    <u>R</u>ecent
+                </button>
+                <button id="btnSave" class="hidden" role="menuitem">
+                    <u>S</u>ave
+                </button>
+                <button id="btnSaveAs" class="hidden" role="menuitem">
+                    Save <u>A</u>s
+                </button>
+                <button id="btnInstall" aria-label="Install" class="menuTop hidden">
+                    <u>I</u>nstall
+                </button>
+            </div>
+        </div>
+
+        <div id="editMenu" role="menu">
+            <select name="fontStyle" id="fontStyle">
+                <option value="sans-serif">Sans Serif</option>
+                <option value="serif">Serif</option>
+                <option value="monospace">Monospace</option>
+            </select>
+            <button id="btnFontSmaller" type="button" role="menuitem"> <b>-</b> </button>
+            <span id="fontSize">16</span>
+            <button id="btnFontBigger" type="button" role="menuitem"> <b>+</b> </button>
+            <button id="btnBold" type="button" role="menuitem"> <b>B</b> </button>
+            <button id="btnItalic" type="button" role="menuitem"> <i>i</i> </button>
+            <button id="btnUnderline" type="button" role="menuitem"> <u>u</u> </button>
+            <button id="btnStrike" type="button" role="menuitem"> <s>strike</s> </button>
+        </div>
+
+        <div id="textEditor" contenteditable="true">The quick <b>brown</b> fox jumped over the lazy dog.</div>
+
+        <details id="footer" class="footer">
+            <summary
+                >About
+                <span>
+                    <span id="modifiedFooter" class="hidden">*</span>
+                    <span id="lblLegacyFS" class="hidden footer-label">Legacy Mode</span>
+                    <span id="lblTabMovesFocus" class="hidden footer-label">Tab Moves Focus</span>
+                </span>
+            </summary>
+            <div id="not-supported">
+                The
+                <a href="https://wicg.github.io/file-system-access/" target="_blank">File System Access API</a>
+                is <b>not</b> supported in this browser yet, and Text Editor is running in legacy mode. In legacy mode, the file modified indicators are not shown.
+            </div>
+            <div>
+                Text Editor is a simple text editor similar to notepad that makes it easy to edit text files on your local file system. It shows how to easily use the new HTML5 File System Access APIs. To learn more about the File System Access APIs and how this demo was built, check out
+                <a href="https://web.dev/file-system-access/" target="_blank"> The file system access APIs</a> article on Web Fundamentals, or see the
+                <a href="https://github.com/GoogleChromeLabs/text-editor/" target="_blank"> source code on GitHub</a>. Written by <a href="https://twitter.com/petele" target="_blank">Pete LePage</a>.
+                <small id="lastUpdated"> Last Updated: [[BUILD_DATE]] (v[[VERSION]]) </small>
+            </div>
+        </details>
+    </div>
+</Page>
+
+<style>
+    .wrap {
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    #editMenu {
+        display: flex;
+        gap: 0.5rem;
+        display: absolute;
+    }
+
+    .menubar {
+        display: flex;
+        gap: 1rem;
+        outline: 3px solid green;
+        width: 100%;
+    }
+    .menu button {
+        cursor: pointer;
+    }
+    .menu > button {
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 0.5rem;
+        background: var(--color-bg);
+        color: var(--color-text);
+    }
+
+    #textEditor {
+        width: 100%;
+        height: 80vh;
+        font-family: var(--font-mono);
+        font-size: 1rem;
+        padding: 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 0.5rem;
+    }
+
+    #book {
+        padding: 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 0.5rem;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .player {
+        padding: 1rem;
+        border: 1px solid var(--color-border);
+        border-radius: 0.5rem;
+        display: flex;
+        gap: 1rem;
+    }
+</style>
+
+<script>
+    const btnBold = document.getElementById("btnBold") as HTMLButtonElement;
+    btnBold.addEventListener("click", () => {
+        toggle(NodeNames.BOLD);
+    });
+    const btnItalic = document.getElementById("btnItalic") as HTMLButtonElement;
+    btnItalic.addEventListener("click", () => {
+        toggle(NodeNames.ITALIC);
+    });
+    const btnUnderline = document.getElementById("btnUnderline") as HTMLButtonElement;
+    btnUnderline.addEventListener("click", () => {
+        toggle(NodeNames.UNDERLINE);
+    });
+
+    const btnStrike = document.getElementById("btnStrike") as HTMLButtonElement;
+    btnStrike.addEventListener("click", () => {
+        toggle(NodeNames.STRIKE);
+    });
+
+    const btnFontSmaller = document.getElementById("btnFontSmaller") as HTMLButtonElement;
+    btnFontSmaller.addEventListener("click", () => {
+        state.fontSize -= 1;
+        updateFontSize();
+    });
+
+    const btnFontBigger = document.getElementById("btnFontBigger") as HTMLButtonElement;
+    btnFontBigger.addEventListener("click", () => {
+        state.fontSize += 1;
+        updateFontSize();
+    });
+
+    const btnFile = document.getElementById("btnFile") as HTMLButtonElement;
+    const menuFile = document.getElementById("menuFile") as HTMLDivElement;
+    btnFile.addEventListener("click", () => {
+        console.log("File Clicked");
+        const btns = menuFile.querySelectorAll("button");
+        for (let i = 1; i < btns.length; i++) {
+            btns[i].classList.toggle("hidden");
+        }
+    });
+
+    const ted = document.getElementById("textEditor") as HTMLDivElement;
+    const editMenu = document.getElementById("editMenu") as HTMLDivElement;
+
+    const state = {
+        modified: false,
+        options: {
+            wordWrap: true,
+            monospace: false,
+            captureTabs: true,
+        },
+        fontSize: 16,
+    };
+
+    /* Setup the main textarea */
+    ted.addEventListener("input", () => {
+        state.modified = true;
+    });
+
+    /* Hide menus any time we start typing */
+    ted.addEventListener("focusin", () => {
+        // myMenus.hideAll();
+    });
+
+    /* Listen for tab key */
+    ted.addEventListener("keydown", (e) => {
+        if (e.key === "Tab" && state.options.captureTabs) {
+            e.preventDefault();
+            ted.innerText += "    ";
+        }
+    });
+
+    const fontSize = document.getElementById("fontSize") as HTMLSpanElement;
+    function updateFontSize() {
+        ted.style.fontSize = `${state.fontSize}px`;
+        fontSize.innerText = state.fontSize + "";
+    }
+
+    /* Initialize the textarea, set focus & font size */
+    window.addEventListener("DOMContentLoaded", updateFontSize);
+
+    const NodeNames = {
+        BOLD: "B",
+        ITALIC: "I",
+        UNDERLINE: "U",
+        STRIKE: "S",
+    };
+
+    function toggle(name: string) {
+        // Find the current cursor position
+        const part = window.getSelection() as Selection;
+        const range = part.getRangeAt(0);
+        console.log(part);
+
+        let node = range.startContainer;
+
+        while (node.parentElement) {
+            node = node.parentElement;
+            const elem = node as HTMLElement;
+            if (node === ted) {
+                console.log("No parent found");
+                break;
+            }
+            if (node.nodeName !== name) {
+                continue;
+            }
+
+            const content = elem.innerHTML;
+            elem.outerHTML = content;
+
+            switch (node.nodeName) {
+                case NodeNames.BOLD:
+                    console.log("Already Bold");
+                    return;
+                case NodeNames.ITALIC:
+                    console.log("Already Italic");
+                    return;
+                case NodeNames.UNDERLINE:
+                    console.log("Already Underline");
+                    return;
+            }
+        }
+
+        if (range.collapsed) {
+            range.selectNode(part.anchorNode || ted);
+        }
+
+        range.surroundContents(document.createElement(name.toLowerCase()));
+    }
+</script>

@@ -4,7 +4,7 @@ import Page from "../../../layouts/Page.astro";
 
 <Page title="Hello WebGPU">
     <div class="wrap">
-        <canvas width="512" height="512" id="canvas"></canvas>
+        <canvas width="512" height="512" id="canvas-tri"></canvas>
     </div>
 </Page>
 
@@ -16,27 +16,40 @@ import Page from "../../../layouts/Page.astro";
 </style>
 
 <script>
-    async function init() {
+    async function init_tri() {
+        const res = await fetch("/shaders/cell.wgsl");
+        console.log("loadFragShader", res);
+        if (!res.ok) {
+            console.error("Failed to load shader.");
+            return;
+        }
+        const cellShaderCode = await res.text();
+
         console.log("astro:page-load");
-        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const canvas = document.getElementById("canvas-tri") as HTMLCanvasElement;
         if (!canvas) {
-            throw new Error("Canvas not found.");
+            console.error("Canvas not found.");
+            return;
         }
         if (!navigator.gpu) {
-            throw new Error("WebGPU not supported on this browser.");
+            console.error("WebGPU not supported on this browser.");
+            return;
         }
         const adapter = await navigator.gpu.requestAdapter();
         if (!adapter) {
-            throw new Error("No appropriate GPUAdapter found.");
+            console.error("No appropriate GPUAdapter found.");
+            return;
         }
         const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
         if (!canvasFormat) {
-            throw new Error("No appropriate CanvasFormat found.");
+            console.error("No appropriate CanvasFormat found.");
+            return;
         }
         const device = await adapter.requestDevice();
         const context = canvas.getContext("webgpu") as GPUCanvasContext;
         if (!context) {
-            throw new Error("WebGPU context not supported on this browser.");
+            console.error("WebGPU context not supported on this browser.");
+            return;
         }
         context.configure({
             device: device,
@@ -68,22 +81,11 @@ import Page from "../../../layouts/Page.astro";
                     shaderLocation: 0, // Position, see vertex shader
                 },
             ],
-        };
+        } as GPUVertexBufferLayout;
 
         const cellShaderModule = device.createShaderModule({
             label: "Cell shader",
-            code: `
-    @vertex
-    fn vertexMain(@location(0) pos: vec2f) ->
-      @builtin(position) vec4f {
-      return vec4f(pos, 0, 1);
-    }
-
-    @fragment
-    fn fragmentMain() -> @location(0) vec4f {
-      return vec4f(1, 0, 0, 1);
-    }
-  `,
+            code: cellShaderCode,
         });
 
         const cellPipeline = device.createRenderPipeline({
@@ -130,5 +132,5 @@ import Page from "../../../layouts/Page.astro";
         device.queue.submit([encoder.finish()]);
     }
     // init();
-    document.addEventListener("astro:page-load", init);
+    document.addEventListener("astro:page-load", init_tri);
 </script>

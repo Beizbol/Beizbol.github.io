@@ -1,0 +1,47 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Web Multi-Window">
+    <div class="wrap">
+        <h1>Web Multi-Window</h1>
+        <button id="add">Add +</button>
+        <button id="open">Open ^</button>
+        <p>Test 1</p>
+        <p>Test 2</p>
+    </div>
+</Page>
+
+<style>
+    .wrap {
+        display: grid;
+        place-items: center;
+        gap: 1rem;
+    }
+</style>
+
+<script>
+    async function init_a() {
+        const wrap = document.querySelector(".wrap") as HTMLDivElement;
+        const add = document.getElementById("add") as HTMLButtonElement;
+        add.addEventListener("click", () => {
+            wrap.appendChild(document.createElement("p")).textContent = "Test";
+        });
+
+        const open = document.getElementById("open") as HTMLButtonElement;
+        open.addEventListener("click", async () => {
+            if (!("getScreenDetails" in window)) {
+                console.log("The Window Management API isn't supported.");
+                return;
+                // Default to using just the current screen.
+                // window.getScreenDetails = async () => [window.screen]; // could be a lie.
+                // window.screen.isExtended = false; // could be a lie.
+            }
+            // use multi-window API
+            const screenDetails = (await window.getScreenDetails()) as ScreenDetails;
+            console.log(screenDetails.screens);
+        });
+    }
+
+    document.addEventListener("astro:page-load", init_a);
+</script>

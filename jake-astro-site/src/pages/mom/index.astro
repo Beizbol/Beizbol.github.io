@@ -1,0 +1,25 @@
+---
+import LinkCard from "../../components/LinkCard.astro";
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="Mom">
+    <div class="cards">
+        <!-- <LinkCard
+			href="/tools/go-impl"
+			title="Go Impl"
+			body="A VS Code extension to list interfaces for each struct."
+		/> -->
+        <LinkCard href="/mom/bday" title="B-Day 🥳" body="Birthday Cards." />
+        <LinkCard href="/mom/mday" title="M-Day 🥂" body="Mother's Day Cards." />
+    </div>
+
+    <style>
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25ch, 1fr));
+            gap: min(2rem, 8vw);
+            padding: min(2rem, 4vw);
+        }
+    </style>
+</Page>

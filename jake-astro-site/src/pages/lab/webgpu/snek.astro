@@ -4,7 +4,7 @@ import Page from "../../../layouts/Page.astro";
 
 <Page title="WebGPU3 Tokyo Snake">
     <div class="wrap">
-        <canvas width="512" height="512" id="canvas"></canvas>
+        <canvas width="512" height="512" id="canvas-snek"></canvas>
     </div>
 </Page>
 
@@ -13,18 +13,22 @@ import Page from "../../../layouts/Page.astro";
         display: grid;
         place-items: center;
     }
-
-    #canvas {
-        background-color: aqua;
-    }
 </style>
 
 <script>
-    async function init() {
+    async function init_snek() {
         const GRID_SIZE = 32;
         const UPDATE_INTERVAL = 200;
 
-        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const res = await fetch("/shaders/snek.wgsl");
+        console.log("loadFragShader", res);
+        if (!res.ok) {
+            console.error("Failed to load shader.");
+            return;
+        }
+        const cellShaderCode = await res.text();
+
+        const canvas = document.getElementById("canvas-snek") as HTMLCanvasElement;
         if (!canvas) {
             throw new Error("Canvas not found.");
         }
@@ -43,6 +47,9 @@ import Page from "../../../layouts/Page.astro";
 
         // Canvas configuration
         const context = canvas.getContext("webgpu");
+        if (!context) {
+            throw new Error("WebGPU context not found.");
+        }
         const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
         context.configure({
             device: device,
@@ -75,7 +82,7 @@ import Page from "../../../layouts/Page.astro";
                     shaderLocation: 0, // Position. Matches @location(0) in the @vertex shader.
                 },
             ],
-        };
+        } as GPUVertexBufferLayout;
 
         // Create the bind group layout and pipeline layout.
         const bindGroupLayout = device.createBindGroupLayout({
@@ -107,69 +114,7 @@ import Page from "../../../layouts/Page.astro";
         // Create the shader that will render the cells.
         const cellShaderModule = device.createShaderModule({
             label: "Cell shader",
-            code: `
-        struct VertexOutput {
-            @builtin(position) position: vec4f,
-            @location(0) color: vec4f,
-          };
-
-          @group(0) @binding(0) var<uniform> grid: vec2f;
-          @group(0) @binding(1) var<storage> cellState: array<u32>;
-
-          @vertex
-          fn vertexMain(@location(0) position: vec2f,
-                        @builtin(instance_index) instance: u32) -> VertexOutput {
-            var output: VertexOutput;
-
-            let i = f32(instance);
-            let cell = vec2f(i % grid.x, floor(i / grid.x));
-
-            let scale = f32(cellState[instance]);
-            let cellOffset = cell / grid * 2;
-            let gridPos = (position+1) / grid - 1 + cellOffset;
-
-            output.position = vec4f(gridPos, 0, 1);
-            
-            switch (cellState[instance]) {
-              case 4: {
-                output.color = vec4f(0.8, 0, 0, 1);
-              }
-              case 3: {
-                output.color = vec4f(0, 0.7, 0, 1);
-              }
-              case 2: {
-                output.color = vec4f(0, 1, 0, 1);
-              }
-              case 1: {
-                let c = cell / grid;
-                output.color = vec4f(c, 1.0 - c.x, 1);
-              }
-              default: {
-                output.color = vec4f(0,0,0,0);
-              }
-            }
-
-            return output;
-          }
-
-          @fragment
-          fn fragmentMain(input: VertexOutput) -> @location(0) vec4f {
-            return input.color;
-          }
-
-          @vertex
-          fn bgVert(@location(0) pos: vec2f) -> VertexOutput{
-              var output: VertexOutput;
-              output.position = vec4f(pos, 0, 1);
-              output.color = vec4f(pos.x * 0.3,pos.y * 0.3, 0.3-pos.x*0.3, 1);
-              return output;
-          }
-
-          @fragment
-            fn bgFrag(input: VertexOutput) -> @location(0) vec4f {
-                return input.color;
-          }
-        `,
+            code: cellShaderCode,
         });
 
         // Create a pipeline that renders the cell.
@@ -334,7 +279,7 @@ import Page from "../../../layouts/Page.astro";
             const bg_pass = encoder.beginRenderPass({
                 colorAttachments: [
                     {
-                        view: context.getCurrentTexture().createView(),
+                        view: context!.getCurrentTexture().createView(),
                         loadOp: "clear",
                         clearValue: { r: 0, g: 0.8, b: 0.8, a: 1.0 },
                         storeOp: "store",
@@ -349,7 +294,7 @@ import Page from "../../../layouts/Page.astro";
             const pass = encoder.beginRenderPass({
                 colorAttachments: [
                     {
-                        view: context.getCurrentTexture().createView(),
+                        view: context!.getCurrentTexture().createView(),
                         loadOp: "load",
                         clearValue: { r: 0, g: 0, b: 0, a: 0 },
                         storeOp: "store",
@@ -411,8 +356,9 @@ import Page from "../../../layouts/Page.astro";
 
         updateDraw();
         // updateDraw();
-        let pause = setInterval(updateDraw, UPDATE_INTERVAL);
+        let pause = null as NodeJS.Timeout | null;
+        pause = setInterval(updateDraw, UPDATE_INTERVAL);
     }
 
-    document.addEventListener("astro:page-load", init);
+    document.addEventListener("astro:page-load", init_snek);
 </script>

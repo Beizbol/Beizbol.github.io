@@ -1,0 +1,87 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="LatenSee">
+    <div class="wrap">
+        <h1>Backend Latency Behind Nginx</h1>
+        <p>I want to see the cost of using a given language to solve my problem - if any.</p>
+        <p>Thus a simple test to see how different backends perform behind Nginx.</p>
+        <h3>Click for Results:</h3>
+        <ul class="list">
+            <button id="btnCtrl">Nginx Control</button>
+            <button id="btnZig">Nginx + Zig</button>
+            <button id="btnGo">Nginx + Go</button>
+            <button id="btnJs">Nginx + JS</button>
+            <button id="btnNode">Nginx + Node</button>
+            <button id="btnPy">Nginx + Python</button>
+            <button id="btnFlask">Nginx + Flask</button>
+        </ul>
+    </div>
+</Page>
+
+<script>
+    async function bench(url: string, name: string, btn: HTMLButtonElement) {
+        let t = 0;
+        const iters = 1000;
+        for (let i = 0; i < iters; i++) {
+            const t0 = performance.now();
+            await fetch(url, { cache: "no-store", mode: "no-cors" });
+            const t1 = performance.now();
+            t += t1 - t0;
+        }
+        const avg = t / iters;
+        const txt = avg.toFixed(2);
+        console.log(`fetch (${iters}) took ${txt} ms per.`);
+        btn.innerText = `${name}: avg ${txt} ms (${iters})`;
+    }
+
+    const btnCtrl = document.getElementById("btnCtrl") as HTMLButtonElement;
+    btnCtrl.addEventListener("click", () => {
+        bench("http://127.0.0.1/lab/backends/ctrl", "Nginx Control", btnCtrl);
+    });
+
+    const btnGo = document.getElementById("btnGo") as HTMLButtonElement;
+    btnGo.addEventListener("click", () => {
+        bench("http://127.0.0.1/lab/backends/go", "Nginx + Go", btnGo);
+    });
+
+    const btnJs = document.getElementById("btnJs") as HTMLButtonElement;
+    btnJs.addEventListener("click", () => {
+        bench("http://127.0.0.1/lab/backends/js", "Nginx + JS", btnJs);
+    });
+
+    const btnNode = document.getElementById("btnNode") as HTMLButtonElement;
+    btnNode.addEventListener("click", () => {
+        bench("http://127.0.0.1/lab/backends/node", "Nginx + Node", btnNode);
+    });
+
+    const btnPy = document.getElementById("btnPy") as HTMLButtonElement;
+    btnPy.addEventListener("click", () => {
+        bench("http://127.0.0.1/lab/backends/py", "Nginx + Python", btnPy);
+    });
+
+    const btnFlask = document.getElementById("btnFlask") as HTMLButtonElement;
+    btnFlask.addEventListener("click", () => {
+        bench("http://127.0.0.1/lab/backends/flask", "Nginx + Flask", btnFlask);
+    });
+
+    const btnZig = document.getElementById("btnZig") as HTMLButtonElement;
+    btnZig.addEventListener("click", () => {
+        bench("http://127.0.0.1/lab/backends/zig", "Nginx + Zig", btnZig);
+    });
+</script>
+
+<style>
+    .wrap {
+        padding: 1rem;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .list {
+        padding: 1rem;
+        display: grid;
+        gap: 1rem;
+    }
+</style>

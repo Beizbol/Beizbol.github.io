@@ -4,7 +4,7 @@ import Page from "../../../layouts/Page.astro";
 
 <Page title="Life in WebGPU">
     <div class="wrap">
-        <canvas width="512" height="512" id="canvas"></canvas>
+        <canvas width="512" height="512" id="canvas-life"></canvas>
     </div>
 </Page>
 
@@ -21,7 +21,7 @@ import Page from "../../../layouts/Page.astro";
         const UPDATE_INTERVAL = 250;
         const WORKGROUP_SIZE = 8;
 
-        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const canvas = document.getElementById("canvas-life") as HTMLCanvasElement;
         if (!canvas) {
             throw new Error("Canvas not found.");
         }
@@ -39,7 +39,7 @@ import Page from "../../../layouts/Page.astro";
         const device = await adapter.requestDevice();
 
         // Canvas configuration
-        const context = canvas.getContext("webgpu");
+        const context = canvas.getContext("webgpu") as GPUCanvasContext;
         const canvasFormat = navigator.gpu.getPreferredCanvasFormat();
         context.configure({
             device: device,

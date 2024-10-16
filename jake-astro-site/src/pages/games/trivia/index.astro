@@ -1,0 +1,31 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="Trivia Time">
+    <div class="alert hide" data-alert></div>
+    <div class="wrap">
+        <div class="pts">Points: <span class="pts" id="score">0000</span></div>
+        <ol id="questions">
+            <li id="q1">dog</li>
+            <li id="q2">cat</li>
+            <li id="q3">fish</li>
+            <li id="q4">snake</li>
+        </ol>
+    </div>
+</Page>
+<style>
+    #questions {
+        list-style-type: lower-alpha;
+    }
+</style>
+<script>
+    import confetti from "canvas-confetti";
+
+    function init_price() {
+        const score = document.getElementById("score") as HTMLSpanElement;
+        const btn = document.getElementById("btn") as HTMLButtonElement;
+    }
+
+    document.addEventListener("astro:page-load", init_price);
+</script>
