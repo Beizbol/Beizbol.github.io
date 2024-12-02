@@ -321,7 +321,7 @@ import Page from "../../../layouts/Page.astro";
 			const chkAgain = document.getElementById("again") as HTMLInputElement;
 			chkAgain.addEventListener("change", (e) => {
 				const show = chkAgain.checked ? "never" : "yes";
-				console.log("checked:", chkAgain.checked, show);
+				// console.log("checked:", chkAgain.checked, show);
 				localStorage.setItem("show-hi", show);
 			});
 
@@ -378,7 +378,7 @@ import Page from "../../../layouts/Page.astro";
 			function quicksave() {
 				const link = document.createElement("a");
 				link.download = filename;
-				link.href = canvas.toDataURL();
+				link.href = canvas.toDataURL("image/jpeg", 1.0);
 				link.click();
 			}
 
@@ -390,14 +390,14 @@ import Page from "../../../layouts/Page.astro";
 				dialog_save.showModal();
 				setTimeout(() => {
 					review.style.backgroundImage = "none";
-					review.src = canvas.toDataURL();
+					review.src = canvas.toDataURL("image/jpeg", 1.0);
 				}, 1);
 			};
 			const help = document.getElementById("help") as HTMLButtonElement;
 			help.onclick = () => {
-				console.log("help");
+				// console.log("help");
 				dialog_help.showModal();
-				console.log("help dialog opened");
+				// console.log("help dialog opened");
 			};
 
 			const pick = document.getElementById("pick") as HTMLInputElement;
@@ -433,7 +433,6 @@ import Page from "../../../layouts/Page.astro";
 				edit_hover: false,
 				pin_offset_x: 0,
 				pin_offset_y: 0,
-				dirty: false,
 				scaleImg: false,
 			};
 
@@ -456,7 +455,7 @@ import Page from "../../../layouts/Page.astro";
 				state.canvas_hover = false;
 				if (state.held) {
 					//place_pin();
-					console.log("left canvas");
+					// console.log("left canvas");
 					state.held = null;
 					draw();
 				}
@@ -597,64 +596,64 @@ import Page from "../../../layouts/Page.astro";
 
 			sides.addEventListener("change", (e) => {
 				if (!state.edit_pin) {
-					console.log("no pin");
+					// console.log("no pin");
 					return;
 				}
 				const sel = e.target as HTMLSelectElement;
 				state.edit_pin.side = sel.value as PinSide;
 				drawPreview();
 				draw();
-				console.log("side changed");
+				// console.log("side changed");
 			});
 
 			icons.addEventListener("change", (e) => {
 				if (!state.edit_pin) {
-					console.log("no pin");
+					// console.log("no pin");
 					return;
 				}
 				const sel = e.target as HTMLSelectElement;
 				// img.src = sel.value;
-				console.log(sel.value);
+				// console.log(sel.value);
 				state.edit_pin.updateIcon(sel.value);
 				drawPreview();
 				draw();
-				console.log("icon changed");
+				// console.log("icon changed");
 			});
 
 			pinColor.addEventListener("change", (e) => {
 				if (!state.edit_pin) {
-					console.log("no pin");
+					// console.log("no pin");
 					return;
 				}
 				const cInput = e.target as HTMLInputElement;
 				state.edit_pin.bg = cInput.value;
 				drawPreview();
 				draw();
-				console.log("color changed");
+				// console.log("color changed");
 			});
 
 			txtColor.addEventListener("change", (e) => {
 				if (!state.edit_pin) {
-					console.log("no pin");
+					// console.log("no pin");
 					return;
 				}
 				const cInput = e.target as HTMLInputElement;
 				state.edit_pin.color = cInput.value;
 				drawPreview();
 				draw();
-				console.log("text color changed");
+				// console.log("text color changed");
 			});
 
 			pinText.addEventListener("change", (e) => {
 				if (!state.edit_pin) {
-					console.log("no pin");
+					// console.log("no pin");
 					return;
 				}
 				const tInput = e.target as HTMLInputElement;
 				state.edit_pin.updateText(tInput.value);
 				drawPreview();
 				draw();
-				console.log("text changed");
+				// console.log("text changed");
 			});
 
 			const sizes = document.getElementById("sizes") as HTMLSelectElement;
@@ -663,7 +662,7 @@ import Page from "../../../layouts/Page.astro";
 				Pin.scale = parseFloat(sel.value);
 				drawPreview();
 				draw();
-				console.log("size changed");
+				// console.log("size changed");
 			});
 
 			let filename = "";
@@ -686,7 +685,14 @@ import Page from "../../../layouts/Page.astro";
 				photo.onload = () => {
 					filename = file.name.slice(0, -3) + "jpg";
 					save.disabled = false;
-					state.dirty = true;
+					window.addEventListener("beforeunload", (e) => {
+						e.preventDefault();
+						e.returnValue = true;
+					});
+					window.addEventListener("astro:before-preparation", (e) => {
+						e.preventDefault();
+						e.returnValue = true;
+					});
 					resize(photo);
 					drawPreview();
 					draw();
@@ -730,20 +736,6 @@ import Page from "../../../layouts/Page.astro";
 					state.held.drawPin();
 				}
 			}
-
-			console.log("adding event listener");
-			window.addEventListener("beforeunload", (e) => {
-				e.preventDefault();
-
-				if (state.dirty) {
-					console.log("dirty");
-				}
-				if (dialog_hi.open) {
-					e.preventDefault();
-					dialog_hi.close();
-					console.log("closed hi");
-				}
-			});
 		}
 
 		document.addEventListener("astro:page-load", init);

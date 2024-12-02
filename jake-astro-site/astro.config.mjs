@@ -18,7 +18,7 @@ export default defineConfig({
   // },
   redirects: {
     //'/old-page': '/new-page'
-    '/dad/': '/dad/fathercell',
+    '/dad/': '/dad/hbd',
     '/photo-pin-tool': '/tools/photo-pin',
     '/photo-pin': '/tools/photo-pin',
     '/pin-tool/': '/tools/photo-pin',
