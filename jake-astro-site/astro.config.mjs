@@ -18,13 +18,10 @@ export default defineConfig({
   // },
   redirects: {
     //'/old-page': '/new-page'
-    '/dad/': '/dad/hbd',
     '/photo-pin-tool': '/tools/photo-pin',
     '/photo-pin': '/tools/photo-pin',
     '/pin-tool/': '/tools/photo-pin',
-    '/pin': '/tools/photo-pin',
-    '/jab': '/apps/jab'
-
+    '/pin': '/tools/photo-pin'
   },
   build: {
     assets: "astrosets",

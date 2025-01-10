@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <title>jOS 0.1</title>
+    <style>
+      :root {
+        --wallpaper: url("https://images.unsplash.com/photo-1736079428727-45d8a7d7ea0a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+        --icon-start: url("/jos/start.svg");
+        --icon-files: url("/jos/folder.svg");
+        --icon-file: url("/jos/file.svg");
+        --icon-code: url("/jos/code.svg");
+        --icon-notes: url("/jos/notepad.svg");
+        --icon-term: url("/jos/term.svg");
+        --icon-settings: url("/jos/settings.svg");
+        --icon-trash-empty: url("/jos/trash-empty.svg");
+        --icon-trash-full: url("/jos/trash-full.svg");
+      }
+      :root[data-icon-theme="win-11"] {
+        --wallpaper: url("https://wallpaperaccess.com/full/7868571.jpg");
+        --icon-start: url("/jos/start11.svg");
+        --icon-files: url("/jos/files11.svg");
+        --icon-file: url("/jos/file.svg");
+        --icon-code: url("/jos/vscode.svg");
+        --icon-notes: url("/jos/Notepad_11.svg");
+        --icon-term: url("/jos/term11.svg");
+        --icon-settings: url("/jos/settings11.svg");
+        --icon-trash-empty: url("/jos/BinEmpty11.webp");
+        --icon-trash-full: url("/jos/BinFull11.webp");
+      }
+      :root[data-icon-theme="win-10"] {
+        --wallpaper: url("https://wallpaperaccess.com/full/1201088.jpg");
+        --icon-start: url("/jos/start11.svg");
+        --icon-files: url("/jos/files11.svg");
+        --icon-file: url("/jos/file.svg");
+        --icon-code: url("/jos/vscode.svg");
+        --icon-notes: url("/jos/Notepad_11.svg");
+        --icon-term: url("/jos/term11.svg");
+        --icon-settings: url("/jos/settings11.svg");
+        --icon-trash-empty: url("/jos/BinEmpty11.webp");
+        --icon-trash-full: url("/jos/BinFull11.webp");
+      }
+      :root[data-icon-theme="win-xp"] {
+        --wallpaper: url("https://wallpaperaccess.com/full/1536061.jpg");
+        --icon-start: url("/jos/start98.svg");
+        --icon-files: url("/jos/files98.svg");
+        --icon-file: url("/jos/file.svg");
+        --icon-code: url("/jos/code98.svg");
+        --icon-notes: url("/jos/Notepad_98.svg");
+        --icon-term: url("/jos/term98.svg");
+        --icon-settings: url("/jos/settings98.svg");
+        --icon-trash-empty: url("/jos/bin-empty-98.svg");
+        --icon-trash-full: url("/jos/bin-full-98.svg");
+      }
+
+      body {
+        box-sizing: border-box;
+        height: 100vh;
+        margin: 0;
+        padding: 0.5rem;
+        background-image: var(--wallpaper);
+        background-size: 100%;
+        background-repeat: no-repeat;
+        font-family: system-ui;
+      }
+
+      .shortcut {
+        background-color: #fff0;
+        border-color: #fff0;
+        aspect-ratio: 1;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+      }
+
+      .shortcut:hover {
+        background-color: #fff2;
+        /* border-color: #fff8; */
+      }
+
+      .shortcut:active {
+        background-color: #fff4;
+        border-color: #fff8;
+      }
+
+      .trash {
+        width: 56px;
+        height: 56px;
+        background-size: contain;
+        background-repeat: no-repeat;
+      }
+
+      .trash.empty {
+        background-image: var(--icon-trash-empty);
+      }
+
+      .trash.full {
+        background-image: var(--icon-trash-full);
+      }
+
+      .task {
+        /* background-color: aquamarine; */
+        background-repeat: no-repeat;
+        background-size: contain;
+        height: 3rem;
+      }
+
+      .file {
+        background-image: var(--icon-file);
+      }
+
+      .files {
+        background-image: var(--icon-files);
+      }
+
+      .start {
+        background-image: var(--icon-start);
+      }
+
+      .term {
+        background-image: var(--icon-term);
+      }
+
+      .notes {
+        background-image: var(--icon-notes);
+      }
+
+      .code {
+        background-image: var(--icon-code);
+      }
+
+      .settings {
+        background-image: var(--icon-settings);
+      }
+
+      .taskbar {
+        display: flex;
+        gap: 0.1rem;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #111;
+        border-top: 1px solid #333;
+        height: 3rem;
+        overflow: hidden;
+        padding: 0.1rem;
+      }
+
+      .app, .menu {
+        width: 50%;
+        height: 50%;
+        border-radius: 0.25rem;
+        border: 1px solid #333;
+        box-shadow: #000c 0 0 0.5rem 0.5rem;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        /* position: relative; */
+      }
+
+      .menu:popover-open {
+        position: absolute;
+        inset: unset;
+        bottom: 4rem;
+        left: 1rem;
+        margin: 0;
+        width: 50%;
+        height: 50%;
+        display: grid;
+        gap: 1rem;
+        justify-items: center;
+      }
+
+      .app {
+        left: 25%;
+        isolation: isolate;
+        background-color: #000;
+      }
+
+      .window {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 2rem 1fr;
+      }
+
+      .appbar {
+        border-radius: 0.15rem 0.15rem 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #111;
+        padding: 0;
+        margin: 0;
+      }
+
+      .btnX {
+        border: none;
+        border-radius: 0 0.15rem 0 0;
+        aspect-ratio: 1;
+        height: 2rem;
+        background-color: #111;
+        /* opacity: 40%; */
+      }
+
+      .btnX:hover {
+        background-color: #f00;
+      }
+
+      .wrap select {
+        padding: 0.5rem;
+        font-size: large;
+      }
+
+      .wrap {
+        padding: 1rem;
+        display: flex;
+        gap: 1rem;
+        font-size: x-large;
+        align-items: center;
+      }
+
+      .content {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .jed {
+        position: relative;
+      }
+
+      .txt {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        /* opacity: 50%; */
+        box-sizing: border-box;
+        border: 1px solid #333;
+        padding: 1rem;
+        font-size: larger;
+
+        /* background-color: blueviolet; */
+      }
+
+      #editor {
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        font-size: larger;
+      }
+    </style>
+  </head>
+  <body id="dropZone" ondrop="dropFile(event);" ondragover="dragOver(event);">
+    <button class="shortcut" id="trash">
+      <div class="trash empty"></div>
+      Trash
+    </button>
+
+    <footer class="taskbar">
+      <button
+        class="shortcut"
+        popovertarget="start"
+      >
+        <div class="start task"></div>
+      </button>
+      <button
+        class="shortcut"
+        onclick="files.show();apps.appendChild(apps.removeChild(files));"
+      >
+        <div class="files task"></div>
+      </button>
+      <button
+        class="shortcut"
+        onclick="term.show();apps.appendChild(apps.removeChild(term));"
+      >
+        <div class="term task"></div>
+      </button>
+      <button
+        class="shortcut"
+        onclick="notes.show();apps.appendChild(apps.removeChild(notes));"
+      >
+        <div class="notes task"></div>
+      </button>
+      <button
+        class="shortcut"
+        onclick="code.show();apps.appendChild(apps.removeChild(code));"
+      >
+        <div class="code task"></div>
+      </button>
+    </footer>
+
+    <div popover id="start" class="menu">
+      <h2>Start Menu</h2>
+      <button
+        class="shortcut"
+        onclick="settings.show();apps.appendChild(apps.removeChild(settings));"
+      >
+        <div class="settings task"></div>
+      </button>
+    </div>
+
+    <div id="apps">
+      <dialog id="files" class="app">
+        <div class="window">
+          <header class="appbar">
+            <div class="fav"></div>
+            <p>Files App</p>
+            <form method="dialog">
+              <button class="btnX">&#x2715;</button>
+            </form>
+          </header>
+        </div>
+      </dialog>
+
+      <dialog id="term" class="app">
+        <div class="window">
+          <header class="appbar">
+            <div class="fav"></div>
+            <p>Term App</p>
+            <form method="dialog">
+              <button class="btnX">&#x2715;</button>
+            </form>
+          </header>
+          <div id="content">
+            <div id="terminal"></div>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog id="notes" class="app">
+        <div class="window">
+          <header class="appbar">
+            <div class="fav"></div>
+            <p>Notes App</p>
+            <form method="dialog">
+              <button class="btnX">&#x2715;</button>
+            </form>
+          </header>
+          <div class="jed">
+            <textarea name="txt" id="txt" class="txt"
+            >Testing testing 123</textarea>
+          </div>
+        </div>
+      </dialog>
+
+      <dialog id="code" class="app">
+        <div class="window">
+          <header class="appbar">
+            <div class="fav"></div>
+            <p>Code App</p>
+            <form method="dialog">
+              <button class="btnX">&#x2715;</button>
+            </form>
+          </header>
+          <div class="content">
+            <pre
+              id="editor"
+            >
+import random
+
+def greet(name:str) -> None:
+    num = random.randint(0, 101)
+    print(f"hello {name}!")
+    print(f"your lucky number is: {num}!")
+</pre
+            >
+          </div>
+        </div>
+      </dialog>
+
+      <dialog id="settings" class="app">
+        <div class="window">
+          <header class="appbar">
+            <div class="fav"></div>
+            <p>Settings App</p>
+            <form method="dialog">
+              <button class="btnX">&#x2715;</button>
+            </form>
+          </header>
+          <div class="wrap">
+            <label for="themes">Theme</label>
+            <select name="themes" id="themes">
+              <option value="jos" selected>Default</option>
+              <option value="win-11">Win11</option>
+              <!-- <option value="win-10">Win10</option> -->
+              <option value="win-xp">WinXP</option>
+            </select>
+          </div>
+        </div>
+      </dialog>
+    </div>
+  </body>
+
+  <script>
+    function dropFile(ev) {
+      // Prevent default behavior (Prevent file from being opened)
+      ev.preventDefault();
+      console.log("File(s) dropped", ev);
+      var file = document.createElement("button");
+      file.classList.add("shortcut");
+      var icon = document.createElement("div");
+      icon.classList.add("task");
+      icon.classList.add("file");
+      file.appendChild(icon);
+      const _file = ev.dataTransfer.items[0].getAsFile();
+      // const filename = ev.dataTransfer
+      console.log("filename: ", _file.name);
+      file.insertAdjacentText("beforeend", _file.name);
+      document.querySelector(".shortcut").insertAdjacentElement("afterend", file);
+    }
+
+    function dragOver(ev) {
+      // Prevent default behavior (Prevent file from being opened)
+      ev.preventDefault();
+      // console.log("File(s) in drop zone");
+    }
+
+    themes.addEventListener("change", (e) => {
+      // const
+      console.log("theme: ", e.target.value);
+      document.documentElement.dataset.iconTheme = e.target.value;
+    });
+
+    document.querySelectorAll(".app").forEach((app, k, p) => {
+      const bar = app.querySelector(".appbar");
+      const btnX = app.querySelector(".btnX");
+      btnX.onmouseup = () => {
+        console.log("btn x", btnX);
+        app.close();
+      };
+      document.onmouseup = (e) => {
+        // console.log("Bar Up");
+        document.onmousemove = null;
+      };
+      bar.onmousedown = (e) => {
+        e.preventDefault();
+        console.log("Bar Down");
+        let off_x = e.clientX - bar.getBoundingClientRect().left;
+        let off_y = e.clientY - bar.getBoundingClientRect().top;
+        console.log("off:", off_x, off_y);
+        apps.appendChild(apps.removeChild(app));
+        // call a function whenever the cursor moves:
+        document.onmousemove = (ev) => {
+          ev.preventDefault();
+          console.log("Mouse Move");
+          app.style.left = (ev.clientX - off_x) + "px";
+          app.style.top = (ev.clientY - off_y) + "px";
+        };
+      };
+      app.onmousedown = (e) => {
+        // e.preventDefault();
+        console.log("App down");
+        // apps.appendChild(apps.removeChild(app));
+      };
+    });
+  </script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/ace-builds@1.37.3/src-noconflict/ace.js"
+    type="text/javascript"
+    charset="utf-8"
+  ></script>
+
+  <script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/dracula");
+    editor.session.setMode("ace/mode/python");
+  </script>
+
+  <script type="module">
+    import { Terminal } from "https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/+esm";
+    var term = new Terminal();
+    const _term = document.getElementById("terminal");
+    term.open(_term);
+    term.write("Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ");
+    // _term.addEventListener("keypress", (ev) => {
+    //   // console.log(ev.key);
+    //   term.write(ev.key);
+    // });
+    // term.onData = () => {
+    //   console.log(`Key entered: ${key}`);
+    // };
+  </script>
+</html>

@@ -1,0 +1,49 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="Santa Platormer 2D">
+    <div class="wrap">
+        <canvas id="canvas" width="640" height="480"></canvas>
+    </div>
+    <dialog>
+        <form class="pts-msg" method="dialog">
+            <h3>Game Over :(</h3>
+            <p>Play Again?</p>
+            <div class="flex">
+                <button>Ok</button>
+                <button><a href="/games">Exit</a></button>
+            </div>
+        </form>
+    </dialog>
+</Page>
+
+<style>
+    .wrap {
+        margin: 0 auto;
+    }
+    #canvas {
+        background-color: black;
+    }
+</style>
+
+<script>
+    import confetti from "canvas-confetti";
+
+    function init_santa() {
+        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "blue";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        draw();
+    }
+    init_santa();
+    document.addEventListener("astro:after-swap", () => {
+        console.log("astro page load");
+        init_santa();
+    });
+</script>

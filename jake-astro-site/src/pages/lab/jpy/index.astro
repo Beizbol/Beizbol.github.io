@@ -1,0 +1,50 @@
+---
+import Page from "@layouts/Page.astro";
+---
+
+<Page title="Python Terminal">
+    <div class="wrap">
+        <button id="btn">Settings</button>
+        <textarea id="terminal" class="term" cols="80" rows="30"> </textarea>
+    </div>
+
+    <dialog id="settings">
+        <form method="dialog">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+            <button type="submit">Save</button>
+        </form>
+    </dialog>
+</Page>
+
+<script>
+    import { loadPyodide } from "https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.mjs";
+
+    async function main() {
+        let pyodide = await loadPyodide();
+        console.log(pyodide.runPython("1 + 2"));
+    }
+    main();
+</script>
+
+<style>
+    :root {
+        --term-bg: black;
+        --term-text: white;
+    }
+
+    .wrap {
+        /* margin: 0 auto; */
+        display: grid;
+        place-items: center;
+        gap: 1rem;
+        padding: 0.5rem;
+    }
+
+    .term {
+        background-color: var(--term-bg);
+        color: var(--term-text);
+        width: 80ch;
+        padding: 3rem;
+    }
+</style>

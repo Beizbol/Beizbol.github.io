@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="color-scheme" content="dark light" />
+        <title>Drop Files</title>
+        <style>
+            body {
+                /* place-items: center; */
+                background-color: rgb(70, 12, 124);
+                height: 100vh;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+            }
+
+            #dropZone {
+                background-color: aquamarine;
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div
+            id="dropZone"
+            ondrop="dropFile(event);"
+            ondragover="dragOver(event);"
+        >
+            Drag one or more files to this drop zone.
+        </div>
+        <script>
+            function dropFile(ev) {
+                // Prevent default behavior (Prevent file from being opened)
+                ev.preventDefault();
+                console.log("File(s) dropped");
+            }
+
+            function dragOver(ev) {
+                // Prevent default behavior (Prevent file from being opened)
+                ev.preventDefault();
+                console.log("File(s) in drop zone");
+            }
+        </script>
+    </body>
+</html>

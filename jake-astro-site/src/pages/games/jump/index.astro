@@ -1,0 +1,49 @@
+---
+import Page from "@layouts/Page.astro";
+
+const jdev = false;
+---
+
+<Page title="Jump">
+  <div class="wrap">
+    <div class="opts">
+      <label class="lbl" for="obs">Options:</label>
+      <select class="obs">
+        <option class="flat">Cars</option>
+        <option class="on">Steps</option>
+        <option class="over">Gaps</option>
+      </select>
+      <!-- <button class="play">Play</button> -->
+      <h3 class="lvl">Lvl 0</h3>
+      <h3 class="jumps">Score 0</h3>
+      <h3 class="best">Best 0</h3>
+      <h3 class="lives">Lives 3</h3>
+      {jdev && <h3 class="dt">dt 0</h3>}
+      <button class="btnGo">Pause</button>
+    </div>
+    <canvas class="game"></canvas>
+  </div>
+
+  <dialog class="resultsDialog">
+    <h1>Game Over</h1>
+    <p>Score: <span class="res-score"></span></p>
+    <p>Best: <span class="res-best"></span></p>
+    <button class="restart">Restart</button>
+  </dialog>
+
+  <dialog class="pauseDialog">
+    <h1>Paused</h1>
+    <button class="resume">Resume</button>
+  </dialog>
+</Page>
+
+<style>
+  .wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    place-items: center;
+  }
+</style>
+
+<script></script>

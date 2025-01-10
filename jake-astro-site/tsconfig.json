@@ -3,6 +3,9 @@
     "compilerOptions": {
         "baseUrl": ".",
         "allowJs": true,
+        "paths": {
+            "@layouts/*": ["src/layouts/*"]
+        },
         "types": [
             "@webgpu/types"
         ]

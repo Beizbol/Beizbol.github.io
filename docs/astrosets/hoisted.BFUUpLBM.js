@@ -1,0 +1,1 @@
+import"./hoisted.B1_uNwtp.js";const e=document.querySelector(".shelf"),o=document.querySelector(".page");e.addEventListener("change",async()=>{const t=await(await fetch(`/books/${e.value}.br`)).text();o.innerHTML=t});

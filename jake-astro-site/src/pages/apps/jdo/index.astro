@@ -1,0 +1,285 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="JDo" name="jdo">
+    <div class="wrap">
+        <h1 class="line">Just Do</h1>
+        <!-- <div class="flex">
+            <button class="btn add">
+                <svg width="48px" height="48px" viewBox="1 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="Edit / Add_Row">
+                        <path id="Vector" d="M3 14V15C3 16.1046 3.89543 17 5 17L19 17C20.1046 17 21 16.1046 21 15L21 13C21 11.8954 20.1046 11 19 11H13M10 8H7M7 8H4M7 8V5M7 8V11" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </g>
+                </svg>
+            </button>
+        </div> -->
+
+        <ul class="list" id="list"></ul>
+        <li class="todo" id="jdo">
+            <input type="checkbox" class="do" />
+            <input type="text" class="edit" placeholder="New item" />
+        </li>
+        <br />
+        <hr />
+        <br />
+        <div class="flex">
+            <h2 class="line">Just Done</h2>
+            <button class="btn sub">
+                <svg width="48px" height="48px" viewBox="1 1 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 9L15 15" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M15 9L9 15" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <circle cx="12" cy="12" r="9" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></circle>
+                </svg>
+            </button>
+        </div>
+
+        <ul class="list" id="done"></ul>
+
+        <button id="install">install</button>
+    </div>
+</Page>
+
+<script>
+    const registerServiceWorker = async () => {
+        if ("serviceWorker" in navigator) {
+            console.log("Registering pwa sw");
+            try {
+                const registration = await navigator.serviceWorker.register("/apps/jdo/sw.js", {
+                    scope: "/apps/jdo/",
+                });
+                if (registration.installing) {
+                    console.log("Service worker installing");
+                } else if (registration.waiting) {
+                    console.log("Service worker installed");
+                } else if (registration.active) {
+                    console.log("Service worker active");
+                }
+            } catch (error) {
+                console.error(`Registration failed with ${error}`);
+            }
+        } else {
+            console.log("Service worker not supported");
+        }
+    };
+
+    registerServiceWorker();
+</script>
+
+<!-- <script>
+    const request = window.indexedDB.open("MyTestDatabase", 3);
+    console.log(request);
+</script> -->
+
+<!-- <script>
+    // Initialize deferredPrompt for use later to show browser install prompt.
+    let deferredPrompt: Event | null;
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+        // Prevent the mini-infobar from appearing on mobile
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        deferredPrompt = e;
+        // Update UI notify the user they can install the PWA
+        // showInstall();
+        // Optionally, send analytics event that PWA install promo was shown.
+        console.log(`'beforeinstallprompt' event was fired.`);
+    });
+
+    const install = document.getElementById("install") as HTMLButtonElement;
+    install.addEventListener("click", async () => {
+        // Show the install prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        // Optionally, send analytics event with outcome of user choice
+        console.log(`User response to the install prompt: ${outcome}`);
+        // We've used the prompt, and can't use it again, throw it away
+        deferredPrompt = null;
+    });
+
+    window.addEventListener("appinstalled", () => {
+        // Hide the app-provided install promotion
+        // hideInstall();
+        // Clear the deferredPrompt so it can be garbage collected
+        deferredPrompt = null;
+        // Optionally, send analytics event to indicate successful install
+        console.log("PWA was installed");
+    });
+</script> -->
+
+<script>
+    const list = document.getElementById("list") as HTMLUListElement;
+    const done = document.getElementById("done") as HTMLUListElement;
+    const todo = document.querySelector(".todo") as HTMLLIElement;
+    // todo.style.backgroundColor = "green";
+    const todo_chk = todo.querySelector(".do") as HTMLInputElement;
+
+    function swap(this: HTMLInputElement, ev: Event) {
+        const self = this.parentElement as HTMLLIElement;
+        if (self === todo) {
+            console.log("ERRRRRR");
+            return;
+        }
+        if (list.contains(self)) {
+            const did = list.removeChild(self) as HTMLLIElement;
+            did.classList.add("done");
+            done.appendChild(did);
+        } else {
+            const redo = done.removeChild(self) as HTMLLIElement;
+            redo.classList.remove("done");
+            list.appendChild(redo);
+        }
+        save();
+    }
+
+    todo_chk.addEventListener("change", () => {
+        todo_chk.checked = false;
+        const txt = todo.querySelector(".edit") as HTMLInputElement;
+        if (txt.value === "") return;
+
+        addTodo();
+        const last = list.lastElementChild as HTMLLIElement;
+        const _chk = last.querySelector(".do") as HTMLInputElement;
+        _chk.checked = true;
+        console.log("changing");
+        const did = list.removeChild(last) as HTMLLIElement;
+        did.classList.add("done");
+        done.appendChild(did);
+
+        save();
+    });
+
+    function save() {
+        const todos: string[] = [];
+        list.querySelectorAll(".edit").forEach((el) => {
+            const txt = el as HTMLInputElement;
+            todos.push(txt.value);
+        });
+        localStorage.setItem("jdos_list", todos.join("\n"));
+
+        const dones: string[] = [];
+        done.querySelectorAll(".edit").forEach((el) => {
+            const txt = el as HTMLInputElement;
+            dones.push(txt.value);
+        });
+        localStorage.setItem("done_list", dones.join("\n"));
+    }
+
+    function load() {
+        const txt_list = localStorage.getItem("jdos_list");
+        if (txt_list && txt_list !== "") {
+            console.log(txt_list);
+            const _list = txt_list.split("\n");
+            _list.forEach((txt) => {
+                const clone = todo.cloneNode(true) as HTMLLIElement;
+                clone.id = "";
+                const chk = clone.querySelector(".do") as HTMLInputElement;
+                chk.addEventListener("change", swap);
+                const _txt = clone.querySelector(".edit") as HTMLInputElement;
+                _txt.value = txt;
+                list.appendChild(clone);
+            });
+        }
+        const txt_done = localStorage.getItem("done_list");
+        if (txt_done && txt_done !== "") {
+            console.log(txt_done);
+            const _done = txt_done.split("\n");
+            _done.forEach((txt) => {
+                const clone = todo.cloneNode(true) as HTMLLIElement;
+                clone.id = "";
+                const chk = clone.querySelector(".do") as HTMLInputElement;
+                chk.addEventListener("change", swap);
+                const _txt = clone.querySelector(".edit") as HTMLInputElement;
+                _txt.value = txt;
+                clone.classList.add("done");
+                done.appendChild(clone);
+            });
+        }
+    }
+    load();
+
+    function addTodo() {
+        const clone = todo.cloneNode(true) as HTMLLIElement;
+        clone.id = "";
+        const chk = clone.querySelector(".do") as HTMLInputElement;
+        chk.addEventListener("change", swap);
+        list.appendChild(clone);
+        const txt = todo.querySelector(".edit") as HTMLInputElement;
+        txt.value = "";
+        save();
+    }
+
+    const edit = document.querySelector(".edit") as HTMLInputElement;
+    edit.addEventListener("change", addTodo);
+
+    const sub = document.querySelector(".btn.sub") as HTMLButtonElement;
+    function subTodo() {
+        console.log("subbing");
+        done.innerHTML = "";
+        save();
+    }
+    sub.addEventListener("click", subTodo);
+</script>
+
+<style>
+    #install {
+        display: absolute;
+    }
+    hr {
+        border: none;
+        border-top: 1px solid #000;
+    }
+    .wrap {
+        padding: 1rem;
+        margin: 0 auto;
+    }
+
+    .list {
+        list-style-type: none;
+        display: grid;
+        padding: 0;
+        gap: 0.75rem;
+    }
+
+    .todo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .do,
+    .btn {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .edit {
+        height: 2rem;
+        /* border: none; */
+    }
+
+    /* .add {
+        width: 3rem;
+        height: 3rem;
+    } */
+    .btn {
+        margin: 0;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .done .edit {
+        text-decoration: line-through;
+        border: none;
+    }
+
+    .flex {
+        display: flex;
+        gap: 1rem;
+
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>

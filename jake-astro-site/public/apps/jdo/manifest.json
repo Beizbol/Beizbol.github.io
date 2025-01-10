@@ -1,0 +1,46 @@
+{
+  "name": "Just Do",
+  "short_name": "JDO",
+  "start_url": "/apps/jdo/",
+  "id": "jakesite-jdo-pwa-v3",
+  "display": "standalone",
+  "theme_color": "black",
+  "background_color": "black",
+  "icons": [
+    {
+      "src": "pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "description": "JDO: The JakeSite TODO App",
+  "categories": [
+    "productivity",
+    "utilities",
+    "todo"
+  ],
+  "screenshots": [
+    {
+      "src": "pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "pwa-512x512.png",
+      "sizes": "512x512",
+      "form_factor": "wide",
+      "type": "image/png"
+    }
+  ]
+}

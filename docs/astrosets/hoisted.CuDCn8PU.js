@@ -1,0 +1,1 @@
+import"./hoisted.B1_uNwtp.js";const e=await WebAssembly.instantiateStreaming(fetch("/wasm/plus.wasm")),{add:t}=e.instance.exports,n=document.getElementById("btn"),s=document.getElementById("ans");document.getElementById("a");document.getElementById("b");n.addEventListener("click",()=>{s.textContent=t(+a.value,+b.value).toString()});console.log(t(6,9));
