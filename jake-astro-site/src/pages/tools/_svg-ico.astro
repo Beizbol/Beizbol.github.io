@@ -1,0 +1,87 @@
+---
+import Page from "../../layouts/Page.astro";
+// import Video from "../components/Video.astro";
+---
+
+<Page title="SVG to ICO">
+    <h1>Generate ICO From SVG</h1>
+    <div class="wrap">
+        <label for="svg">SVG:</label>
+        <input id="svg" type="file" accept=".svg" />
+        <button id="btn" class="btn">Generate</button>
+    </div>
+    <div class="wrap">
+        <canvas id="ico"></canvas>
+    </div>
+    <div class="wrap"><a class="btn" id="download" download="qr.ico"> Download</a></div>
+</Page>
+
+<script>
+    const input = document.getElementById("txt") as HTMLInputElement;
+    const ico = document.getElementById("ico") as HTMLCanvasElement;
+
+    const download = document.getElementById("download") as HTMLAnchorElement;
+    const btn = document.getElementById("btn") as HTMLButtonElement;
+    btn.onclick = () => {
+        const ctx = ico.getContext("2d");
+        download.href = ico.toDataURL();
+        download.style.display = "inline";
+
+        if (wrap.firstChild) {
+            wrap.removeChild(wrap.firstChild);
+        }
+        wrap.appendChild(qr.getCanvas());
+    };
+</script>
+<style>
+    label {
+        font-size: 1.25rem;
+        margin: 0.5rem;
+    }
+
+    #txt {
+        resize: none;
+        padding: 1rem;
+        overflow-y: none;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+    }
+
+    h1 {
+        margin: 1rem;
+    }
+
+    h1,
+    .wrap {
+        text-align: center;
+    }
+
+    #qr {
+        display: block;
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+
+    #download {
+        display: none;
+
+        text-decoration: none;
+        outline: none;
+        text-align: center;
+    }
+
+    .btn {
+        border: 2px solid;
+        color: black;
+        padding: 0.75rem;
+        margin: 0.5rem;
+        font-size: 1.25rem;
+        border-radius: 0.5rem;
+        background-color: var(--color-accent);
+    }
+
+    .btn:focus,
+    .btn:hover {
+        color: var(--color-text);
+    }
+</style>

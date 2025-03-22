@@ -4,33 +4,47 @@ import Page from "../../layouts/Page.astro";
 ---
 
 <Page title="Lab">
-	<h1>Welcome to the <span class="text-gradient">Lab</span></h1>
-	<section>
-		<h3>Frontend</h3>
-		<ul role="list" class="link-card-grid">
-			<LinkCard href="/lab/webgpu" title="WebGPU" body="Adding layers on layers on layers." />
-			<LinkCard href="/lab/dial-up" title="Dialup Loader" body="Flashback to when the internet was crammed through your phone line." />
-			<LinkCard href="/models" title="3D Viewer" body="Messing with the 3rd dimension on the web." />
-		</ul>
-	</section>
-	<section>
-		<h3>Backend</h3>
-		<ul role="list" class="link-card-grid">
-			<LinkCard href="/lab/backends" title="LatenSee" body="What is the overhead to use any given language to answer a request." />
-		</ul>
-	</section>
-	<section>
-		<h3>Back Burner</h3>
-		<ul role="list" class="link-card-grid">
-			<LinkCard href="/lab/ambush" title="Ambush" body="Prepare your army to hold the line!" />
-			<LinkCard href="/lab/highnoon" title="High Noon" body="Dueling pistols outside the saloon." /><LinkCard href="/lab/bounce" title="Bounce" body="DVD screen-saver inspired digital art drawn with html canvas." />
-			<LinkCard href="/lab/hover" title="Hover" body="Nice to look at." />
-			<LinkCard href="/lab/hi" title="Hi" body="Hey." />
-		</ul>
-	</section>
+	<div class="grid-bg">
+		<h1>Welcome to the <span class="text-gradient">Lab</span></h1>
+		<section>
+			<h3>Frontend</h3>
+			<ul role="list" class="link-card-grid">
+				<LinkCard href="/lab/jOS" title="jOS" body="A desktop environment built on the web." />
+				<LinkCard href="/lab/webgpu" title="WebGPU" body="Adding layers on layers on layers." />
+				<LinkCard href="/lab/dial-up" title="Dialup Loader" body="Flashback to when the internet was crammed through your phone line." />
+				<LinkCard href="/models" title="3D Viewer" body="Messing with the 3rd dimension on the web." />
+			</ul>
+		</section>
+		<section>
+			<h3>Backend</h3>
+			<ul role="list" class="link-card-grid">
+				<LinkCard href="/lab/backends" title="LatenSee" body="What is the overhead to use any given language to answer a request." />
+			</ul>
+		</section>
+		<section>
+			<div>
+				<h3>Back Burner</h3>
+				<ul role="list" class="link-card-grid">
+					<LinkCard href="/lab/ambush" title="Ambush" body="Prepare your army to hold the line!" />
+					<LinkCard href="/lab/highnoon" title="High Noon" body="Dueling pistols outside the saloon." /><LinkCard href="/lab/bounce" title="Bounce" body="DVD screen-saver inspired digital art drawn with html canvas." />
+					<LinkCard href="/lab/hover" title="Hover" body="Nice to look at." />
+					<LinkCard href="/lab/hi" title="Hi" body="Hey." />
+				</ul>
+			</div>
+		</section>
+	</div>
 </Page>
 
 <style>
+	.grid-bg {
+		--opacity: 0.25;
+		--gray: rgb(229 231 235 / var(--opacity)); /* gray-200 */
+		background-image: linear-gradient(to right, var(--gray) 1px, transparent 1px), linear-gradient(to bottom, var(--gray) 1px, transparent 1px);
+		background-repeat: repeat;
+		background-position: -10px -10px;
+		background-size: 20px 20px;
+	}
+
 	:root {
 		--color-gradient: linear-gradient(0deg, red, orange);
 	}
@@ -38,7 +52,9 @@ import Page from "../../layouts/Page.astro";
 	h1,
 	section {
 		margin: 1rem;
-		/* background-color: aquamarine; */
+		background-color: #0008;
+		backdrop-filter: blur(1px);
+		padding: 0.5rem;
 	}
 
 	.text-gradient {

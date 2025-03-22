@@ -1,0 +1,94 @@
+---
+import Page from "@layouts/Page.astro";
+---
+
+<Page title="Farm 2 Table">
+    <div class="wrap">
+        <canvas id="canvas" width="640" height="480">
+            <p>Canvas not supported</p>
+        </canvas>
+    </div>
+</Page>
+
+<script>
+    import Game from "./game";
+    import { State } from "./game/state";
+
+    //orange
+    //purple
+    //green
+    //pink
+
+    function init_farm_game() {
+        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const game = new Game(canvas);
+
+        const pads: any = {};
+
+        window.addEventListener("gamepadconnected", (e) => {
+            pads[e.gamepad.index] = e.gamepad;
+            game.pads.set(e.gamepad.index, e.gamepad);
+            console.log(game.pads);
+            console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.", e.gamepad.index, e.gamepad.id, e.gamepad.buttons.length, e.gamepad.axes.length);
+        });
+
+        window.addEventListener("gamepaddisconnected", (e) => {
+            game.pads.delete(e.gamepad.index);
+            console.log(game.pads);
+            console.log("Gamepad disconnected from index %d: %s", e.gamepad.index, e.gamepad.id);
+        });
+
+        window.addEventListener("mousemove", (e) => {
+            game.mouse.x = e.clientX - canvas.offsetLeft;
+            game.mouse.y = e.clientY - canvas.offsetTop;
+        });
+
+        window.addEventListener("mousedown", (e) => {
+            game.mouse.click = true;
+        });
+
+        window.addEventListener("mouseup", (e) => {
+            game.mouse.click = false;
+        });
+
+        window.addEventListener("keydown", (e) => {
+            if (!game.keys.has(e.key)) {
+                console.log("keydown", e.key);
+                game.keys.set(e.key, null);
+            }
+        });
+
+        window.addEventListener("keyup", (e) => {
+            if (game.keys.has(e.key)) {
+                console.log("keyup", e.key);
+                game.keys.delete(e.key);
+            }
+        });
+
+        function draw() {
+            game.draw();
+            if (game.state === State.Play) requestAnimationFrame(draw);
+            else if (game.state === State.Pause) setTimeout(draw, 250);
+        }
+        console.log("Game started");
+        const fps = 30;
+        const dt = 1000 / fps;
+        setInterval(() => {
+            game.update(pads, dt);
+        }, dt);
+        requestAnimationFrame(draw);
+    }
+
+    // init_farm_game();
+    document.addEventListener("astro:page-load", init_farm_game);
+</script>
+
+<style>
+    .wrap {
+        padding: 2rem 0;
+        margin: 0 auto;
+    }
+    #canvas {
+        background-color: black;
+    }
+</style>

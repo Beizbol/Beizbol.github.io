@@ -1,0 +1,129 @@
+---
+import Page from "@layouts/Page.astro";
+---
+
+<Page title="Farm 2 Table">
+    <div class="wrap">
+        <canvas id="canvas" width="640" height="480">
+            <p>Canvas not supported</p>
+        </canvas>
+    </div>
+</Page>
+
+<style>
+    .wrap {
+        /* background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1ODAuMDMyIDU4MC4wMzIiPjxwYXRoIGQ9Ik01MDUuNzY1IDE1MS43MzNjLTE2LjI1NS0xMC4zOTItNC41MjgtMTYuMzI5LTIxLjM1My0yOS4xOTMtMTYuODI0LTEyLjg2NC04NS4xMDQtMzQuNjM5LTk2Ljk4My0yNC43NDNzLTI1LjIzMyAxMS44NzMtMjUuMjMzIDExLjg3M0gyMTcuODQ0cy0xMy4zNi0xLjk3Ny0yNS4yMzMtMTEuODczYy0xMS44NzMtOS44OTYtODAuMTYgMTEuODczLTk2Ljk4MyAyNC43NDMtMTYuODI0IDEyLjg2NC01LjA5OCAxOC44MDEtMjEuMzUzIDI5LjE5My0xNi4yNTUgMTAuMzkyLTU4LjgwOCAxNTMuODg2LTU4LjgwOCAxNTMuODg2cy01NS40MTcgMTU5LjgyNCA0My41NDQgMTc5LjEyYzAgMCAyNC4yNDgtMTUuMzM2IDQ1LjAyNS00MC4wNzkgMjAuNzg0LTI0Ljc0MyA2MS4zNTMtNTkuODcyIDgzLjEyOC02MC4zNjggMjEuMjk4LS40ODMgOTkuMzg5LS4wMTkgMTAyLjc5MiAwaC4xMjNjMy40MDMtLjAxOSA4MS40OTQtLjQ4MyAxMDIuNzkyIDAgMjEuNzY5LjQ5NiA2Mi4zNDUgMzUuNjI1IDgzLjEyOCA2MC4zNjhzNDUuMDI0IDQwLjA3OSA0NS4wMjQgNDAuMDc5Yzk4Ljk2MS0xOS4yOTYgNDMuNTQ0LTE3OS4xMiA0My41NDQtMTc5LjEycy00Mi41NDctMTQzLjQ5NC01OC44MDItMTUzLjg4NnoiLz48L3N2Zz4="); */
+        filter: drop-shadow(0 1rem 0.5rem #000);
+    }
+
+    #canvas {
+        mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1ODAuMDMyIDU4MC4wMzIiPjxwYXRoIGQ9Ik01MDUuNzY1IDE1MS43MzNjLTE2LjI1NS0xMC4zOTItNC41MjgtMTYuMzI5LTIxLjM1My0yOS4xOTMtMTYuODI0LTEyLjg2NC04NS4xMDQtMzQuNjM5LTk2Ljk4My0yNC43NDNzLTI1LjIzMyAxMS44NzMtMjUuMjMzIDExLjg3M0gyMTcuODQ0cy0xMy4zNi0xLjk3Ny0yNS4yMzMtMTEuODczYy0xMS44NzMtOS44OTYtODAuMTYgMTEuODczLTk2Ljk4MyAyNC43NDMtMTYuODI0IDEyLjg2NC01LjA5OCAxOC44MDEtMjEuMzUzIDI5LjE5My0xNi4yNTUgMTAuMzkyLTU4LjgwOCAxNTMuODg2LTU4LjgwOCAxNTMuODg2cy01NS40MTcgMTU5LjgyNCA0My41NDQgMTc5LjEyYzAgMCAyNC4yNDgtMTUuMzM2IDQ1LjAyNS00MC4wNzkgMjAuNzg0LTI0Ljc0MyA2MS4zNTMtNTkuODcyIDgzLjEyOC02MC4zNjggMjEuMjk4LS40ODMgOTkuMzg5LS4wMTkgMTAyLjc5MiAwaC4xMjNjMy40MDMtLjAxOSA4MS40OTQtLjQ4MyAxMDIuNzkyIDAgMjEuNzY5LjQ5NiA2Mi4zNDUgMzUuNjI1IDgzLjEyOCA2MC4zNjhzNDUuMDI0IDQwLjA3OSA0NS4wMjQgNDAuMDc5Yzk4Ljk2MS0xOS4yOTYgNDMuNTQ0LTE3OS4xMiA0My41NDQtMTc5LjEycy00Mi41NDctMTQzLjQ5NC01OC44MDItMTUzLjg4NnoiLz48L3N2Zz4=");
+        mask-size: cover;
+        mask-repeat: no-repeat;
+        mask-position: center;
+    }
+</style>
+
+<script>
+    function init_pads() {
+        const pads: any = {};
+        window.addEventListener("gamepadconnected", (e) => {
+            pads[e.gamepad.index] = e.gamepad;
+            console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.", e.gamepad.index, e.gamepad.id, e.gamepad.buttons.length, e.gamepad.axes.length);
+        });
+
+        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const ctx = canvas.getContext("2d", { alpha: false }) as CanvasRenderingContext2D;
+
+        function circle(x: number, y: number, r: number, c: string) {
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.closePath();
+            ctx.fillStyle = c;
+            ctx.fill();
+        }
+
+        function gamepad() {
+            const p = pads[0];
+            const y = -30;
+            // draw left stick
+            const xl = 10 + canvas.width / 4;
+            const yl = y + 10 + (3 * canvas.height) / 8;
+            const rl = 50;
+            circle(xl, yl, rl, "#222");
+            circle(xl, yl, rl - 15, "#0c0c0c");
+
+            // draw right stick
+            const xr = (5 * canvas.width) / 8;
+            const yr = y + (3 * canvas.height) / 5;
+            const rr = 50;
+            circle(xr, yr, rr, "#222");
+            circle(xr, yr, rr - 15, "#0c0c0c");
+
+            // draw dpad
+            const dx = (2 * canvas.width) / 5;
+            const dy = y + (3 * canvas.height) / 5;
+            const r = 50;
+            circle(dx, dy, r, "#222");
+            ctx.fillStyle = "#0c0c0c";
+            ctx.fillRect(dx - r, dy - r / 4, r * 2, r / 2);
+            ctx.fillRect(dx - r / 4, dy - r, r / 2, r * 2);
+
+            // draw ABXY buttons
+            const btn_r = 50;
+            const btn_x = (3 * canvas.width) / 4;
+            const btn_y = y + 10 + (3 * canvas.height) / 8;
+
+            if (p && p.buttons[0].pressed) {
+                circle(btn_x, 10 + btn_y + btn_r / 2, 18, "#172");
+            } else {
+                circle(btn_x, 10 + btn_y + btn_r / 2, 18, "#395");
+            }
+
+            circle(10 + btn_x + btn_r / 2, btn_y, 18, "#711");
+
+            circle(-10 + btn_x - btn_r / 2, btn_y, 18, "#159");
+
+            circle(btn_x, -10 + btn_y - btn_r / 2, 18, "#771");
+        }
+
+        function draw() {
+            // update
+
+            // draw
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // gradient
+            const grad = ctx.createLinearGradient(0.5 * canvas.width, 0, 0.5 * canvas.width, canvas.height);
+            grad.addColorStop(0, "#222");
+            grad.addColorStop(1, "#000");
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            gamepad();
+            // for (let i = 0; i < pads.length; i++) {
+            //     const pad = pads[i];
+
+            // }
+
+            // request next frame
+            requestAnimationFrame(draw);
+        }
+        console.log("Game started");
+
+        requestAnimationFrame(draw);
+    }
+
+    // init_farm_game();
+    document.addEventListener("astro:page-load", init_pads);
+</script>
+
+<style>
+    .wrap {
+        padding: 2rem 0;
+        margin: 0 auto;
+    }
+    #canvas {
+        background-color: black;
+    }
+</style>

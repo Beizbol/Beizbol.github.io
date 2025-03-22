@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="color-scheme" content="dark light" />
+        <title>Ratings and Reviews - RTINGS.com</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: system-ui, Helvetica, sans-serif;
+            }
+
+            header {
+                display: flex;
+                background-color: #f008;
+                padding: 0 4rem;
+                font-weight: bolder;
+            }
+
+            section, main {
+                display: grid;
+                margin: 0 auto;
+                max-width: 60rem;
+                gap: 1rem;
+            }
+
+            footer {
+                background-color: #444;
+            }
+
+            header > nav > * {
+                background-color: #f008;
+                height: 100%;
+                display: grid;
+                place-items: center;
+                cursor: pointer;
+            }
+
+            nav a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            nav a:hover {
+                text-decoration: underline;
+            }
+
+            nav details[open] {
+                position: relative;
+            }
+
+            nav summary {
+                /* display: flex; */
+                align-items: center;
+                justify-content: space-evenly;
+                height: 100%;
+                cursor: pointer;
+                padding-left: 2rem;
+            }
+
+            .flex {
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+            }
+
+            .logo {
+                font-size: x-large;
+            }
+
+            .menu {
+                position: absolute;
+                top: 2rem;
+                left: 0;
+                background-color: #f00;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <!-- <h1>Ratings and Reviews - RTINGS.com</h1> -->
+            <nav class="flex">
+                <a class="logo" href="/">RTINGS.com</a>
+
+                <details>
+                    <summary>REVIEWS</summary>
+                    <div class="menu">
+                        <a href="/tv">TV REVIEWS</a>
+                        <a href="/monitor">MONITOR REVIEWS</a>
+                        <a href="/mouse">MOUSE REVIEWS</a>
+                        <a href="/printer">PRINTER REVIEWS </a>
+                        <a href="/vacuum">VACUUM REVIEWS</a>
+                        <a href="/router">ROUTER REVIEWS</a>
+                        <a href="/airfryer"> AIR FRYER REVIEWS </a>
+                        <a href="/microwave">MICROWAVE REVIEWS</a>
+                        <a href="/humidifier">HUMIDIFIER REVIEWS</a>
+                        <a href="/keyboard">KEYBOARD SWITCH REVIEWS</a>
+                        <a href="/speaker">SPEAKER REVIEWS</a>
+                        <a href="/laptop">LAPTOP REVIEWS</a>
+                        <br>
+                        <a href="/headphones">HEADPHONES REVIEWS</a>
+                        <a href="/soundbar">SOUNDBAR REVIEWS</a>
+                        <a href="/keyboard">KEYBOARD REVIEWS</a>
+                        <a href="/robot-vacuum">ROBOT VACUUM REVIEWS</a>
+                        <a href="/projector">PROJECTOR REVIEWS</a>
+                        <a href="/toaster">TOASTER REVIEWS</a>
+                        <a href="/blender">BLENDER REVIEWS</a>
+                        <a href="/dehumidifier">DEHUMIDIFIER REVIEWS</a>
+                        <a href="/airpurifier">AIR PURIFIER REVIEWS</a>
+                        <a href="/toaster-oven">TOASTER OVEN REVIEWS</a>
+                        <a href="/camera">CAMERA REVIEWS</a>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>WHAT'S NEW</summary>
+                    <div class="menu">
+                        <a href="/computer">COMPUTER</a>
+                        <a href="/home-entertainment">HOME ENTERTAINMENT</a>
+                        <a href="/audio">AUDIO</a>
+                        <a href="/home">HOME</a>
+                        <a href="/photo-video">PHOTO & VIDEO</a>
+                        <a href="/kitchen">KITCHEN</a>
+                    </div>
+                </details>
+
+                <a href="/contact">R&D</a>
+                <a href="/forums">FORUMS</a>
+                <a href="/about">DEALS</a>
+                <a href="/contact">NEWSLETTERS</a>
+            </nav>
+        </header>
+        <main>
+            <section class="hero">
+                <div>
+                    <img src="" alt="">
+                    Driven by data, run by a passionate team of engineers,
+                    testers, technical writers, developers, and more.
+                    <a href="/hiring">
+                        We are hiring!
+                    </a>
+                </div>
+                <div>
+                    Get full access to our test results with extra website
+                    features and support our consumer-focused mission.
+                    <button>GET INSIDER ACCESS</button>
+                </div>
+                <h1>
+                    FIND THE BEST PRODUCT FOR YOUR NEEDS
+                </h1>
+                <div>
+                    We purchase our own products and put them under the same
+                    test bench so you can easily compare the results. No
+                    cherry-picked units sent by brands. No ads. Only real tests.
+                </div>
+            </section>
+
+            <footer>
+                We make money directly from you via insider access (which gives
+                you access to extra features) and when you buy a product after
+                clicking a link to a retailer. Learn more about how we work. We
+                buy our own products, just like you, mostly from the United
+                States. When a product is discontinued or no longer popular, we
+                sell the review units locally. You can see what products we
+                currently have for sale here. © 2025 9298-5266 Quebec Inc. All
+                Rights Reserved. Visit our corporate site.
+            </footer>
+        </main>
+    </body>
+</html>

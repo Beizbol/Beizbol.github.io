@@ -1,0 +1,25 @@
+{
+  "$ref": "#/definitions/shoes",
+  "definitions": {
+    "shoes": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "colors": {
+          "type": "number"
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "colors"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

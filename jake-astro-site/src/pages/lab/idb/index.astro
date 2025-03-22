@@ -1,0 +1,92 @@
+---
+import Page from "@layouts/Page.astro";
+---
+
+<Page title="IndexDB">
+    <div class="wrap">
+        <label for="upload"
+            >Select Photos
+            <input type="file" id="upload" name="upload" accept=".jpg, .jpeg, .png" multiple />
+        </label>
+        <!-- <button id="btn">Go</button> -->
+        <ul id="list" class="list">
+            <h3>Photos</h3>
+        </ul>
+        <img id="preview" />
+        <canvas id="canvas">
+            <p>Canvas not supported. :(</p>
+        </canvas>
+    </div>
+</Page>
+
+<style>
+    .wrap {
+        display: grid;
+        place-items: center;
+        padding: 2rem;
+        gap: 1rem;
+    }
+
+    label {
+        outline: 1px solid black;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+    }
+
+    input {
+        display: block;
+        padding-top: 0.5rem;
+    }
+
+    .list {
+        border: 1px solid black;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        list-style: none;
+    }
+    .list h3 {
+        margin: 0;
+        padding-bottom: 1rem;
+    }
+</style>
+
+<style is:inline>
+    li {
+        padding: 1rem;
+        background-color: #888;
+        border-radius: 0.25rem;
+    }
+</style>
+
+<script>
+    import { Img, ImgDB } from "./idb";
+
+    const img_db = new ImgDB();
+    img_db.init();
+
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d");
+
+    const list = document.getElementById("list") as HTMLUListElement;
+    const upload = document.getElementById("upload") as HTMLInputElement;
+    upload.addEventListener("change", async () => {
+        if (!upload.files) return;
+        for (const file of upload.files) {
+            const img = new Img(file.name, file);
+            const li = document.createElement("li");
+            li.innerText = file.name;
+            if (ctx) {
+                li.addEventListener("click", async () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    const bm = await createImageBitmap(img.blob);
+                    ctx.drawImage(bm, 0, 0, canvas.width, canvas.height);
+                    img_db.put(img);
+                });
+            }
+            const preview = document.getElementById("preview") as HTMLImageElement;
+            preview.src = URL.createObjectURL(img.blob);
+            list.appendChild(li);
+            await img_db.put(img);
+        }
+    });
+</script>

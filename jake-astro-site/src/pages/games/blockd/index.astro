@@ -1,0 +1,182 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="Blockd">
+    <div class="wrap">
+        <canvas id="canvas" width="322" height="642">
+            <p>Canvas not supported</p>
+        </canvas>
+    </div>
+</Page>
+
+<style>
+    .wrap {
+        margin: 0 auto;
+        padding-top: 2rem;
+    }
+    #canvas {
+        background-color: black;
+    }
+</style>
+
+<script>
+    function rotate(matrix) {
+        const N = matrix.length - 1;
+        const result = matrix.map((row, i) => row.map((val, j) => matrix[N - j][i]));
+
+        return result;
+    }
+
+    function init_blockd_game() {
+        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+        const size = 32;
+        const pad = 2;
+        const w = 10;
+        const h = 20;
+        const grid = Array.from({ length: h }, () => new Array(w).fill(false));
+        let y = h - 1;
+        let place = false;
+        let dt = 152;
+        let isOff = true;
+
+        const ON = {
+            bg: "#001",
+            cell: "#c01",
+            grid: "#224",
+            I: "aqua",
+            J: "red",
+            L: "orange",
+            O: "yellow",
+            S: "lime",
+            Z: "blue",
+            T: "fuchsia",
+        };
+
+        const OFF = {
+            bg: "#001",
+            cell: "#400",
+            grid: "#112",
+            I: "teal",
+            J: "maroon",
+            L: "chocolate",
+            O: "olive",
+            S: "green",
+            Z: "navy",
+            T: "purple",
+        };
+
+        let colors = OFF;
+
+        const shapes = {
+            I: [
+                [0, 0, 0, 0],
+                [1, 1, 1, 1],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+            ],
+            J: [
+                [1, 0, 0],
+                [1, 1, 1],
+                [0, 0, 0],
+            ],
+            L: [
+                [0, 0, 1],
+                [1, 1, 1],
+                [0, 0, 0],
+            ],
+            O: [
+                [1, 1],
+                [1, 1],
+            ],
+            S: [
+                [0, 1, 1],
+                [1, 1, 0],
+                [0, 0, 0],
+            ],
+            Z: [
+                [1, 1, 0],
+                [0, 1, 1],
+                [0, 0, 0],
+            ],
+            T: [
+                [0, 1, 0],
+                [1, 1, 1],
+                [0, 0, 0],
+            ],
+        };
+
+        document.addEventListener("keydown", (e) => {
+            switch (e.key) {
+                case " ":
+                    if (isOff) {
+                        isOff = false;
+                        colors = ON;
+                    } else {
+                        place = true;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        });
+
+        const next = () => {
+            if (!isOff) {
+                if (place) {
+                    place = false;
+                    // Clear Hanging Cells
+                    for (let i = 0; i < w; i++) {
+                        if (grid[y][i] && !grid[y + 1][i]) {
+                            grid[y][i] = false;
+                            // movers.pop();
+                        }
+                    }
+                    if (dt === 0) {
+                        isOff = true;
+                        colors = OFF;
+                    }
+                    y -= 1;
+                    dt -= 8;
+                }
+                // Clear Mover Row
+                for (let i = 0; i < w; i++) {
+                    grid[y][i] = false;
+                }
+
+                // if (movers.at(0) === 0) {
+                //     isL = false;
+                // }
+                // if (movers.at(-1) === w - 1) {
+                //     isL = true;
+                // }
+                // Move Movers
+                // for (let i = 0; i < movers.length; i++) {
+                //     movers[i] += isL ? -1 : 1;
+                //     grid[y][movers[i]] = true;
+                // }
+            }
+
+            // Draw
+            ctx.fillStyle = colors.grid;
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            for (let i = 0; i < grid.length; i++) {
+                for (let j = 0; j < grid[i].length; j++) {
+                    const cell = grid[i][j];
+                    const x = j * size + pad;
+                    const y = i * size + pad;
+                    ctx.fillStyle = cell ? colors.cell : colors.bg;
+                    ctx.fillRect(x, y, size - pad, size - pad);
+                }
+            }
+
+            setTimeout(next, dt);
+        };
+
+        next();
+    }
+    document.addEventListener("astro:page-load", init_blockd_game);
+</script>

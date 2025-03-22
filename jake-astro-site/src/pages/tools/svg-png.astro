@@ -1,0 +1,108 @@
+---
+import Page from "../../layouts/Page.astro";
+---
+
+<Page title="SVG to PNG">
+    <div class="wrap">
+        <input id="pick" type="file" accept="image/*" />
+        <canvas id="big_canvas" width="512px" height="512px"></canvas>
+        <button id="big_download" disabled>Download 512x512</button>
+        <canvas id="canvas" width="192px" height="192px"></canvas>
+        <button id="download" disabled>Download 192x192</button>
+    </div>
+    <style>
+        .flex {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .wrap {
+            display: grid;
+            /* justify-content: center; */
+            gap: 2rem;
+            place-items: center;
+            padding: 2rem 0;
+        }
+
+        canvas {
+            border: 1px solid #ffffff;
+        }
+    </style>
+
+    <script>
+        function init() {
+            console.log("init");
+            const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+            const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+            ctx.canvas.width = 192;
+            ctx.canvas.height = 192;
+            const big_canvas = document.getElementById("big_canvas") as HTMLCanvasElement;
+            const big_ctx = big_canvas.getContext("2d") as CanvasRenderingContext2D;
+            big_ctx.canvas.width = 512;
+            big_ctx.canvas.height = 512;
+
+            let name = "";
+            const download = document.getElementById("download") as HTMLButtonElement;
+            download.onclick = () => {
+                const link = document.createElement("a");
+                link.download = name + "-192x192.png";
+                link.href = canvas.toDataURL("image/png", 1);
+                link.click();
+            };
+
+            const big_download = document.getElementById("big_download") as HTMLButtonElement;
+            big_download.onclick = () => {
+                const big_link = document.createElement("a");
+                big_link.download = name + "-512x512.png";
+                big_link.href = big_canvas.toDataURL("image/png", 1);
+                big_link.click();
+            };
+
+            const pick = document.getElementById("pick") as HTMLInputElement;
+            const photo = new Image();
+
+            pick.addEventListener("change", (e) => {
+                const picker = e.target as HTMLInputElement;
+
+                if (!picker.files || picker.files.length < 1) {
+                    alert("No image files selected.");
+                    return;
+                }
+
+                if (picker.files.length > 1) {
+                    alert("One image file at a time.");
+                    return;
+                }
+                const file = picker.files[0];
+                const url = URL.createObjectURL(file);
+                photo.src = url;
+                photo.onload = () => {
+                    name = file.name.slice(0, -4);
+                    download.disabled = false;
+                    big_download.disabled = false;
+                    draw();
+                };
+            });
+
+            function draw() {
+                big_ctx.clearRect(0, 0, big_canvas.width, big_canvas.height);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if (photo.src) {
+                    big_ctx.drawImage(photo, 0, 0);
+                    ctx.drawImage(photo, 0, 0);
+                }
+            }
+
+            window.addEventListener("beforeunload", (e) => {
+                if (photo.src !== null) return;
+                e.preventDefault();
+                alert("Are you sure you want to leave without converting?");
+            });
+        }
+
+        init();
+
+        // Runs immediately after the new page replaces the old page
+        document.addEventListener("astro:after-swap", init);
+    </script>
+</Page>

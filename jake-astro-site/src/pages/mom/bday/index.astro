@@ -2,264 +2,325 @@
 import Page from "../../../layouts/Page.astro";
 ---
 
-<Page title="Cards">
-    <div class="wrap">
-        <input type="checkbox" id="card-toggle" value="selected" />
-        <label id="card" class="card" for="card-toggle">
-            <div class="front face">
-                <img src="/imgs/mom.png" />
-            </div>
-            <div class="inner-top face">
-                <div class="contents">
-                    <img src="/imgs/bday_cake.png" />
-                    <img src="/imgs/wine.png" />
+<Page title="Dear Mom">
+    <div class="clock"></div>
+    <div class="background">
+        <!--clock based on current time-->
+        <!--night theme-->
+        <div class="sun"></div>
+        <div class="moon"></div>
+        <div class="ocean">
+            <div class="house-boat center">
+                <div class="bottom"></div>
+                <div class="base">
+                    <div class="window left"></div>
+                    <div class="window right"></div>
                 </div>
-            </div>
-            <div class="inner-bottom face">
-                <div class="msg">
-                    <div>Dear Mom,</div>
-                    <img src="/imgs/happy_bday.png" />
-                    <div class="love">Love, Jake &#128150;</div>
-                    <p id="notice" class="show">Tap/Click!</p>
+                <div class="captain-room">
+                    <div class="window left"></div>
                 </div>
-
-                <style>
-                    .wrap:before {
-                        content: "";
-                        position: fixed;
-                        left: -3px;
-                        right: 0;
-                        top: -3px;
-                        bottom: 0;
-                        z-index: -1;
-                        display: flex;
-                        width: 100vw;
-                        height: 100vh;
-                        background-image: url("/imgs/bloons.png");
-                        background-position: 50% 50%;
-                        background-size: cover;
-                        /* background-repeat: no-repeat; */
-                        -webkit-filter: blur(4px);
-                        -moz-filter: blur(4px);
-                        -o-filter: blur(4px);
-                        -ms-filter: blur(4px);
-                        filter: blur(4px);
-                        -webkit-font-smoothing: antialiased;
-                        -moz-osx-font-smoothing: antialiased;
-                        font-smoothing: antialiased;
-                    }
-
-                    h2,
-                    h3 {
-                        font-family: cursive;
-                    }
-
-                    #card-toggle {
-                        display: none;
-                    }
-
-                    .card {
-                        display: block;
-                        width: min(80vw, 60vh);
-                        height: min(60vw, 35vh);
-                        cursor: pointer;
-                        box-shadow: 0px 0.5rem 0.75rem #666;
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        -webkit-transform: translate(-50%, -50%);
-                        -moz-transform: translate(-50%, -50%);
-                        -o-transform: translate(-50%, -50%);
-                        -ms-transform: translate(-50%, -50%);
-                        transform: translate(-50%, -50%);
-                        -webkit-perspective: 1750px;
-                        -moz-perspective: 1750px;
-                        -o-perspective: 1750px;
-                        -ms-perspective: 1750px;
-                        perspective: 1750px;
-                        -webkit-transition: all 0.75s ease-out;
-                        -moz-transition: all 0.75s ease-out;
-                        -o-transition: all 0.75s ease-out;
-                        -ms-transition: all 0.75s ease-out;
-                        transition: all 0.75s ease-out;
-                    }
-
-                    #notice {
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        right: 0;
-                        text-align: center;
-
-                        color: var(--color-text);
-                        opacity: 0;
-                        -webkit-transition: all 0.25s ease-out;
-                        -moz-transition: all 0.25s ease-out;
-                        -o-transition: all 0.25s ease-out;
-                        -ms-transition: all 0.25s ease-out;
-                        transition: all 0.25s ease-out;
-                    }
-
-                    #notice.show {
-                        opacity: 1;
-                        bottom: -50px;
-                    }
-
-                    .card:hover .face {
-                        -webkit-transition: all 0.3s ease-out;
-                        -moz-transition: all 0.3s ease-out;
-                        -o-transition: all 0.3s ease-out;
-                        -ms-transition: all 0.3s ease-out;
-                        transition: all 0.3s ease-out;
-                    }
-
-                    .face {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background-color: #ff66b3;
-
-                        background-image: url("/imgs/cream_paper.png");
-                        /* background-color: rgb(255, 88, 255); */
-                        border-radius: 0.15rem;
-                        /* box-shadow: 0.25rem 0.25rem 0.75rem 0 rgba(0, 0, 0, 0.5); */
-
-                        box-sizing: border-box;
-                        -webkit-backface-visibility: visible;
-                        -moz-backface-visibility: visible;
-                        -o-backface-visibility: visible;
-                        -ms-backface-visibility: visible;
-                        backface-visibility: visible;
-                        -webkit-transition: all 0.5s ease-out;
-                        -moz-transition: all 0.5s ease-out;
-                        -o-transition: all 0.5s ease-out;
-                        -ms-transition: all 0.5s ease-out;
-                        transition: all 0.5s ease-out;
-                        -webkit-transform-origin: 0 0;
-                        -moz-transform-origin: 0 0;
-                        -o-transform-origin: 0 0;
-                        -ms-transform-origin: 0 0;
-                        transform-origin: 0 0;
-                    }
-
-                    .front {
-                        display: grid;
-                        padding: 1rem;
-                        grid-template-columns: 1fr;
-                        align-items: center;
-                        justify-items: center;
-                        z-index: 3;
-                        -webkit-transform: rotateX(5deg);
-                        -moz-transform: rotateX(5deg);
-                        -o-transform: rotateX(5deg);
-                        -ms-transform: rotateX(5deg);
-                        transform: rotateX(5deg);
-                        -webkit-backface-visibility: hidden;
-                        -moz-backface-visibility: hidden;
-                        -o-backface-visibility: hidden;
-                        -ms-backface-visibility: hidden;
-                        backface-visibility: hidden;
-                    }
-
-                    img {
-                        padding-right: 10%;
-                        max-width: 80%;
-                        max-height: 80%;
-                    }
-
-                    .inner-top {
-                        padding: 5%;
-                        z-index: 2;
-                        -webkit-transform: rotateX(5deg);
-                        -moz-transform: rotateX(5deg);
-                        -o-transform: rotateX(5deg);
-                        -ms-transform: rotateX(5deg);
-                        transform: rotateX(5deg);
-                    }
-
-                    .inner-top .contents {
-                        width: 100%;
-                        height: 100%;
-                        text-align: center;
-                        -webkit-transform: rotateX(180deg);
-                        -moz-transform: rotateX(180deg);
-                        -o-transform: rotateX(180deg);
-                        -ms-transform: rotateX(180deg);
-                        transform: rotateX(180deg);
-                    }
-
-                    .inner-bottom {
-                        padding: 4%;
-                        z-index: 1;
-                        -webkit-transform: rotateX(0deg);
-                        -moz-transform: rotateX(0deg);
-                        -o-transform: rotateX(0deg);
-                        -ms-transform: rotateX(0deg);
-                        transform: rotateX(0deg);
-                    }
-
-                    .msg img {
-                        position: absolute;
-                        max-width: 75%;
-                        margin: 0;
-                        padding-top: 5%;
-                        padding-left: 20%;
-                        z-index: -1;
-                    }
-
-                    .msg {
-                        height: 100%;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-between;
-                    }
-
-                    .love {
-                        text-align: right;
-                    }
-
-                    .card:hover .front,
-                    .card:hover .inner-top {
-                        -webkit-transform: rotateX(25deg);
-                        -moz-transform: rotateX(25deg);
-                        -o-transform: rotateX(25deg);
-                        -ms-transform: rotateX(25deg);
-                        transform: rotateX(25deg);
-                    }
-
-                    #card-toggle:checked + .card {
-                        -webkit-transform: translate(-50%, 0) rotate(-2deg);
-                        -moz-transform: translate(-50%, 0) rotate(-2deg);
-                        -o-transform: translate(-50%, 0) rotate(-2deg);
-                        -ms-transform: translate(-50%, 0) rotate(-2deg);
-                        transform: translate(-50%, 0) rotate(-2deg);
-                    }
-
-                    #card-toggle:checked + .card .inner-top {
-                        box-shadow: 0px -0.5rem 1rem #666;
-                        z-index: 0;
-                    }
-
-                    #card-toggle:checked + .card .front,
-                    #card-toggle:checked + .card .inner-top {
-                        -webkit-transform: rotateX(170deg);
-                        -moz-transform: rotateX(170deg);
-                        -o-transform: rotateX(170deg);
-                        -ms-transform: rotateX(170deg);
-                        transform: rotateX(170deg);
-                    }
-
-                    .card-toggle:checked + .card .inner-bottom {
-                        -webkit-transform: rotateY(15deg);
-                        -moz-transform: rotateY(15deg);
-                        -o-transform: rotateY(15deg);
-                        -ms-transform: rotateY(15deg);
-                        transform: rotateY(15deg);
-                    }
-                </style>
+                <div class="railing top">
+                    <div class="pole one"></div>
+                    <div class="pole two"></div>
+                    <div class="pole three"></div>
+                    <div class="pole four"></div>
+                    <div class="pole five"></div>
+                    <div class="pole six"></div>
+                </div>
+                <div class="roof"></div>
+                <div class="roof top"></div>
             </div>
-        </label>
+        </div>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1600 900">
+            <defs>
+                <linearGradient id="bg" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color: rgba(53, 127, 242, 0.6)"></stop>
+                    <stop offset="100%" style="stop-color: rgba(38, 89, 190, 0.06)"></stop>
+                </linearGradient>
+                <path id="wave" fill="url(#bg)" d="M-363.852,502.589c0,0,236.988-41.997,505.475,0
+              s371.981,38.998,575.971,0s293.985-39.278,505.474,5.859s493.475,48.368,716.963-4.995v560.106H-363.852V502.589z"></path>
+            </defs>
+            <g>
+                <use xlink:href="#wave" opacity=".3">
+                    <animateTransform attributeName="transform" attributeType="XML" type="translate" dur="8s" calcMode="spline" values="270 230; -334 180; 270 230" keyTimes="0; .5; 1" keySplines="0.42, 0, 0.58, 1.0;0.42, 0, 0.58, 1.0" repeatCount="indefinite"></animateTransform>
+                </use>
+                <use xlink:href="#wave" opacity=".6">
+                    <animateTransform attributeName="transform" attributeType="XML" type="translate" dur="6s" calcMode="spline" values="-270 230;243 220;-270 230" keyTimes="0; .6; 1" keySplines="0.42, 0, 0.58, 1.0;0.42, 0, 0.58, 1.0" repeatCount="indefinite"></animateTransform>
+                </use>
+                <use xlink:href="#wave" opacity=".9">
+                    <animateTransform attributeName="transform" attributeType="XML" type="translate" dur="4s" calcMode="spline" values="0 230;-140 200;0 230" keyTimes="0; .4; 1" keySplines="0.42, 0, 0.58, 1.0;0.42, 0, 0.58, 1.0" repeatCount="indefinite"></animateTransform>
+                </use>
+            </g>
+        </svg>
+        <img class="banner" src="/imgs/bday_banner.png" alt="Happy Birthday!" />
     </div>
 </Page>
+
+<style>
+    .background {
+        display: grid;
+        place-items: center;
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+    }
+
+    .background * {
+        position: absolute;
+    }
+
+    svg {
+        min-width: 100%;
+        min-height: 100%;
+    }
+    .center {
+        transform: translate(-50%, 0);
+        left: 50%;
+    }
+    .pole {
+        position: absolute;
+        top: -2px;
+        height: 30px;
+        width: 3px;
+        background: #3b63ac;
+    }
+    .pole.one {
+        right: 100%;
+    }
+    .pole.two {
+        right: 80%;
+    }
+    .pole.three {
+        right: 60%;
+    }
+    .pole.four {
+        right: 40%;
+    }
+    .pole.five {
+        right: 20%;
+    }
+    .pole.six {
+        right: -2px;
+    }
+    .railing {
+        width: 35%;
+        border: solid 2px #3b63ac;
+        margin-left: 10px;
+    }
+    .railing.top {
+        left: 45%;
+        bottom: 120px;
+    }
+    .house-boat {
+        width: 300px;
+        height: 300px;
+        bottom: 200px;
+    }
+    .house-boat .captain-room {
+        box-shadow: inset 0px 3px 2px 0.1em #18151c;
+        background: #6a7892;
+        width: 45%;
+        left: 10px;
+        bottom: 90px;
+        height: 80px;
+    }
+    .house-boat .captain-room .window {
+        top: 50%;
+        transform: translate(0, -50%);
+        border: 4px solid #343b48;
+        bottom: 10px;
+        width: 80px;
+        height: 30px;
+    }
+    .house-boat .captain-room .window.left {
+        left: 10px;
+    }
+    .house-boat .captain-room .window.right {
+        right: 10px;
+    }
+    .house-boat .captain-room .window:before {
+        position: absolute;
+        content: "";
+        top: 50%;
+        width: 100%;
+        border: 2px solid #343b48;
+    }
+    .house-boat .captain-room .window:after {
+        position: absolute;
+        content: "";
+        left: 50%;
+        height: 100%;
+        border: 2px solid #343b48;
+    }
+    .house-boat .base {
+        box-shadow: inset 0px 3px 2px 0.1em #18151c;
+        width: 80%;
+        left: 10px;
+        height: 80px;
+        background: #6a7892;
+        bottom: 10px;
+    }
+    .house-boat .base .window {
+        top: 50%;
+        transform: translate(0, -50%);
+        border: 4px solid #343b48;
+        bottom: 10px;
+        width: 80px;
+        height: 30px;
+    }
+    .house-boat .base .window.left {
+        left: 10px;
+    }
+    .house-boat .base .window.right {
+        right: 10px;
+    }
+    .house-boat .base .window:before {
+        position: absolute;
+        content: "";
+        top: 50%;
+        width: 100%;
+        border: 2px solid #343b48;
+    }
+    .house-boat .base .window:after {
+        position: absolute;
+        content: "";
+        left: 50%;
+        height: 100%;
+        border: 2px solid #343b48;
+    }
+    .house-boat .roof {
+        width: 90%;
+        height: 10px;
+        bottom: 90px;
+        background: #557dc5;
+    }
+    .house-boat .roof.top {
+        width: 90%;
+        bottom: 170px;
+    }
+    .house-boat .bottom {
+        width: 100%;
+        bottom: 0px;
+        height: 10px;
+        background: #557dc5;
+        z-index: 200;
+        box-shadow: 7px 8px 4px 0.1em #18151c;
+    }
+    .ocean {
+        position: absolute;
+        bottom: 0%;
+        width: 100%;
+        height: 220px;
+    }
+
+    .moon {
+        position: absolute;
+        top: 15%;
+        left: 15%;
+        transform: translate(-15%, -15%);
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        background: #f1ee9e;
+        box-shadow: 0px 0px 60px 0.3em #f1ee9e;
+    }
+
+    .clock {
+        height: 100%;
+    }
+
+    .wrap {
+        display: grid;
+        place-items: center;
+    }
+
+    .banner {
+        width: 300px;
+        height: 300px;
+        bottom: 200px;
+        display: none;
+    }
+</style>
+
+<script>
+    import confetti from "canvas-confetti";
+
+    // Night Related Colors
+    const nightSkyColor = "linear-gradient(#16162E 40%,#495482) ";
+    const duskSkyColor = "linear-gradient(#16162E 40%,#FF1EAD) ";
+    const nightOceanColor = "linear-gradient(#334b71, #233e4f, #18151c)";
+    const nightBoatColor = "#6a7892";
+    const nightWindowColor = "linear-gradient(orange, white)";
+
+    // Day Related Colors
+    const daySkyColor = "#87CEFA";
+    const earlyMorningSkyColor = "linear-gradient(#16162E 40%,#ff4d00) ";
+    const dayOceanColor = "linear-gradient(#4DB4D7, #0076BE, #0033FF)";
+    const dayBoatColor = "#FFFDD0";
+    const dayWindowColor = "linear-gradient(15deg, #3399FF, white)";
+
+    function setAllElements(className, color) {
+        var elements = document.getElementsByClassName(className);
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.background = color;
+        }
+    }
+
+    function setBackground(hour: number) {
+        let body = document.querySelector("body");
+        let ocean = document.querySelector(".ocean");
+        let base = document.querySelector(".base");
+        let captainRoom = document.querySelector(".captain-room");
+        if ((hour >= 18 && hour < 24) || (hour >= 0 && hour < 5)) {
+            // Night time styling
+            ocean.style.background = nightOceanColor;
+            if (hour >= 3 && hour < 5) {
+                // Early morning
+                body.style.background = duskSkyColor;
+            } else {
+                body.style.background = nightSkyColor;
+            }
+            captainRoom.style.background = nightBoatColor;
+            base.style.background = nightBoatColor;
+            setAllElements("window", nightWindowColor); //set color of all windows
+        } else {
+            // Day time styling
+            if (hour >= 5 && hour < 7) {
+                // Sunrise
+                body.style.backgroundColor = earlyMorningSkyColor;
+            } else {
+                body.style.backgroundColor = daySkyColor;
+            }
+            ocean.style.background = dayOceanColor;
+            captainRoom.style.background = dayBoatColor;
+            base.style.background = dayBoatColor;
+            setAllElements("window", dayWindowColor);
+        }
+    }
+    function setTime() {
+        let date = new Date();
+        setBackground(date.getHours());
+    }
+
+    setTime();
+    setInterval(() => {
+        setTime();
+    }, 60000);
+
+    let bday_flag = false;
+
+    document.addEventListener("click", () => {
+        let bday = document.querySelector(".banner") as HTMLDivElement;
+        if (!bday_flag) {
+            bday.style.display = "block";
+            confetti();
+        } else {
+            bday.style.display = "none";
+        }
+        bday_flag = !bday_flag;
+    });
+</script>

@@ -1,0 +1,189 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="Stack">
+    <div class="wrap">
+        <div class="wins">
+            <div>Wins</div>
+            <div>&#129353; <span>0</span></div>
+            <div>&#129352; <span>0</span></div>
+            <div>&#129351; <span>0</span></div>
+        </div>
+        <canvas id="canvas" width="290" height="514">
+            <p>Canvas not supported</p>
+        </canvas>
+
+        <div class="ctls">
+            &#128377;
+            <kbd>touch</kbd> /
+            <kbd>spacebar</kbd>
+        </div>
+    </div>
+</Page>
+
+<style>
+    .wrap {
+        margin: 0 auto;
+        padding-top: 1rem;
+        display: grid;
+        gap: 1rem;
+        place-items: center;
+    }
+    .wins {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+    .ctls {
+        margin-right: 1rem;
+    }
+
+    #canvas {
+        background-color: black;
+    }
+</style>
+
+<script>
+    function init_stack_game() {
+        const size = 32;
+        const pad = 2;
+        const w = 9;
+        const h = 16;
+        const grid = Array.from({ length: h }, () => new Array(w).fill(false));
+        const movers = [3, 4, 5];
+        let y = h - 1;
+        grid[y][3] = true;
+        grid[y][4] = true;
+        grid[y][5] = true;
+        y -= 1;
+        let isL = true;
+        let place = false;
+        let dt = 256; //152;
+        let isOff = true;
+
+        let win = 0;
+
+        const ON = {
+            bg: "#102",
+            cell: "#f02",
+            grid: "#208",
+            minor: "#0aa",
+            major: "#0a0",
+            minorW: "#0FF",
+            majorW: "#0F0",
+        };
+
+        const OFF = {
+            bg: "#001",
+            cell: "#300",
+            grid: "#113",
+            minor: "#033",
+            major: "#030",
+            minorW: "#066",
+            majorW: "#060",
+        };
+
+        let colors = isOff ? OFF : ON;
+
+        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+        document.addEventListener("keydown", (e) => {
+            switch (e.key) {
+                case " ":
+                    e.preventDefault();
+                    if (isOff) {
+                        isOff = false;
+                    } else {
+                        place = true;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        });
+
+        canvas.addEventListener("touchstart", () => {
+            if (isOff) {
+                isOff = false;
+            } else {
+                place = true;
+            }
+        });
+
+        const update = () => {
+            if (place) {
+                place = false;
+                // Clear Hanging Cells
+                for (let i = 0; i < w; i++) {
+                    if (grid[y][i] && !grid[y + 1][i]) {
+                        grid[y][i] = false;
+                        movers.pop();
+                        console.log(movers.length);
+                        if (movers.length === 0) {
+                            isOff = true;
+                        }
+                    }
+                }
+                //check minor win
+                if (y === 4 && grid[4].includes(true)) {
+                    win = 1;
+                }
+                //check minor win
+                if (y === 0 && grid[0].includes(true)) {
+                    win = 2;
+                    isOff = true;
+                    return;
+                }
+                y -= 1;
+                dt -= 8;
+            }
+            // Clear Mover Row
+            for (let i = 0; i < w; i++) {
+                grid[y][i] = false;
+            }
+
+            if (movers.at(0) === 0) {
+                isL = false;
+            }
+            if (movers.at(-1) === w - 1) {
+                isL = true;
+            }
+            // Move Movers
+            for (let i = 0; i < movers.length; i++) {
+                movers[i] += isL ? -1 : 1;
+                grid[y][movers[i]] = true;
+            }
+            colors = isOff ? OFF : ON;
+        };
+
+        const next = () => {
+            if (!isOff) update();
+
+            // Draw
+            ctx.fillStyle = colors.grid;
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.fillStyle = win > 1 ? colors.majorW : colors.major;
+            ctx.fillRect(0, 0, ctx.canvas.width, 34);
+            ctx.fillStyle = win > 0 ? colors.minorW : colors.minor;
+            ctx.fillRect(0, 128, ctx.canvas.width, 34);
+
+            for (let i = 0; i < grid.length; i++) {
+                for (let j = 0; j < grid[i].length; j++) {
+                    const cell = grid[i][j];
+                    const x = j * size + pad;
+                    const y = i * size + pad;
+                    ctx.fillStyle = cell ? colors.cell : colors.bg;
+                    ctx.fillRect(x, y, size - pad, size - pad);
+                }
+            }
+
+            setTimeout(next, dt);
+        };
+
+        next();
+    }
+    document.addEventListener("astro:page-load", init_stack_game);
+</script>

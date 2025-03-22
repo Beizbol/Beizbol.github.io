@@ -1,7 +1,7 @@
 ---
 import Nav from "../components/Nav.astro";
 import Theme from "../components/Theme.astro";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import "../styles/theme.css";
 
@@ -30,7 +30,7 @@ const pwa = `/apps/${name}/manifest.json`;
 		<meta name="background-color" content="black" />
 		<meta name="description" content={title} />
 		<title>{title}</title>
-		<ViewTransitions />
+		<ClientRouter />
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 		<link rel="apple-touch-icon" href="/pwa-192x192.png" />
 		<link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
