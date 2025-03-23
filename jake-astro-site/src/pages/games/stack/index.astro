@@ -59,7 +59,8 @@ import Page from "../../../layouts/Page.astro";
         y -= 1;
         let isL = true;
         let place = false;
-        let dt = 256; //152;
+        let dt = 200; //152;
+        let timer = 15;
         let isOff = true;
 
         let win = 0;
@@ -68,20 +69,24 @@ import Page from "../../../layouts/Page.astro";
             bg: "#102",
             cell: "#f02",
             grid: "#208",
-            minor: "#0aa",
-            major: "#0a0",
-            minorW: "#0FF",
-            majorW: "#0F0",
+            bronze: "#941",
+            silver: "#999",
+            gold: "#b80",
+            bronzeW: "#b62",
+            silverW: "#bbb",
+            goldW: "#FC0",
         };
 
         const OFF = {
             bg: "#001",
             cell: "#300",
             grid: "#113",
-            minor: "#033",
-            major: "#030",
-            minorW: "#066",
-            majorW: "#060",
+            bronze: "#321",
+            silver: "#444",
+            gold: "#540",
+            bronzeW: "#b62",
+            silverW: "#aaa",
+            goldW: "#d90",
         };
 
         let colors = isOff ? OFF : ON;
@@ -127,16 +132,23 @@ import Page from "../../../layouts/Page.astro";
                         }
                     }
                 }
-                //check minor win
-                if (y === 4 && grid[4].includes(true)) {
+                //check bronze win
+                if (y === 8 && grid[8].includes(true)) {
                     win = 1;
                 }
-                //check minor win
-                if (y === 0 && grid[0].includes(true)) {
+                //check silver win
+                if (y === 4 && grid[4].includes(true)) {
                     win = 2;
+                }
+                //check gold win
+                if (y === 0 && grid[0].includes(true)) {
+                    win = 3;
+                }
+                if (y === 0) {
                     isOff = true;
                     return;
                 }
+                timer -= 1;
                 y -= 1;
                 dt -= 8;
             }
@@ -156,19 +168,20 @@ import Page from "../../../layouts/Page.astro";
                 movers[i] += isL ? -1 : 1;
                 grid[y][movers[i]] = true;
             }
-            colors = isOff ? OFF : ON;
         };
 
         const next = () => {
             if (!isOff) update();
-
+            colors = isOff ? OFF : ON;
             // Draw
             ctx.fillStyle = colors.grid;
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            ctx.fillStyle = win > 1 ? colors.majorW : colors.major;
+            ctx.fillStyle = win > 2 ? colors.goldW : colors.gold;
             ctx.fillRect(0, 0, ctx.canvas.width, 34);
-            ctx.fillStyle = win > 0 ? colors.minorW : colors.minor;
+            ctx.fillStyle = win > 1 ? colors.silverW : colors.silver;
             ctx.fillRect(0, 128, ctx.canvas.width, 34);
+            ctx.fillStyle = win > 0 ? colors.bronzeW : colors.bronze;
+            ctx.fillRect(0, 256, ctx.canvas.width, 34);
 
             for (let i = 0; i < grid.length; i++) {
                 for (let j = 0; j < grid[i].length; j++) {
