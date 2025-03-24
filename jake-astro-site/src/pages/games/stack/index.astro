@@ -20,6 +20,17 @@ import Page from "../../../layouts/Page.astro";
             <kbd>spacebar</kbd>
         </div>
     </div>
+    <dialog id="gameOver">
+        <form method="dialog">
+            <div class="flex">
+                <div id="bronze" class="medal empty"></div>
+                <div id="silver" class="medal empty"></div>
+                <div id="gold" class="medal empty"></div>
+            </div>
+            <p>Game Over</p>
+            <button>OK</button>
+        </form>
+    </dialog>
 </Page>
 
 <style>
@@ -41,6 +52,26 @@ import Page from "../../../layouts/Page.astro";
 
     #canvas {
         background-color: black;
+    }
+    .medal {
+        height: 50px;
+        width: 50px;
+    }
+
+    .medal.empty {
+        content: "-";
+    }
+
+    .medal.bronze {
+        content: "🎗️";
+    }
+
+    .medal.silver {
+        content: "🏅";
+    }
+
+    .medal.gold {
+        content: "🏆";
     }
 </style>
 

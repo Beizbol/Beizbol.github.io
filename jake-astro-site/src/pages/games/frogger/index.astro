@@ -1,0 +1,213 @@
+---
+import Page from "../../../layouts/Page.astro";
+---
+
+<Page title="Frogger">
+    <div class="wrap">
+        <div class="wins">
+            <div>Stats:</div>
+            <div>🛣️ <span id="roads">0</span></div>
+            <div>🌊 <span id="rivers">0</span></div>
+            <div>🏆 <span id="wins">0</span></div>
+        </div>
+        <canvas id="canvas" width="290" height="514">
+            <p>Canvas not supported</p>
+        </canvas>
+
+        <div class="ctls">
+            &#128377;
+            <kbd>touch</kbd> /
+            <kbd>spacebar</kbd>
+        </div>
+    </div>
+    <dialog id="gameOver">
+        <form method="dialog">
+            <h3>Game Over!</h3>
+            <div class="flex">
+                <div id="m1" class="medal"></div>
+                <div id="m2" class="medal"></div>
+                <div id="m3" class="medal"></div>
+            </div>
+            <p id="result"></p>
+            <button>OK</button>
+        </form>
+    </dialog>
+</Page>
+
+<style>
+    .wrap {
+        margin: 0 auto;
+        padding-top: 1rem;
+        display: grid;
+        gap: 1rem;
+        place-items: center;
+    }
+    .wins {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+    .ctls {
+        margin-right: 1rem;
+    }
+    #canvas {
+        background-color: black;
+    }
+
+    .medal {
+        height: 3rem;
+        width: 3rem;
+    }
+    .medal.road {
+        content: "🚑";
+    }
+    .medal.medic {
+        content: "🏥";
+    }
+    .medal.crutch {
+        content: "🩻";
+    }
+    .medal.river {
+        content: "🛥️";
+    }
+    .medal.saver {
+        content: "🛟";
+    }
+    .medal.cpr {
+        content: "🌬️";
+    }
+    .medal.gold {
+        content: "🏆";
+    }
+    .medal.shine {
+        content: "✨";
+    }
+</style>
+
+<script>
+    import Frog from "./frog";
+
+    function init_frogger_game() {
+        const size = 32;
+        const pad = 2;
+        const w = 9;
+        const h = 16;
+        const grid = Array.from({ length: h }, () => new Array(w).fill(false));
+        const lanes = [3, 4, 5];
+        const UP = 0;
+        const RIGHT = 1;
+        const DOWN = 2;
+        const LEFT = 3;
+        let dir = UP;
+        let jump = false;
+        let dt = 15; //152;
+        let timer = 15;
+        let isOff = true;
+
+        const ON = {
+            bg: "#102",
+            cell: "#f02",
+            grass: "#082",
+            gold: "#b80",
+            river: "#028",
+            road: "#444",
+        };
+
+        const OFF = {
+            bg: "#001",
+            cell: "#300",
+            grass: "#131",
+            gold: "#540",
+            river: "#002",
+            road: "#222",
+        };
+
+        let colors = isOff ? OFF : ON;
+
+        const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+
+        document.addEventListener("keydown", (e) => {
+            e.preventDefault();
+            if (isOff) {
+                isOff = false;
+                return;
+            }
+            switch (e.key) {
+                case " ":
+                    jump = true;
+                    break;
+                case "w":
+                    dir = UP;
+                    jump = true;
+                    break;
+                case "a":
+                    dir = LEFT;
+                    jump = true;
+                    break;
+                case "s":
+                    dir = DOWN;
+                    jump = true;
+                    break;
+                case "d":
+                    dir = RIGHT;
+                    jump = true;
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        // canvas.addEventListener("touchstart", (e) => {
+        //     if (isOff) {
+        //         isOff = false;
+        //     } else {
+        //         jump = true;
+        //     }
+        //     if (e.touches[0].clientX < 150) {
+        //         left = true;
+        //     } else if (e.touches[0].clientX > window.screenX - 150) {
+        //         right = true;
+        //     }
+        // });
+
+        function update() {
+            if (jump) {
+                jump = false;
+                frog.jump();
+            }
+            frog.update(dir);
+        }
+
+        const frog = new Frog();
+
+        function next() {
+            if (!isOff) update();
+            colors = isOff ? OFF : ON;
+            // Draw
+            ctx.fillStyle = colors.grass;
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            ctx.fillStyle = colors.gold;
+            ctx.fillRect(0, 0, ctx.canvas.width, 2);
+            ctx.fillStyle = colors.river;
+            ctx.fillRect(0, 2 * size, ctx.canvas.width, 5 * size + pad);
+            ctx.fillStyle = colors.road;
+            ctx.fillRect(0, 9 * size + pad, ctx.canvas.width, 5 * size - pad);
+
+            ctx.fillStyle = colors.bg;
+            for (let i = 0; i < grid.length; i++) {
+                for (let j = 0; j < grid[i].length; j++) {
+                    // const cell = grid[i][j];
+                    const x = j * size + pad;
+                    const y = i * size + pad;
+                    ctx.fillRect(x, y, size - pad, size - pad);
+                }
+            }
+
+            frog.draw(ctx);
+        }
+        setInterval(next, dt);
+        // next();
+    }
+    document.addEventListener("astro:page-load", init_frogger_game);
+</script>
