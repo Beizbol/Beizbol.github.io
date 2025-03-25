@@ -26,9 +26,7 @@ const { fg } = Astro.props;
         const ruffle = window.RufflePlayer.newest();
         const player = ruffle.createPlayer();
         player.volume = 0.25;
-        const container = document.getElementById(
-            "container",
-        ) as HTMLDivElement;
+        const container = document.getElementById("container") as HTMLDivElement;
         container.appendChild(player);
         player.style.width = "64rem";
         player.style.height = "48rem";

@@ -6,9 +6,9 @@ import Page from "../../../layouts/Page.astro";
     <div class="wrap">
         <div class="wins">
             <div>Wins</div>
-            <div>&#129353; <span>0</span></div>
-            <div>&#129352; <span>0</span></div>
-            <div>&#129351; <span>0</span></div>
+            <div>🎗️ <span id="bw">0</span></div>
+            <div>🏅 <span id="sw">0</span></div>
+            <div>🏆 <span id="gw">0</span></div>
         </div>
         <canvas id="canvas" width="290" height="514">
             <p>Canvas not supported</p>
@@ -22,13 +22,13 @@ import Page from "../../../layouts/Page.astro";
     </div>
     <dialog id="gameOver">
         <form method="dialog">
+            <h3>Game Over!</h3>
             <div class="flex">
-                <div id="bronze" class="medal empty"></div>
-                <div id="silver" class="medal empty"></div>
-                <div id="gold" class="medal empty"></div>
+                <div id="bronze" class="medal">-</div>
+                <div id="silver" class="medal">-</div>
+                <div id="gold" class="medal">-</div>
             </div>
-            <p>Game Over</p>
-            <button>OK</button>
+            <button>Restart</button>
         </form>
     </dialog>
 </Page>
@@ -53,29 +53,33 @@ import Page from "../../../layouts/Page.astro";
     #canvas {
         background-color: black;
     }
+    dialog button {
+        float: right;
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+    }
+    dialog h3 {
+        text-align: center;
+    }
     .medal {
-        height: 50px;
-        width: 50px;
+        height: 4rem;
+        width: 4rem;
+        display: grid;
+        place-items: center;
+        background-color: aqua;
+        font-size: x-large;
+        border-radius: 0.5rem;
+        background-color: #8888;
     }
-
-    .medal.empty {
-        content: "-";
-    }
-
-    .medal.bronze {
-        content: "🎗️";
-    }
-
-    .medal.silver {
-        content: "🏅";
-    }
-
-    .medal.gold {
-        content: "🏆";
+    .flex {
+        display: flex;
+        gap: 0.5rem;
     }
 </style>
 
 <script>
+    import confetti from "canvas-confetti";
+
     function init_stack_game() {
         const size = 32;
         const pad = 2;
@@ -93,7 +97,6 @@ import Page from "../../../layouts/Page.astro";
         let dt = 200; //152;
         let timer = 15;
         let isOff = true;
-
         let win = 0;
 
         const ON = {
@@ -122,6 +125,8 @@ import Page from "../../../layouts/Page.astro";
 
         let colors = isOff ? OFF : ON;
 
+        const dialog = document.getElementById("gameOver") as HTMLDialogElement;
+
         const canvas = document.getElementById("canvas") as HTMLCanvasElement;
         const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
@@ -149,6 +154,74 @@ import Page from "../../../layouts/Page.astro";
             }
         });
 
+        const bw = document.getElementById("bw") as HTMLSpanElement;
+        bw.innerText = localStorage.getItem("stack-wins-bronze") || "0";
+        const sw = document.getElementById("sw") as HTMLSpanElement;
+        sw.innerText = localStorage.getItem("stack-wins-silver") || "0";
+        const gw = document.getElementById("gw") as HTMLSpanElement;
+        gw.innerText = localStorage.getItem("stack-wins-gold") || "0";
+        let wins = {
+            b: parseInt(bw.innerText),
+            s: parseInt(sw.innerText),
+            g: parseInt(gw.innerText),
+        };
+
+        const bronze = document.getElementById("bronze") as HTMLDivElement;
+        const silver = document.getElementById("silver") as HTMLDivElement;
+        const gold = document.getElementById("gold") as HTMLDivElement;
+
+        const game_over = () => {
+            console.log("game over");
+            isOff = true;
+            if (win >= 1) {
+                bronze.innerText = "🎗️";
+                wins.b += 1;
+            }
+            if (win >= 2) {
+                silver.innerText = "🏅";
+                wins.s += 1;
+            }
+            if (win === 3) {
+                gold.innerText = "🏆";
+                wins.g += 1;
+                confetti();
+            }
+            dialog.showModal();
+        };
+
+        dialog.onclose = () => {
+            localStorage.setItem("stack-wins-bronze", wins.b.toString());
+            localStorage.setItem("stack-wins-silver", wins.s.toString());
+            localStorage.setItem("stack-wins-gold", wins.g.toString());
+            bronze.innerText = "-";
+            silver.innerText = "-";
+            gold.innerText = "-";
+            document.location.reload();
+            // //reset the board
+            // for (let i = 0; i < h; i++) {
+            //     for (let j = 0; j < w; j++) {
+            //         grid[i][j] = false;
+            //     }
+            // }
+            // // reset the movers
+            // while (movers.length > 0) {
+            //     movers.pop();
+            // }
+            // movers.push(3, 4, 5);
+            // // reset the state
+            // y = h - 1;
+            // grid[y][3] = true;
+            // grid[y][4] = true;
+            // grid[y][5] = true;
+            // y -= 1;
+            // isL = true;
+            // place = false;
+            // dt = 200; //152;
+            // timer = 15;
+            // isOff = true;
+            // win = 0;
+        };
+
         const update = () => {
             if (place) {
                 place = false;
@@ -159,7 +232,8 @@ import Page from "../../../layouts/Page.astro";
                         movers.pop();
                         console.log(movers.length);
                         if (movers.length === 0) {
-                            isOff = true;
+                            game_over();
+                            return;
                         }
                     }
                 }
@@ -176,7 +250,7 @@ import Page from "../../../layouts/Page.astro";
                     win = 3;
                 }
                 if (y === 0) {
-                    isOff = true;
+                    game_over();
                     return;
                 }
                 timer -= 1;
