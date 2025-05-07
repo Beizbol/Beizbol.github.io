@@ -23,14 +23,16 @@ import Page from "../../layouts/Page.astro";
     const download = document.getElementById("download") as HTMLAnchorElement;
     const btn = document.getElementById("btn") as HTMLButtonElement;
     btn.onclick = () => {
-        const ctx = ico.getContext("2d");
-        download.href = ico.toDataURL();
-        download.style.display = "inline";
+        console.log("png:\n", ico.toDataURL("image/png", 1));
 
-        if (wrap.firstChild) {
-            wrap.removeChild(wrap.firstChild);
-        }
-        wrap.appendChild(qr.getCanvas());
+        // const ctx = ico.getContext("2d");
+        // download.href = ico.toDataURL();
+        // download.style.display = "inline";
+
+        // if (wrap.firstChild) {
+        //     wrap.removeChild(wrap.firstChild);
+        // }
+        // wrap.appendChild(qr.getCanvas());
     };
 </script>
 <style>

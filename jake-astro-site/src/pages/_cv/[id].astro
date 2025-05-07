@@ -1,0 +1,48 @@
+---
+import { getCollection, render } from "astro:content";
+import Page from "../../layouts/Page.astro";
+// 1. Generate a new path for every collection entry
+export async function getStaticPaths() {
+    const cvs = await getCollection("cv");
+    return cvs.map((cv: { id: any }) => ({
+        params: { id: cv.id },
+        props: { cv },
+    }));
+}
+
+const { cv } = Astro.props;
+const { Content } = await render(cv);
+---
+
+<Page title={cv.id}>
+    <div id="wrap">
+        <Content />
+    </div>
+</Page>
+
+<style is:inline>
+    #wrap {
+        display: grid;
+        margin: 0 auto;
+        max-width: 768px;
+        gap: 1rem 2rem;
+        /* grid-template-columns: repeat(auto-fit, 320px); */
+    }
+
+    #wrap h1,
+    #wrap h2,
+    #wrap h3,
+    #wrap p {
+        margin: 0;
+        padding: 0;
+    }
+
+    #wrap ul {
+        margin: 0;
+    }
+    #wrap h1 {
+        text-align: center;
+    }
+</style>
+
+<script src="https://code.iconify.design/2/2.2.1/iconify.min.js" type="module"></script>
